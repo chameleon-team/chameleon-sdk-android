@@ -237,21 +237,3 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
 - CmlFontUtil：主要就是加载自定义字体，如assets下fonts包下的Barlow-Medium.ttf字体
 
 
-----
-# 6. 发布 AAR
-项目中各模块依赖关系如下：
-- `cmlsdk` 模块抽象接入能力，并实现通用Adapter能力，不依赖于其他模块
-- `js-bundle-mgr` 依赖 `cmlsdk`，实现js bundle 下载、预加载及缓存的能力
-- `cmlweb` 依赖 `cmlsdk`，实现降级所需的web 渲染能力
-- `cmlweex` 依赖于 `cmlsdk` 和 `js-bundle-mgr`，实现 weex native 渲染能力
-- `cmlrn` 依赖于 `cmlsdk` 和 `js-bundle-mgr`，实现 react native 渲染能力
-
-所以需要从 `cmlsdk` 开始发布，然后发布 `js-bundle-mgr` 和 `cmlweb`，最后发布 `cmlweex` 和 `cmlrn`。
-
-发布流程如下：
-1. 修改根目录下 `gradle.propeties` 文件中的 `PUBLISH` 的值为`true`，`VERSION` 的值为需要发布的版本
-2. 发布 `cmlsdk`，命令：`./gradlew :cmlsdk:uploadArchives`
-3. 发布 `js-bundle-mgr`，命令：`./gradlew :js-bundle-mgr:uploadArchives`
-4. 发布 `cmlweb`，命令：`./gradlew :cmlweb:uploadArchives`
-5. 发布 `cmlweex`，命令：`./gradlew :cmlweex:uploadArchives`
-5. 发布 `cmlrn`，命令：`./gradlew :cmlrn:uploadArchives`
