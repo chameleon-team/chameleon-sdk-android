@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/title_bar_layout_above"
+    android:layout_width="fill_parent"
+    android:layout_height="44dp"
+    android:background="#fafafa"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/cml_title_view_left_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/cml_header_left_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cml_title_view_btn_back_selector"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/cml_header_left_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/cml_333333"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:text="返回"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/cml_header_right_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/cml_666666"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/cml_header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:singleLine="true"
+        android:textColor="#666666"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/cml_header_right_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cml_ms_title_view_btn_back_selector"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/car_iv_title_bar_line"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="#e5e5e5"
+        android:clickable="true" />
+</RelativeLayout>
+
+

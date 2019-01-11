@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/rich_ic"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/rich_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:textColor="#666666"
+        android:textSize="16dp"
+        tools:lineSpacingMultiplier="1.2"
+        tools:text="富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容富文本内容" />
+</merge>

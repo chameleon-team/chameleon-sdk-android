@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cml_cccccc">#cccccc</color>
+    <color name="cml_btn_gray">#4a4c5b</color>
+    <color name="cml_15000000">#15000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="cml_btn_orange">#fc9153</color>
+    <color name="cml_white">#ffffff</color>
+
+
+    <color name="cml_f3f4f5">#f3f4f5</color>
+
+    <color name="cml_999999">#999999</color>
+    <color name="cml_333333">#333333</color>
+    <color name="cml_666666">#666666</color>
+
+
+</resources>

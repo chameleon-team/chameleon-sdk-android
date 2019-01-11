@@ -1,136 +1,129 @@
+<h1>Android SDK 简介</h1>
+android 端的实现思路是采用目前比较流行的一些 native 渲染引擎作为底层支持，同时扩展一些一般工程通用的基础能力。目前支持的渲染引擎是 `weex` 和 `react native`，使用时<font color=#FF0000>二者选其一</font>作为项目的 native 渲染引擎。
 
-# Chameleon
-Chameleon/kəˈmiːlɪən/，简写CML，中文名卡梅龙，中文意思变色龙，意味着就像变色龙一样能适应不同环境的跨端整体解决方案。
-
-Chameleon设计理念是提供一套框架，将“多态”设计模式贯穿到工程化开发中，上层95%+代码可重用，在底层（组件、本地接口）分离差异化实现，在编译阶段分离代码，产出多端应用。
-
-android端目前是采用Weex来渲染页面，并且提供了Chameleon设计的一套JsBundleMgr及富文本组件。目前主要有以下内容：
+# 1. 项目结构
+项目一级目录结构如下：
 ```
- |
- |-adapter      对外暴露adapter及其默认的实现
- |-annotation   CmlJsMethod及CmlComponentProp注解
- |-component    收敛weex component能力与Chameleon
- |-container    Chameleon中activity及view的实现
- |-module       收敛weex module于Chameleon
- |-utils        工具类包 目前只有log的实现
- |-widget       自定义控件 目前仅有activity里的标题栏控件
- |-CmlBaseLifecycle     可视页面生命周期
- |-CmlConstant      常量的管理
- |-CmlEngine        Chameleon入口类的管理
- |-CmlEnvironment   Chameleon环境的设置，如DEBUG、是否直接降级等等
- |-CmlInitAdapter   Chameleon初始化adaper，包含预加载列表、设置缓存大小等
- |-CmlInstance      Chameleon基于Weex渲染的具体实现
+|+ app sdk测试模块
+|+ CmlSDKExample SDK使用示例
+|+ cmlsdk SDK接入层，抽象 Chameleon 引擎能力、实现通用扩展能力
+|+ cmlweex 包装 weex 渲染引擎
+|+ cmlweb 包装 web 渲染引擎
+|+ cmlrn 包装 react native 渲染引擎
+|+ js-bundle-mgr 实现 js bundle 预加载、缓存
+|+ rich-text-component 富文本组件
+|+ sdk-image 图片选择、图片拍摄组件
+|+ sdk-location 位置组件
 ```
 
-----
+cmlsdk 模块单独拿出来看下目录结构：
+```
+|- cmlsdk
+    |+ adapter 定义了扩展能力的接口以及默认实现，无默认实现的能力需要第三方项目根据自己的实际业务需求去实现
+    |+ bridge 定义了 js 和 native 通信的接口，实现协议相关的处理能力，以及实现了协议层使用入口
+    |+ bundle js bundle 相关定义，目前只有一个类用来描述 js bundle 相关信息
+    |+ common 通用能力的基础封装类
+    |+ container 渲染容器的抽象能力定义
+    |+ extend Chameleon 提供的一些能力
+    |+ module 扩展能力管理，收集 sdk 默认提供的以及第三方用户自己实现的 module，根据 bridge 层指令执行具体某个 module 的某个 method
+    |+ utils 工具类集合
+    |+ widget 自定义的widget，目前只有一个 title bar，用做 webview 渲染容器的action bar
+    |- CmlBaseLifecycle 生命周期的接口定义
+    |- CmlConstant 常量定义
+    |- CmlEngine Chameleon SDK 使用入口
+    |- CmlEnvironment 运行环境和运行参数配置入口、扩展能力设置入口
+    |- CmlInstanceManage 页面运行实例的管理类，每一个容器实例运行时，其对应的Instance会注册到这里
+    |- ICmlEngine 引擎的抽象接口
+    |- ICmlInstance 容器实例抽象接口
+    |- ICmlActivityInstance 全屏容器实例抽象接口
+    |- ICmlViewInstance 视图容器实例抽象接口
+```
 
-## adapter
-加载图片，WebSocket，图片加载，跳转等功能对外提供接口，开发者可以根据自己的需要实现，通过`CmlInitAdapter.Buidler`去注册。
+项目整体架构如下图所示：
+
+![image](../assets/cml_doc_android_01.png)
+
+
+# 2. Chameleon 使用
+此部分可以参看手把手系列之<a href="../example/android_example.html">《变色龙SDK使用范例》</a>
+
+# 3. 基础类说明
+
+## 3.1 CmlEngine
+此类是 <em>Chameleon/kəˈmiːlɪən/</em> SDK 的入口类，提供基本的初始化入口和 <em>Chameleon</em>容器的调起能力。具体包含以下能力
+- SDK 初始化入口
+- 调起渲染容器
+- 初始化预加载列表
+- 注册扩展module
+
+## 3.2 CmlEnvironment
+CmlEnvironment 主要提供了开发期间需要的一些能力，如
+- 调试开关
+- 降级开关
+- 缓存开关
+
+以及一些常量的定义，如
+- 预加载的最大缓存
+- 运行时的最大缓存
+
+CmlEnvironment 一个非常重要的能力是提供了对 adapter 设置和获取能力，方便使用者实现自己的适配模块。如加载图片，WebSocket，图片加载，跳转等功能。开发者可以根据自己的需要，实现对应的接口并注册到SDK中使用。
 
 | 接口 | 功能 | 默认实现 |
 | :------ | :------ | :------ |
-| ICmlDegradeAdapter | 降级 | 没有默认实现 |
-| ICmlImgLoaderAdapter | 图片加载 | CmlDefaultImgLoaderAdapter ，默认使用 Glide，需要用户手动集成 Glide |
-|ICmlLoggerAdapter|日志|CmlDefaultLoggerAdapter，默认使用系统 log 输出|
-|ICmlNavigatorAdapter|url 跳转|默认使用 Intent.ACTION_VIEW 处理|
-|ICmlStatisticsAdapter|统计信息输出|没有默认实现，不关心可以不用实现|
-|ICmlWebSocketAdapter|WebSocket|CmlDefaultWebSocketAdapter，默认使用 OkHttp3，需要用户手动集成 OkHttp3|
+| ICmlDegradeAdapter | 降级 | 不提供默认实现，示例 CmlDegradeDefault 默认会关闭 native 渲染容器，打开 Web 容器，加载降级url |
+| ICmlImgLoaderAdapter | 图片加载 | CmlDefaultImgLoaderAdapter ，默认使用 Glide，需要用户手动集成 Glide |
+| CmlLoggerAdapter|日志|CmlLoggerDefault，默认使用系统 log 输出|
+| ICmlNavigatorAdapter|url 跳转|默认使用 Intent.ACTION_VIEW 处理|
+| ICmlStatisticsAdapter|统计信息输出|没有默认实现，不关心可以不用实现|
+| ICmlWebSocketAdapter|WebSocket|CmlDefaultWebSocketAdapter，默认使用 OkHttp3，需要用户手动集成 OkHttp3|
 
+## 3.3 module
+- 功能：通过注册module提供原生能力的扩展
+- 原理：依赖bridge进行协议通信，根据不同module进行协议处理分发
+- module，扩展原生能力
+    + module注册
+        * 必须注册CmlEngine.registerModule(Class<?> moduleClass)
+        * 不强制要求添加@CmlModule,未添加时会使用默认设置
+        * 不建议在运行中动态注册module
+    + module名称
+        * 默认使用module的类名
+        * 配置module名称，添加注解@CmlModule(alias = "name")
+    + module实例
+        * 默认为实例全局唯一，即无论有多少instance都会使用同一个module实例
+        * 配置全局性，添加注解@CmlModule(global = false)
+    + module组合
+        * 针对极特殊情况，允许多个class共用一个module名称
+        * 必须有且只有一个class作为module，所有相关class均会使用该moduel配置
+        * 其余class必须使用@CmlJoin(name = "name")，指定需要关联的moduel名称
+        * 每个class实例之间无关联，仅会在使用时再创建实例
+- method，提供原生能力方法
+    + method注册
+        * 自动注册module类中所有的public方法
+        * 不强制要求添加@CmlMethod,未添加时会使用默认设置
+        * 如果不希望方法被误添加，需要在方法上添加@CmlIgnore
+    + method名称
+        * 默认使用method方法名
+        * 配置method名称，添加注解@CmlMethod(alias = "name")
+    + method线程
+        * 默认运行在主线程
+        * 配置method线程，添加注解@CmlMethod(uiThread = false)
+- param，原生能力方法所需要的参数
+    + param类型
+        * 针对Context、ICmlInstance等上下文类型，会根据调用环境进行查找替换
+        * 对于CmlCallback的类型，会构建对应的回调，需要自行处理回调
+        * 其余类型会根据bridge传递的参数进行处理
+    + param参数
+        * 根据birdge传递的数据，根据参数类型进行转化
+        * 目前可转化的类型为JSONObject、String
+        * 如果要直接转为对象，需要设置CmlJsonAdapter或接入相应json库
+    + param字段
+        * 只想获取传递数据中的某一个对象时，可以使用@CmlParam
+        * 添加@CmlParam(name = "name")，设置该参数获取的字段
+        * 添加@CmlParam(admin = "admin")，设置该参数默认值
 
-## component
-- component扩展类必须继承CmlComponent.
-- component对应的设置属性的方法必须添加注解@CmlComponentProp(name=value)
-- 由于目前Chameleon是对weex的包装，所以component对应的属性方法必须是public
-- component 扩展的方法可以使用 int, double, float, String, Map, List 类型的参数
-- 完成component后一定要传递给CmlInitAdapter.registerComponent(Map<String, Class<? extends CmlComponent>> registerComponents)方法
-
-## module
-- module扩展必须继承CmlModule类。
-- 扩展方法必须加上@CmlJSMethod(uiThread=false or true)注解。Weex会根据注解来判断当前方法是否要运行在UI线程，和当前方法是否是扩展方法。
-- 由于目前Chameleon是对weex的包装，所以module对应的属性方法必须是public
-- module 扩展的方法可以使用 int, double, float, String, Map, List 类型的参数
-- 完成module后一定要传递给CmlInitAdapter.registerModule(String key, Class<? extends CmlModule> registerModule)方法
-
-## CmlEngine
-Chameleon入口类，主要有Weex容器的初始化，接入CmlJsBundleMgr来对JsBundle的管理（JsBundle的预加载、Js代码的获取、预加载及运行时的缓存大小设置），向Weex注册module及component。以上操作均在子线程执行。
-## CmlInitAdapter
-Chameleon初始化适配类
-## CmlInstance
-Weex对Js的渲染，渲染失败则走降级流程
-## 使用方式
-### compile
-添加依赖。
-```gradle
-compile 'com.didi.chameleon:chameleon:latest.version'
-```
-在应用启动的时候进行初始化。
-```java
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        CmlEnvironment.DEBUG = true;//设置是否是 DEBUG
-
-        CmlInitAdapter cmlInitAdapter = new CmlInitAdapter.Builder()
-                .setDegradeAdapter(new XxxDegradAdapter())
-                .addPreloadList(preloadList)
-                .registerModule("xxx", XxxCmlModule.class)
-                .build();
-
-        CmlEngine.getInstance().init(this, cmlInitAdapter);
-    }
-}
-```
-### 使用CmlView
-```java
-    private CmlView cmlView;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_cml_view);
-        FrameLayout flRoot = findViewById(R.id.fl_root);
-        cmlView = new CmlView(this);
-        flRoot.addView(cmlView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        cmlView.onCreate();
-        cmlView.render(MainActivity.TEST_URL, null);
-        cmlView.nativeToJs("1111", "2222");//回传数据给js
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (cmlView != null) {
-            cmlView.onResume();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (cmlView != null) {
-            cmlView.onPause();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (cmlView != null) {
-            cmlView.onDestroy();
-        }
-    }
-```
-### 使用CmlActivity
-```java
-CmlEngine.getInstance().launchWeexPage(this, url, null);
-//or
-new CmlActivity.Launch(activity, url).addOptions(null).launch();
-```
 
 ----
-# JsBundleMgr
+# 4. JsBundleMgr
 JsBundleMgr是一个对js进行下载、缓存的一个模块，根据协议来实现js增量更新功能。主要有以下内容
 ```
  |
@@ -146,7 +139,7 @@ JsBundleMgr是一个对js进行下载、缓存的一个模块，根据协议来�
 ```
 
 ----
-## code
+## 4.1 code
 对js代码进行预加载、获取、缓存的管理。在该包里，我们将拿到的url根据协议来拆分成多个url1、url2等，然后在根据url1、url2等来获取对应的js代码，首先从本地缓存里获取去寻找对应的js代码，如果不存在则从网络去下载并保存在本地
 ## utils
 一些文件管理、拆分url、网络判断的工具类
@@ -156,28 +149,38 @@ JsBundleMgr是一个对js进行下载、缓存的一个模块，根据协议来�
 - CmlNetworkUtils：当前网络状态的判断，如Wi-Fi、4g等
 - CmlUtils：Md5的生成、主线程判断等等
 
-## CmlJsBundleConstant
+## 4.2 CmlJsBundleConstant
 缓存文件名、预加载优先级的管理，预加载优先级有以下三种类型
 - 普通（PRIORITY_COMMON）：非Wi-Fi情况不预加载
 - 强预加载（PRIORITY_FORCE）：无论什么网络情况都预加载
 - 强预加载+预解析（PRIORITY_FORCE_MAX）：目前未用到
 
-## CmlJsBundleEngine
+## 4.3 CmlJsBundleEngine
 实现了CmlJsBundleManager接口，主要有以下三个方法
 - initConfig(Context,CmlJsBundleMgrConfig)：初始化config，主要是设置预加载url、预加载缓存、运行时缓存的设置，预加载及运行时缓存默认为4M
 - startPreload()：开始预加载，目前预加载成功或者失败并没有任何信息返回，只能查看log进行分析
 - getWXTemplate(String,CmlGetCodeStringCallback)：获取js代码
 
-## CmlJsBundleManager
+## 4.4 CmlJsBundleManager
 实现此接口可以自己定义JsBundleMgr的实现
 
-----
-## 添加依赖
+## 4.5 使用
+### 添加依赖
 ```gradle
 compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
 ```
-## 预加载
+### 预加载
 ```java
+    /**
+     * 预加载的最大缓存
+     */
+    private static long maxPreloadSize = 4 * 1024 * 1024;
+    /**
+     * 运行时的最大缓存
+     */
+    private static long maxRuntimeSize = 4 * 1024 * 1024;
+
+    public void preloadList(String url1, String url2){
         CmlJsBundleEnvironment.DEBUG = true;
         List<CmlModel> cmlModels = new ArrayList<>();
         CmlModel model = new CmlModel();
@@ -188,11 +191,16 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
         model.priority = 2;
         model.bundle = CmlUtils.parseWeexUrl(url2);
         cmlModels.add(model);
-        CmlJsBundleMgrConfig config = new CmlJsBundleMgrConfig.Builder().setPreloadList(cmlModels).build();
+        CmlJsBundleMgrConfig config = new CmlJsBundleMgrConfig.Builder()
+                .setMaxPreloadSize(maxPreloadSize)
+                .setMaxRuntimeSize(maxRuntimeSize)
+                .build();
         CmlJsBundleEngine.getInstance().initConfig(this, config);
+        CmlJsBundleEngine.getInstance().setPreloadList(cmlModels);
         CmlJsBundleEngine.getInstance().startPreload();
+    }
 ```
-## 获取Js代码
+### 获取Js代码
 ```java
         CmlJsBundleEngine.getInstance().initConfig(this, new CmlJsBundleMgrConfig.Builder().build());
         String url = CmlUtils.parseWeexUrl(url);
@@ -209,7 +217,7 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
         });
 ```
 ----
-# 富文本组件
+# 5. 富文本组件
 富文本是Chameleon里唯一一个默认注册的组件，主要有以下内容
 ```
  |
@@ -230,12 +238,20 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
 
 
 ----
-# 发布 AAR
-项目中 `library` 依赖于 `js-bundle-mgr`、`rich-text-component`、`common`，而`js-bundle-mgr`和`rich-text-component` 又依赖于 `common`，所以要从 `common` 开始发布，才能保证编译不报错。
+# 6. 发布 AAR
+项目中各模块依赖关系如下：
+- `cmlsdk` 模块抽象接入能力，并实现通用Adapter能力，不依赖于其他模块
+- `js-bundle-mgr` 依赖 `cmlsdk`，实现js bundle 下载、预加载及缓存的能力
+- `cmlweb` 依赖 `cmlsdk`，实现降级所需的web 渲染能力
+- `cmlweex` 依赖于 `cmlsdk` 和 `js-bundle-mgr`，实现 weex native 渲染能力
+- `cmlrn` 依赖于 `cmlsdk` 和 `js-bundle-mgr`，实现 react native 渲染能力
+
+所以需要从 `cmlsdk` 开始发布，然后发布 `js-bundle-mgr` 和 `cmlweb`，最后发布 `cmlweex` 和 `cmlrn`。
 
 发布流程如下：
 1. 修改根目录下 `gradle.propeties` 文件中的 `PUBLISH` 的值为`true`，`VERSION` 的值为需要发布的版本
-2. 发布 `common`，命令：`./gradlew :common:uploadArchives`
+2. 发布 `cmlsdk`，命令：`./gradlew :cmlsdk:uploadArchives`
 3. 发布 `js-bundle-mgr`，命令：`./gradlew :js-bundle-mgr:uploadArchives`
-4. 发布 `rich-text-component`，命令：`./gradlew :rich-text-component:uploadArchives`
-5. 发布 `library`，命令：`./gradlew :library:uploadArchives`
+4. 发布 `cmlweb`，命令：`./gradlew :cmlweb:uploadArchives`
+5. 发布 `cmlweex`，命令：`./gradlew :cmlweex:uploadArchives`
+5. 发布 `cmlrn`，命令：`./gradlew :cmlrn:uploadArchives`

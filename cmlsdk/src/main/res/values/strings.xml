@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Chameleon Library</string>
+    <string name="cml_loading_msg">正在加载&#8230;</string>
+
+</resources>

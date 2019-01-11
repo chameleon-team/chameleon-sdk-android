@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion COMPILE_SDK.toInteger()
+    buildToolsVersion BUILD_TOOL_VER
+    defaultPublishConfig VERSION.endsWith('-SNAPSHOT') ? 'debug' : "release"
+
+    defaultConfig {
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+        }
+        debug {
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:support-v4:$SUPPORT_VER"
+    compile "com.android.support:appcompat-v7:$SUPPORT_VER"
+
+    compile project(':cmlsdk')
+}

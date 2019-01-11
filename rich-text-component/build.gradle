@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion COMPILE_SDK.toInteger()
+    buildToolsVersion BUILD_TOOL_VER
+    defaultPublishConfig VERSION.endsWith('-SNAPSHOT') ? 'debug' : "release"
+
+    defaultConfig {
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+        }
+        debug {
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided "com.android.support:appcompat-v7:$SUPPORT_VER"
+    provided "com.taobao.android:weex_sdk:$WEEX_VER"
+    provided "com.alibaba:fastjson:$FAST_JSON_VER"
+    provided project(':cmlweex')
+}
