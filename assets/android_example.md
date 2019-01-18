@@ -1,23 +1,28 @@
 # 手把手教你系列- 变色龙SDK使用范例
-以一个小demo工程，讲述变色龙SDK的使用方式，引领轻松入门。<font color=#FF0000>Demo 工程在根目录 CmlSDKExample 目录下</font>，用 Android Studio 导入并 run 起来后，再对照以下说明文档看会好理解。
+以一个小demo工程，讲述变色龙SDK的使用方式，引领轻松入门。<font color=#FF0000>Demo 工程在根目录 app 目录下</font>，用 Android Studio 导入并 run 起来后，再对照以下说明文档看会好理解。
 
 ## 1. compile 依赖添加
 ### 1.1 项目根目录 build.gradle 里添加 maven 仓库地址
 ```
 buildscript {
     repositories {
-        google()
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+        }
     }
     ...
 }
 
 allprojects {
     repositories {
-        google()
+        maven {
+            url 'https://maven.google.com/'
+        }
         jcenter()
+        mavenCentral()
+        ...
     }
-    ...
 }
 ```
 
