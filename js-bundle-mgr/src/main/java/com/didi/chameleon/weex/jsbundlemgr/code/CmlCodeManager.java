@@ -101,7 +101,7 @@ public class CmlCodeManager implements ICmlCodeManager {
                 }
                 if (CmlCodeUtils.isCodeFull(url, mGlobalCodes.get(url))) {
                     // 代码都获取完毕
-                    CmlEnvironment.getThreadCenter().post(new Runnable() {
+                    CmlEnvironment.getThreadCenter().postMain(new Runnable() {
                         @Override
                         public void run() {
                             callback.onSuccess(CmlCodeUtils.mergeCode(mGlobalCodes.get(url)));

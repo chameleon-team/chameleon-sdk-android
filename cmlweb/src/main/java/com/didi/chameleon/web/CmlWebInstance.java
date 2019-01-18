@@ -7,90 +7,99 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 
-import com.didi.chameleon.sdk.CmlBaseLifecycle;
-import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
+import com.didi.chameleon.sdk.ICmlBaseLifecycle;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.container.ICmlActivity;
+import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.web.bridge.CmlWebView;
 
 import java.util.HashMap;
 
-public class CmlWebInstance implements ICmlActivityInstance, CmlBaseLifecycle {
+public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
 
     private static final String TAG = "CmlWebInstance";
 
     private String mInstanceId;
+    private int mRequestCode;
     private CmlWebView mWebView;
+    private ICmlActivity mCmlContainer;
+    private HashMap<String, Object> extendsParam;
+    private ICmlLaunchCallback mLaunchCallback;
 
     private String mUrl;
     private String mTotalUrl;
-
-    private Activity mActivity;
-    private ICmlActivity mCmlContainer;
-
-    private HashMap<String, Object> extendsParam;
 
     public String getInstanceId() {
         return mInstanceId;
     }
 
-    public CmlWebInstance(@NonNull Activity activity,
-                          @NonNull ICmlActivity cmlContainer) {
-        mActivity = activity;
+    public CmlWebInstance(@NonNull ICmlActivity cmlContainer,
+                          @NonNull String instanceId,
+                          int requestCode) {
         mCmlContainer = cmlContainer;
+        mInstanceId = instanceId;
+        mRequestCode = requestCode;
+        mLaunchCallback = CmlInstanceManage.getInstance().getLaunchCallback(instanceId);
+
+        CmlLogUtil.d(TAG, "instance id: " + instanceId);
+        CmlLogUtil.d(TAG, "request code: " + requestCode);
     }
 
     public void setWebView(CmlWebView webView) {
         mWebView = webView;
     }
 
-    /**
-     * 初始化param状态，当reload页面时不需要再次初始化param
-     */
-    private boolean initParamSuccess = false;
-
     @Override
     public void onCreate() {
-        mInstanceId = CmlEngine.getInstance().generateInstanceId();
         // 注册到框架里
-        CmlInstanceManage.getInstance().addActivityInstance(mActivity, mInstanceId, this);
-
-        if (!initParamSuccess) {
-            initParam();
-            initParamSuccess = true;
+        CmlInstanceManage.getInstance().addActivityInstance(mCmlContainer.getActivity(), mInstanceId, this);
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onCreate();
         }
-    }
-
-    private void initParam() {
     }
 
     @Override
     public void onResume() {
-
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResume();
+        }
     }
 
     @Override
     public void onPause() {
-
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onPause();
+        }
     }
 
     @Override
     public void onStop() {
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onStop();
+        }
     }
 
     @Override
     public void onDestroy() {
         CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onDestroy();
+        }
     }
 
-    public void onActivityDestroy() {
-
+    @Override
+    public void onResult(int resultCode, String result) {
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResult(this, mRequestCode, resultCode, result);
+        }
     }
-
 
     /**
      * 根据传入的 url 渲染页面
@@ -152,7 +161,12 @@ public class CmlWebInstance implements ICmlActivityInstance, CmlBaseLifecycle {
 
     @Override
     public Context getContext() {
-        return mActivity;
+        return mCmlContainer.getContext();
+    }
+
+    @Override
+    public Activity getActivity() {
+        return mCmlContainer.getActivity();
     }
 
     @Override
@@ -200,6 +214,12 @@ public class CmlWebInstance implements ICmlActivityInstance, CmlBaseLifecycle {
     @Override
     public String getCurrentURL() {
         return mUrl;
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return mCmlContainer.getObjectView();
     }
 
     @Override

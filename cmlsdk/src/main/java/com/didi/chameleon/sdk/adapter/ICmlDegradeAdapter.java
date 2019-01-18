@@ -1,5 +1,6 @@
 package com.didi.chameleon.sdk.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,7 +30,7 @@ public interface ICmlDegradeAdapter {
     /**
      * 降级展示 Activity
      *
-     * @param context     Context
+     * @param activity     Context
      * @param url         降级地址，也是传入 Cml 的地址
      * @param options     降级参数，也是传入 Cml 的参数
      * @param degradeCode 降级原因:<br>
@@ -38,7 +39,7 @@ public interface ICmlDegradeAdapter {
      *                    {@link CmlConstant#FAILED_TYPE_DEGRADE},<br>
      *                    {@link CmlConstant#FAILED_TYPE_DOWNLOAD}
      */
-    void degradeActivity(@NonNull Context context, @NonNull String url, @Nullable HashMap<String, Object> options, int degradeCode);
+    void degradeActivity(@NonNull Activity activity, @NonNull String url, @Nullable HashMap<String, Object> options, int degradeCode);
 
     /**
      * 获取降级展示 View 包裹类，给外部周期回调。

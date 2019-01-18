@@ -1,5 +1,6 @@
 package com.didi.chameleon.rn;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import com.didi.chameleon.sdk.CmlConstant;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlEngine;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
@@ -37,7 +39,7 @@ public class CmlRnEngine implements ICmlEngine {
     }
 
     @Override
-    public void launchPage(@NonNull Context activity, String url, HashMap<String, Object> options) {
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options) {
         if (TextUtils.isEmpty(Util.parseCmlUrl(url))) {
             CmlLogUtil.e(TAG, "launchPage failed, url is: " + url);
             if (CmlEnvironment.getDegradeAdapter() != null) {
@@ -46,6 +48,20 @@ public class CmlRnEngine implements ICmlEngine {
             return;
         }
         new CmlRnActivity.Launch(activity, url).addOptions(options).launch();
+    }
+
+    @Override
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options, int requestCode, ICmlLaunchCallback launchCallback) {
+        if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("file://")) {
+            CmlLogUtil.e(TAG, "launchPage failed, url is: " + url);
+            return;
+        }
+
+        new CmlRnActivity.Launch(activity, url)
+                .addOptions(options)
+                .addRequestCode(requestCode)
+                .addLaunchCallback(launchCallback)
+                .launchForResult();
     }
 
     private void initJsBundleManager(Context context) {

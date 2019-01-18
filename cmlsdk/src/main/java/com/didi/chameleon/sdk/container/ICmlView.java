@@ -1,10 +1,10 @@
 package com.didi.chameleon.sdk.container;
 
-import com.didi.chameleon.sdk.CmlBaseLifecycle;
+import com.didi.chameleon.sdk.ICmlBaseLifecycle;
 
 import java.util.HashMap;
 
-public interface ICmlView extends CmlBaseLifecycle, ICmlContainer {
+public interface ICmlView extends ICmlBaseLifecycle, ICmlContainer {
     /**
      * @param url     jsBundle 地址
      * @param options 需要透传的参数

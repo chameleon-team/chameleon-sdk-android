@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../upload.gradle'
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -23,9 +24,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided "com.android.support:appcompat-v7:$SUPPORT_VER"
-    provided "com.taobao.android:weex_sdk:$WEEX_VER"
-    provided "com.alibaba:fastjson:$FAST_JSON_VER"
-    provided project(':cmlweex')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
+    compileOnly "com.taobao.android:weex_sdk:$WEEX_VER"
+    compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
+    if (Boolean.parseBoolean(PUBLISH)) {
+        compileOnly "com.didiglobal.chameleon:cmlsdk:$VERSION"
+        compileOnly "com.didiglobal.chameleon:cmlweex:$VERSION"
+    } else {
+        compileOnly project(':cmlsdk')
+        compileOnly project(':cmlweex')
+    }
 }

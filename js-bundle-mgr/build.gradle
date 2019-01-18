@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../upload.gradle'
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -25,10 +26,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile "com.android.support:support-v4:$SUPPORT_VER"
-    compile "com.android.support:appcompat-v7:$SUPPORT_VER"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:support-v4:$SUPPORT_VER"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_VER"
 
-    compile project(':cmlsdk')
+    if (Boolean.parseBoolean(PUBLISH)) {
+        api "com.didiglobal.chameleon:cmlsdk:$VERSION"
+    } else {
+        implementation project(':cmlsdk')
+    }
 }

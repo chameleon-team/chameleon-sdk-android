@@ -2,6 +2,7 @@ package com.didi.chameleon.sdk.container;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -10,6 +11,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
 public abstract class CmlContainerActivity extends FragmentActivity {
+
+    protected static final String PARAM_URL = "url";
+    protected static final String PARAM_OPTIONS = "options";
+    protected static final String PARAM_REQUEST_CODE = "request_code";
+    protected static final String PARAM_INSTANCE_ID = "instance_id";
 
     private static final int REQUEST_WRITE_SDCARD = 100;
 
@@ -38,5 +44,12 @@ public abstract class CmlContainerActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     protected abstract void renderByUrl();
+
+    protected abstract String getInstanceId();
 }

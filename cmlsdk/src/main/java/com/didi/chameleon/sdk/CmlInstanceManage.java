@@ -26,6 +26,7 @@ public class CmlInstanceManage {
     private HashMap<String, ICmlInstance> mInstances = new HashMap<>();
     private HashMap<String, ICmlActivityInstance> mActivityInstances = new HashMap<>();
     private HashMap<String, ICmlViewInstance> mViewInstances = new HashMap<>();
+    private HashMap<String, ICmlLaunchCallback> mLaunchCallbacks = new HashMap<>();
 
     public static CmlInstanceManage getInstance() {
         return instance;
@@ -54,6 +55,21 @@ public class CmlInstanceManage {
             return mActivityInstances.get(instanceId);
         }
         return null;
+    }
+
+    public ICmlLaunchCallback getLaunchCallback(String instanceId) {
+        if (mLaunchCallbacks.containsKey(instanceId)) {
+            return mLaunchCallbacks.get(instanceId);
+        }
+        return null;
+    }
+
+    public void addLaunchCallback(String instanceId, ICmlLaunchCallback launchCallback) {
+        mLaunchCallbacks.put(instanceId, launchCallback);
+    }
+
+    public void removeLaunchCallback(String instanceId) {
+        mLaunchCallbacks.remove(instanceId);
     }
 
     public void addActivityInstance(Context context, String instanceId, ICmlActivityInstance instance) {

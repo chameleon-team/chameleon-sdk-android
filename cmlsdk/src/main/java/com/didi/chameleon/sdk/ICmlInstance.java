@@ -1,6 +1,7 @@
 package com.didi.chameleon.sdk;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.didi.chameleon.sdk.container.ICmlContainer;
 
@@ -47,4 +48,12 @@ public interface ICmlInstance extends ICmlContainer {
      * @param degradeCode 降级原因，参考 {@link CmlConstant}
      */
     void degradeToH5(int degradeCode);
+
+    /**
+     * 主页面调起子页面，子页面和主页面通信
+     *
+     * @param resultCode
+     * @param result
+     */
+    void onResult(int resultCode, String result);
 }

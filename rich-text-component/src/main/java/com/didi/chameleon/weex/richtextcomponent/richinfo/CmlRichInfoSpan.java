@@ -1,6 +1,7 @@
 package com.didi.chameleon.weex.richtextcomponent.richinfo;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -9,30 +10,25 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 
-import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
 import com.didi.chameleon.weex.richtextcomponent.utils.CmlFontUtil;
 
-/**
-
- * @since 15/9/18.
- * <p/>
- * 配合{@link CmlRichInfo}显示富文本文字，可直接设置给TextView
- */
 public class CmlRichInfoSpan extends SpannableString {
 
-    public CmlRichInfoSpan(@NonNull CharSequence source, CmlRichInfo info) {
-        super(source);
-        if (info != null && TextUtils.isEmpty(info.message)) {
-            info.message = source.toString();
-        }
-        addSpans(info);
+    public interface CmlSpanAction {
+
+        void onItemClick(View widget, String tag, int index);
     }
 
-    public CmlRichInfoSpan(CmlRichInfo info) {
+    private CmlSpanAction action;
+
+    public CmlRichInfoSpan(CmlRichInfo info, CmlSpanAction action) {
         super(info.message);
+        this.action = action;
         addSpans(info);
     }
 
@@ -50,7 +46,8 @@ public class CmlRichInfoSpan extends SpannableString {
                 return;
             }
 
-            for (CmlRichInfo.Bean b : info.getBeans()) {
+            for (int i = 0; i < info.getBeans().size(); i++) {
+                CmlRichInfo.Bean b = info.getBeans().get(i);
                 if (b.startPosition >= info.message.length() || b.startPosition > b.endPosition) {
                     continue;
                 }
@@ -58,10 +55,11 @@ public class CmlRichInfoSpan extends SpannableString {
                     b.endPosition = info.message.length() - 1;
                 }
 
-                if (!TextUtils.isEmpty(b.link)) {
-                    setSpan(new ClickSpan(b.link, info), b.startPosition,
+                if (b.click) {
+                    setSpan(new ClickSpan(info.message.substring(b.startPosition, b.endPosition + 1), i), b.startPosition,
                             b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
+
                 if (!TextUtils.isEmpty(b.colorString)) {
                     setSpan(new ForegroundColorSpan(b.colorValue), b.startPosition,
                             b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -70,19 +68,52 @@ public class CmlRichInfoSpan extends SpannableString {
                     setSpan(new BackgroundColorSpan(b.bgColorValue), b.startPosition,
                             b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
-                if (b.bold) {
-                    setSpan(new StyleSpan(android.graphics.Typeface.BOLD), b.startPosition,
-                            b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
 
                 if (b.realSize > 0) {
                     setSpan(new AbsoluteSizeSpan(b.realSize, true), b.startPosition,
                             b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
 
-                if (!TextUtils.isEmpty(b.fontName)) {
-                    //从assets下获取字体文件
-                    setSpan(new CmlCustomTypefaceSpan(CmlFontUtil.getTypeface(b.fontName)),
+                int styleType = 0;
+                if ("italic".equals(b.fontStyle)) {
+                    styleType = Typeface.ITALIC;
+                }
+                if ("bold".equals(b.fontWeight)) {
+                    styleType |= Typeface.BOLD;
+                }
+                if (styleType != 0) {
+                    setSpan(new StyleSpan(styleType), b.startPosition,
+                            b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                if ("underline".equals(b.textDecoration)) {
+                    setSpan(new UnderlineSpan(), b.startPosition,
+                            b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else if ("line-through".equals(b.textDecoration)) {
+                    setSpan(new StrikethroughSpan(), b.startPosition,
+                            b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                Typeface typeface = null;
+                switch (b.fontName) {
+                    case "sans":
+                        typeface = Typeface.SANS_SERIF;
+                        break;
+                    case "serif":
+                        typeface = Typeface.SERIF;
+                        break;
+                    case "monospace":
+                        typeface = Typeface.MONOSPACE;
+                        break;
+                    default:
+                        if (!TextUtils.isEmpty(b.fontName)) {
+                            //从assets下获取字体文件
+                            typeface = CmlFontUtil.getTypeface(b.fontName);
+                        }
+                }
+
+                if (typeface != null) {
+                    setSpan(new CmlCustomTypefaceSpan(typeface),
                             b.startPosition, b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
@@ -144,14 +175,13 @@ public class CmlRichInfoSpan extends SpannableString {
         return true;
     }
 
-    static class ClickSpan extends ClickableSpan {
-        private final String uri;
+    private class ClickSpan extends ClickableSpan {
+        private final String tag;
+        private final int index;
 
-        private CmlClickSpanListener clickSpanListener;
-
-        ClickSpan(String url, CmlClickSpanListener clickSpanListener) {
-            this.uri = url;
-            this.clickSpanListener = clickSpanListener;
+        ClickSpan(String tag, int index) {
+            this.tag = tag;
+            this.index = index;
         }
 
         @Override
@@ -161,12 +191,8 @@ public class CmlRichInfoSpan extends SpannableString {
 
         @Override
         public void onClick(@NonNull View widget) {
-            if (clickSpanListener != null) {
-                clickSpanListener.spanClicked(widget);
-            }
-            //富文本点击跳转路由
-            if (CmlRichTextComponent.getOnRouterListener() != null) {
-                CmlRichTextComponent.getOnRouterListener().onRoute(widget, uri);
+            if (action != null) {
+                action.onItemClick(widget, tag, index);
             }
         }
     }

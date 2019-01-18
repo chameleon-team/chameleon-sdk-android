@@ -45,7 +45,7 @@ public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInst
     }
 
     private void init(Context context) {
-        wxInstance = new CmlWeexViewInstance(context, CmlView.this, CmlView.this);
+        wxInstance = new CmlWeexViewInstance(CmlView.this, CmlView.this);
     }
 
     /**
@@ -129,6 +129,12 @@ public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInst
     @Override
     public void onRenderSuccess() {
 
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return this;
     }
 
     @Override

@@ -1,14 +1,20 @@
 package com.didi.chameleon.web.container;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.didi.chameleon.sdk.bridge.CmlBridgeManager;
+import com.didi.chameleon.sdk.CmlEngine;
+import com.didi.chameleon.sdk.CmlInstanceManage;
+import com.didi.chameleon.sdk.ICmlInstance;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
+import com.didi.chameleon.sdk.container.CmlContainerActivity;
 import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.widget.CmlTitleView;
@@ -18,12 +24,10 @@ import com.didi.chameleon.web.bridge.CmlWebView;
 
 import java.util.HashMap;
 
-public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
+public class CmlWebActivity extends CmlContainerActivity implements ICmlActivity {
     private static final String TAG = "CmlActivity";
     private CmlWebView mWebView;
     private CmlWebInstance mWebInstance;
-    private static final String PARAM_URL = "url";
-    private static final String PARAM_OPTIONS = "options";
     private View loadingView;
     private CmlTitleView titleView;
     private ViewGroup viewContainer;
@@ -36,12 +40,15 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWebInstance = new CmlWebInstance(this, this);
+
+        final String instanceId = getIntent().getStringExtra(PARAM_INSTANCE_ID);
+        final int requestCode = getIntent().getIntExtra(PARAM_REQUEST_CODE, -1);
+        mWebInstance = new CmlWebInstance(this, instanceId, requestCode);
         mWebInstance.onCreate();
         mIsViewValid = true;
         setContentView(R.layout.cml_container_activity);
         initView();
-        initIntent();
+        renderByUrl();
     }
 
     private void initView() {
@@ -64,7 +71,8 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
         });
     }
 
-    private void initIntent() {
+    @Override
+    public void renderByUrl() {
         Intent intent = getIntent();
         String url = intent.getStringExtra(PARAM_URL);
         if (TextUtils.isEmpty(url)) {
@@ -75,6 +83,14 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
             options = (HashMap<String, Object>) intent.getSerializableExtra(PARAM_OPTIONS);
             mWebInstance.renderByUrl(url, options);
         }
+    }
+
+    @Override
+    public String getInstanceId() {
+        if (null != mWebInstance) {
+            return mWebInstance.getInstanceId();
+        }
+        return null;
     }
 
     @Override
@@ -120,11 +136,6 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void updateNaviTitle(String title) {
         if (null != titleView) {
             titleView.setTitle(title);
@@ -133,6 +144,17 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
 
     @Override
     public Context getContext() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return mWebView;
+    }
+
+    @Override
+    public Activity getActivity() {
         return this;
     }
 
@@ -173,12 +195,14 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
 
     public static final class Launch {
         private String url;
-        private Context context;
+        private Activity activity;
         private HashMap<String, Object> options;
+        private int requestCode;
+        private ICmlLaunchCallback launchCallback;
 
-        public Launch(Context context, String url) {
+        public Launch(Activity activity, String url) {
             this.url = url;
-            this.context = context;
+            this.activity = activity;
         }
 
         public CmlWebActivity.Launch addOptions(HashMap<String, Object> options) {
@@ -186,9 +210,21 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
             return this;
         }
 
-        private Intent buildIntent() {
-            Intent intent = new Intent(context, CmlWebActivity.class);
+        public CmlWebActivity.Launch addRequestCode(int requestCode) {
+            this.requestCode = requestCode;
+            return this;
+        }
+
+        public CmlWebActivity.Launch addLaunchCallback(ICmlLaunchCallback launchCallback) {
+            this.launchCallback = launchCallback;
+            return this;
+        }
+
+        private Intent buildIntent(String instanceId) {
+            Intent intent = new Intent(activity, CmlWebActivity.class);
             intent.putExtra(PARAM_URL, url);
+            intent.putExtra(PARAM_REQUEST_CODE, requestCode);
+            intent.putExtra(PARAM_INSTANCE_ID, instanceId);
             if (options != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(PARAM_OPTIONS, options);
@@ -198,7 +234,48 @@ public class CmlWebActivity extends FragmentActivity implements ICmlActivity {
         }
 
         public void launch() {
-            context.startActivity(buildIntent());
+            final String instanceId = CmlEngine.getInstance().generateInstanceId();
+            activity.startActivity(buildIntent(instanceId));
+        }
+
+        public void launchForResult() {
+            final String instanceId = CmlEngine.getInstance().generateInstanceId();
+            if (null != launchCallback) {
+                // 注册到管理类
+                CmlInstanceManage.getInstance().addLaunchCallback(instanceId, new ICmlLaunchCallback() {
+                    @Override
+                    public void onResult(@NonNull ICmlInstance cmlInstance, int requestCode, int resultCode, String result) {
+                        launchCallback.onResult(cmlInstance, requestCode, resultCode, result);
+                    }
+
+                    @Override
+                    public void onCreate() {
+                        launchCallback.onCreate();
+                    }
+
+                    @Override
+                    public void onResume() {
+                        launchCallback.onResume();
+                    }
+
+                    @Override
+                    public void onPause() {
+                        launchCallback.onPause();
+                    }
+
+                    @Override
+                    public void onStop() {
+                        launchCallback.onStop();
+                    }
+
+                    @Override
+                    public void onDestroy() {
+                        CmlInstanceManage.getInstance().removeLaunchCallback(instanceId);
+                        launchCallback.onDestroy();
+                    }
+                });
+            }
+            activity.startActivity(buildIntent(instanceId));
         }
     }
 }

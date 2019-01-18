@@ -1,5 +1,6 @@
 package com.didi.chameleon.weex;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import com.didi.chameleon.sdk.CmlConstant;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlEngine;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
 import com.didi.chameleon.sdk.bridge.ICmlBridge;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol;
@@ -44,7 +46,7 @@ import java.util.List;
  */
 
 public class CmlWeexEngine implements ICmlEngine {
-    public static final String TAG = "CmlWeexEngine";
+    private static final String TAG = "CmlWeexEngine";
     private ICmlJSExceptionAdapter cmlJSExceptionAdapter = new CmlDefaultJsExceptionAdapter();
     private CmlJsBundleManager cmlJsBundleManager;
 
@@ -61,7 +63,7 @@ public class CmlWeexEngine implements ICmlEngine {
     }
 
     @Override
-    public void launchPage(@NonNull Context activity, String url, HashMap<String, Object> options) {
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options) {
         if (TextUtils.isEmpty(Util.parseCmlUrl(url))) {
             CmlLogUtil.e(TAG, "launchPage failed, url is: " + url);
             if (CmlEnvironment.getDegradeAdapter() != null) {
@@ -70,6 +72,20 @@ public class CmlWeexEngine implements ICmlEngine {
             return;
         }
         new CmlWeexActivity.Launch(activity, url).addOptions(options).launch();
+    }
+
+    @Override
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options, int requestCode, ICmlLaunchCallback launchCallback) {
+        if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("file://")) {
+            CmlLogUtil.e(TAG, "launchPage failed, url is: " + url);
+            return;
+        }
+
+        new CmlWeexActivity.Launch(activity, url)
+                .addOptions(options)
+                .addRequestCode(requestCode)
+                .addLaunchCallback(launchCallback)
+                .launchForResult();
     }
 
     private void initJsBundleManager(Context context) {

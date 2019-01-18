@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../upload.gradle'
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -23,14 +24,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    provided "com.android.support:appcompat-v7:$SUPPORT_VER"
-    testCompile 'junit:junit:4.12'
-    androidTestCompile "com.android.support:support-annotations:$SUPPORT_VER"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation "com.android.support:support-annotations:$SUPPORT_VER"
 
-    provided 'com.github.bumptech.glide:glide:3.8.0' // 图片默认加载框架
-    provided 'com.google.code.gson:gson:2.8.5'
-    provided 'com.alibaba:fastjson:1.2.54'
-    provided 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
+    compileOnly 'com.github.bumptech.glide:glide:3.8.0' // 图片默认加载框架
+    compileOnly 'com.google.code.gson:gson:2.8.5'
+    compileOnly 'com.alibaba:fastjson:1.2.54'
+    compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
 
 }

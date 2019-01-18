@@ -1,13 +1,20 @@
 package com.didi.chameleon.weex.container;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.CmlInstanceManage;
+import com.didi.chameleon.sdk.ICmlInstance;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.container.CmlContainerActivity;
 import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
@@ -19,7 +26,7 @@ import com.didi.chameleon.weex.R;
 import java.util.HashMap;
 
 /**
- * 用来展示 Chameleon Weex 页面，通过{@link Launch} 或者{@link CmlWeexEngine#launchPage(Context, String, HashMap)}进行启动
+ * 用来展示 Chameleon Weex 页面，通过{@link Launch} 或者{@link CmlWeexEngine#launchPage(Activity, String, HashMap)}进行启动
  *
 
  * @since 18/5/24
@@ -27,11 +34,10 @@ import java.util.HashMap;
 public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInstance.ICmlInstanceListener, ICmlActivity {
     private static final String TAG = "CmlWeexActivity";
     private CmlWeexInstance mWXInstance;
-    private static final String PARAM_URL = "url";
-    private static final String PARAM_OPTIONS = "options";
 
     private View loadingView;
     private CmlTitleView titleView;
+    private View objectView;
     private ViewGroup viewContainer;
     /*
      * 判断view是否有效，我们认为View在onCreate~onDestroy之间为有效
@@ -42,7 +48,10 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWXInstance = new CmlWeexInstance(this, this, this);
+
+        final String instanceId = getIntent().getStringExtra(PARAM_INSTANCE_ID);
+        final int requestCode = getIntent().getIntExtra(PARAM_REQUEST_CODE, -1);
+        mWXInstance = new CmlWeexInstance(this, this, instanceId, requestCode);
         mWXInstance.onCreate();
         mIsViewValid = true;
         setContentView(R.layout.cml_container_activity);
@@ -75,6 +84,14 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
             options = (HashMap<String, Object>) intent.getSerializableExtra(PARAM_OPTIONS);
             mWXInstance.renderByUrl(url, options);
         }
+    }
+
+    @Override
+    public String getInstanceId() {
+        if (null != mWXInstance) {
+            return mWXInstance.getInstanceId();
+        }
+        return null;
     }
 
     @Override
@@ -117,11 +134,6 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public void onDegradeToH5(String url, int degradeCode) {
         if (CmlEnvironment.getDegradeAdapter() != null) {
             CmlEnvironment.getDegradeAdapter().degradeActivity(this, url, this.options, degradeCode);
@@ -131,6 +143,7 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
 
     @Override
     public void onViewCreate(View view) {
+        objectView = view;
         viewContainer.addView(view);
     }
 
@@ -141,6 +154,17 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
 
     @Override
     public Context getContext() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return objectView;
+    }
+
+    @Override
+    public Activity getActivity() {
         return this;
     }
 
@@ -181,12 +205,14 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
 
     public static final class Launch {
         private String url;
-        private Context context;
+        private Activity activity;
         private HashMap<String, Object> options;
+        private int requestCode;
+        private ICmlLaunchCallback launchCallback;
 
-        public Launch(Context context, String url) {
+        public Launch(Activity activity, String url) {
             this.url = url;
-            this.context = context;
+            this.activity = activity;
         }
 
         public CmlWeexActivity.Launch addOptions(HashMap<String, Object> options) {
@@ -194,9 +220,21 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
             return this;
         }
 
-        private Intent buildIntent() {
-            Intent intent = new Intent(context, CmlWeexActivity.class);
+        public CmlWeexActivity.Launch addRequestCode(int requestCode) {
+            this.requestCode = requestCode;
+            return this;
+        }
+
+        public CmlWeexActivity.Launch addLaunchCallback(ICmlLaunchCallback launchCallback) {
+            this.launchCallback = launchCallback;
+            return this;
+        }
+
+        private Intent buildIntent(String instanceId) {
+            Intent intent = new Intent(activity, CmlWeexActivity.class);
             intent.putExtra(PARAM_URL, url);
+            intent.putExtra(PARAM_REQUEST_CODE, requestCode);
+            intent.putExtra(PARAM_INSTANCE_ID, instanceId);
             if (options != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(PARAM_OPTIONS, options);
@@ -206,7 +244,48 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
         }
 
         public void launch() {
-            context.startActivity(buildIntent());
+            final String instanceId = CmlEngine.getInstance().generateInstanceId();
+            activity.startActivity(buildIntent(instanceId));
+        }
+
+        public void launchForResult() {
+            final String instanceId = CmlEngine.getInstance().generateInstanceId();
+            if (null != launchCallback) {
+                // 注册到管理类
+                CmlInstanceManage.getInstance().addLaunchCallback(instanceId, new ICmlLaunchCallback() {
+                    @Override
+                    public void onResult(@NonNull ICmlInstance cmlInstance, int requestCode, int resultCode, String result) {
+                        launchCallback.onResult(cmlInstance, requestCode, resultCode, result);
+                    }
+
+                    @Override
+                    public void onCreate() {
+                        launchCallback.onCreate();
+                    }
+
+                    @Override
+                    public void onResume() {
+                        launchCallback.onResume();
+                    }
+
+                    @Override
+                    public void onPause() {
+                        launchCallback.onPause();
+                    }
+
+                    @Override
+                    public void onStop() {
+                        launchCallback.onStop();
+                    }
+
+                    @Override
+                    public void onDestroy() {
+                        CmlInstanceManage.getInstance().removeLaunchCallback(instanceId);
+                        launchCallback.onDestroy();
+                    }
+                });
+            }
+            activity.startActivity(buildIntent(instanceId));
         }
     }
 }

@@ -1,11 +1,10 @@
 <h1>Android SDK 简介</h1>
-android 端的实现思路是采用目前比较流行的一些 native 渲染引擎作为底层支持，同时扩展一些一般工程通用的基础能力。目前支持的渲染引擎是 `weex` 和 `react native`，使用时<font color=#FF0000>二者选其一</font>作为项目的 native 渲染引擎。
+android 端的实现思路是采用目前比较流行的一些 native 渲染引擎作为底层支持，同时扩展一些一般工程通用的基础能力。目前支持的渲染引擎是 `weex`，<font color=#FF0000>即将支持</font> `react native`，使用时<font color=#FF0000>二者选其一</font>作为项目的 native 渲染引擎。
 
 # 1. 项目结构
 项目一级目录结构如下：
 ```
-|+ app sdk测试模块
-|+ CmlSDKExample SDK使用示例
+|+ app SDK使用示例
 |+ cmlsdk SDK接入层，抽象 Chameleon 引擎能力、实现通用扩展能力
 |+ cmlweex 包装 weex 渲染引擎
 |+ cmlweb 包装 web 渲染引擎
@@ -41,11 +40,11 @@ cmlsdk 模块单独拿出来看下目录结构：
 
 项目整体架构如下图所示：
 
-![image](../assets/cml_doc_android_01.png)
+![image](./assets/cml_doc_android_01.png)
 
 
 # 2. Chameleon 使用
-此部分可以参看手把手系列之<a href="../example/android_example.html">《变色龙SDK使用范例》</a>
+此部分可以参看手把手系列之<a href="./assets/android_example.md">《变色龙SDK使用范例》</a>
 
 # 3. 基础类说明
 
@@ -167,20 +166,10 @@ JsBundleMgr是一个对js进行下载、缓存的一个模块，根据协议来�
 ## 4.5 使用
 ### 添加依赖
 ```gradle
-compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
+compile 'com.didiglobal.chameleon:js-bundle-mgr:latest.version'
 ```
 ### 预加载
 ```java
-    /**
-     * 预加载的最大缓存
-     */
-    private static long maxPreloadSize = 4 * 1024 * 1024;
-    /**
-     * 运行时的最大缓存
-     */
-    private static long maxRuntimeSize = 4 * 1024 * 1024;
-
-    public void preloadList(String url1, String url2){
         CmlJsBundleEnvironment.DEBUG = true;
         List<CmlModel> cmlModels = new ArrayList<>();
         CmlModel model = new CmlModel();
@@ -191,14 +180,9 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
         model.priority = 2;
         model.bundle = CmlUtils.parseWeexUrl(url2);
         cmlModels.add(model);
-        CmlJsBundleMgrConfig config = new CmlJsBundleMgrConfig.Builder()
-                .setMaxPreloadSize(maxPreloadSize)
-                .setMaxRuntimeSize(maxRuntimeSize)
-                .build();
+        CmlJsBundleMgrConfig config = new CmlJsBundleMgrConfig.Builder().setPreloadList(cmlModels).build();
         CmlJsBundleEngine.getInstance().initConfig(this, config);
-        CmlJsBundleEngine.getInstance().setPreloadList(cmlModels);
         CmlJsBundleEngine.getInstance().startPreload();
-    }
 ```
 ### 获取Js代码
 ```java
@@ -235,5 +219,4 @@ compile 'com.didi.chameleon:js-bundle-mgr:latest.version'
 
 ## utils
 - CmlFontUtil：主要就是加载自定义字体，如assets下fonts包下的Barlow-Medium.ttf字体
-
 

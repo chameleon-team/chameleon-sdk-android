@@ -58,18 +58,18 @@ public class CmlFileDownloader {
                 httpClient.execute(cmlRequest, new ICmlHttpListener() {
                     @Override
                     public void onHttpStart() {
-                        CmlLogUtils.w("CmlFileDownloader", "开始下载jsbundle");
+                        CmlLogUtils.d("CmlFileDownloader", "开始下载jsbundle");
                     }
 
                     @Override
                     public void onHttpProgress(int currentLength, int countLength) {
-                        CmlLogUtils.w("CmlFileDownloader", "currentLength," + currentLength + ",byteCount:" + countLength + ",progress" + (currentLength * 100 / countLength) + "%");
+                        CmlLogUtils.v("CmlFileDownloader", "currentLength," + currentLength + ",byteCount:" + countLength + ",progress" + (currentLength * 100 / countLength) + "%");
                     }
 
                     @Override
                     public void onHttpFinish(CmlResponse response) {
                         if (response != null) {
-                            CmlLogUtils.w("CmlFileDownloader", "response：" + response.toString());
+                            CmlLogUtils.d("CmlFileDownloader", "response：" + response.toString());
                             if (response.data != null && TextUtils.equals("200", response.statusCode)) {
                                 String template = new String(response.data);
                                 if (TextUtils.isEmpty(template)) {

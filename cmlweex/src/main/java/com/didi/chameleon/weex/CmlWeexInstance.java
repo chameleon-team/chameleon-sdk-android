@@ -1,5 +1,6 @@
 package com.didi.chameleon.weex;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,14 +12,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.didi.chameleon.sdk.CmlBaseLifecycle;
 import com.didi.chameleon.sdk.CmlConstant;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
+import com.didi.chameleon.sdk.ICmlBaseLifecycle;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlStatisticsAdapter;
-import com.didi.chameleon.sdk.container.ICmlContainer;
+import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
@@ -39,17 +41,19 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
  * 主要功能:
  */
 
-public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, IWXRenderListener {
-    private static final String TAG = "cml_weex_debug";
+public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle, IWXRenderListener {
+    private static final String TAG = "CmlWeexInstance";
+
+    private String mInstanceId;
+    private int mRequestCode;
     private CmlWXSDKInstanceWrapper mWeexInstance;
-    private ICmlContainer mCmlContainer;
+    private ICmlActivity mCmlActivity;
+    private ICmlInstanceListener mInstanceListener;
+    private ICmlLaunchCallback mLaunchCallback;
+
     private String mWXUrl;
     private String mTotalUrl;
     private long mCreateTime, mStartRenderTime;
-
-    private Context mContext;
-    private ICmlInstanceListener instanceListener;
-    private String mInstanceId;
 
     private HashMap<String, Object> extendsParam;
 
@@ -58,12 +62,14 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
      */
     private boolean hasRenderSuccess = false;
 
-    public CmlWeexInstance(@NonNull Context context,
-                           @NonNull ICmlContainer cmlContainer,
-                           @NonNull ICmlInstanceListener listener) {
-        this.mContext = context;
-        this.instanceListener = listener;
-        this.mCmlContainer = cmlContainer;
+    public CmlWeexInstance(@NonNull ICmlActivity cmlActivity,
+                           @NonNull ICmlInstanceListener listener,
+                           @NonNull String instanceId,
+                           int requestCode) {
+        mInstanceListener = listener;
+        mCmlActivity = cmlActivity;
+        mRequestCode = requestCode;
+        mLaunchCallback = CmlInstanceManage.getInstance().getLaunchCallback(instanceId);
     }
 
     /**
@@ -80,6 +86,9 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
             initParam();
             initParamSuccess = true;
         }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onCreate();
+        }
     }
 
     private void initParam() {
@@ -90,12 +99,18 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
         if (mWeexInstance != null) {
             mWeexInstance.onActivityResume();
         }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResume();
+        }
     }
 
     @Override
     public void onPause() {
         if (mWeexInstance != null) {
             mWeexInstance.onActivityPause();
+        }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onPause();
         }
     }
 
@@ -104,11 +119,24 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
         if (mWeexInstance != null) {
             mWeexInstance.onActivityStop();
         }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onStop();
+        }
     }
 
     @Override
     public void onDestroy() {
         destroyWeexInstance();
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onDestroy();
+        }
+    }
+
+    @Override
+    public void onResult(int resultCode, String result) {
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResult(this, mRequestCode, resultCode, result);
+        }
     }
 
     /**
@@ -142,6 +170,10 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
                     params.put(CmlEnvironment.CML_QUERY_SDK, CmlEnvironment.VERSION);
                     params.put(CmlEnvironment.CML_QUERY_URL, mTotalUrl);
                     options.put(CmlConstant.WEEX_OPTIONS_KEY, params);
+
+                    //适配weex的自定内容
+                    options.put("bundleUrl", mWXUrl);
+
                     render(template, options);
                 }
             }
@@ -206,8 +238,8 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
 
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
-        if (instanceListener != null) {
-            instanceListener.onViewCreate(view);
+        if (mInstanceListener != null) {
+            mInstanceListener.onViewCreate(view);
         }
     }
 
@@ -235,8 +267,8 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
      * render渲染成功，调用回调
      */
     private void onRenderSuccess() {
-        if (instanceListener != null) {
-            instanceListener.onRenderSuccess();
+        if (mInstanceListener != null) {
+            mInstanceListener.onRenderSuccess();
         }
     }
 
@@ -272,10 +304,10 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
      * @param info 信息
      */
     private void showDebugInfo(String info) {
-        TextView view = new TextView(mContext);
+        TextView view = new TextView(mCmlActivity.getActivity());
         view.setText(info);
         view.setTextIsSelectable(true);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mCmlActivity.getActivity());
         AlertDialog dialog;
         builder.setView(view);
         builder.setTitle("发生错误了！");
@@ -312,21 +344,21 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
      */
     @Override
     public void degradeToH5(int degradeCode) {
-        if (instanceListener != null) {
-            instanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+        if (mInstanceListener != null) {
+            mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
         }
     }
 
     private void createWXInstance() {
         destroyWeexInstance();
-        mWeexInstance = new CmlWXSDKInstanceWrapper(mContext);
+        mWeexInstance = new CmlWXSDKInstanceWrapper(mCmlActivity.getActivity());
         mWeexInstance.setCmlInstance(this);
         mWeexInstance.registerRenderListener(this);
         mWeexInstance.onActivityCreate();
 
         // 注册到框架里
         mInstanceId = mWeexInstance.getInstanceId();
-        CmlInstanceManage.getInstance().addActivityInstance(mContext, mInstanceId, this);
+        CmlInstanceManage.getInstance().addActivityInstance(mCmlActivity.getActivity(), mInstanceId, this);
     }
 
     private void destroyWeexInstance() {
@@ -342,32 +374,44 @@ public class CmlWeexInstance implements ICmlActivityInstance, CmlBaseLifecycle, 
 
     @Override
     public Context getContext() {
-        return mContext;
+        return mCmlActivity.getContext();
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return mCmlActivity.getObjectView();
+    }
+
+
+    @Override
+    public Activity getActivity() {
+        return mCmlActivity.getActivity();
     }
 
     @Override
     public boolean isActivity() {
-        return mCmlContainer.isActivity();
+        return mCmlActivity.isActivity();
     }
 
     @Override
     public boolean isView() {
-        return mCmlContainer.isView();
+        return mCmlActivity.isView();
     }
 
     @Override
     public boolean isInDialog() {
-        return mCmlContainer.isInDialog();
+        return mCmlActivity.isInDialog();
     }
 
     @Override
     public boolean isValid() {
-        return mCmlContainer.isValid();
+        return mCmlActivity.isValid();
     }
 
     @Override
     public void finishSelf() {
-        mCmlContainer.finishSelf();
+        mCmlActivity.finishSelf();
     }
 
     @Override

@@ -1,31 +1,18 @@
 package com.didi.chameleon.weex.richtextcomponent.richinfo;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.View;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 import java.util.List;
 
-import static android.util.TypedValue.COMPLEX_UNIT_DIP;
-
 /**
  * 富文本数据
- *
-
- * @since 15/9/18.
  */
 
-public class CmlRichInfo implements Serializable, CmlClickSpanListener {
+public class CmlRichInfo implements Serializable {
 
     /**
      * 背景色，例如 #FFFFFF
@@ -76,18 +63,13 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
     @JSONField(name = "rich_message")
     private List<Bean> beans;
 
-    private final RichInfoPadding defaultPadding = new RichInfoPadding(6, 3, 6, 3);
-    private transient RichInfoPadding padding;
+    public final RichInfoPadding defaultPadding = new RichInfoPadding(6, 3, 6, 3);
+    public transient RichInfoPadding padding;
 
     //已经解析过的颜色，直接可用
     public transient int textColor;
 
     public transient boolean sizeUseDefault = true;
-
-    /**
-     * {@link Bean}设置的ClickSpan是否被点击
-     */
-    private transient boolean isSpanClicked = false;
 
     public CmlRichInfo() {
 
@@ -96,7 +78,6 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
     public CmlRichInfo(@NonNull String msg) {
         this.message = msg;
     }
-
 
     public List<Bean> getBeans() {
         return beans;
@@ -162,66 +143,6 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
         return result;
     }
 
-    private void setRichInfo(TextView textView) {
-        textView.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(msgColor)) {
-            msgColor = "#666666";
-        }
-        if (!TextUtils.isEmpty(message)) {
-            message = message.replace("\\n", "\n");
-        }
-        textView.setText(new CmlRichInfoSpan(this));
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setIncludeFontPadding(false);
-        GradientDrawable drawable = new GradientDrawable();
-        if (!TextUtils.isEmpty(this.background)) {
-            drawable.setColor(Color.parseColor(this.background));
-        } else {
-            drawable.setColor(Color.TRANSPARENT);
-        }
-        DisplayMetrics displayMetrics = textView.getResources().getDisplayMetrics();
-        if (this.isHaveBorder()) {
-            if (!sizeUseDefault) {
-                textView.setTextSize(10);
-            }
-            textView.setSingleLine();
-            try {
-                float borderWidth = TypedValue.applyDimension(COMPLEX_UNIT_DIP, Float.valueOf(this.borderWidth), displayMetrics);
-                float borderCorner = TypedValue.applyDimension(COMPLEX_UNIT_DIP, Float.valueOf(this.borderCorner), displayMetrics);
-                drawable.setStroke((int) borderWidth, Color.parseColor(this.borderColor));
-                drawable.setCornerRadius(borderCorner);
-            } catch (Exception ignore) {
-
-            }
-            if (null == padding) {
-                padding = defaultPadding;
-            }
-        } else {
-            if (!sizeUseDefault) {
-                textView.setTextSize(TextUtils.isEmpty(background) ? 12 : 10);
-            }
-        }
-        if (padding != null) {
-            int left = (int) TypedValue.applyDimension(COMPLEX_UNIT_DIP, padding.left, displayMetrics);
-            int top = (int) TypedValue.applyDimension(COMPLEX_UNIT_DIP, padding.top, displayMetrics);
-            int right = (int) TypedValue.applyDimension(COMPLEX_UNIT_DIP, padding.right, displayMetrics);
-            int bottom = (int) TypedValue.applyDimension(COMPLEX_UNIT_DIP, padding.bottom, displayMetrics);
-            textView.setPadding(left, top, right, bottom);
-        }
-        textView.setBackgroundDrawable(drawable);
-        if (!TextUtils.isEmpty(msgFont)) {
-            int size = Integer.parseInt(msgFont) / 2;
-            if (size > 0) {
-                textView.setTextSize(COMPLEX_UNIT_DIP, size);
-            }
-        }
-    }
-
-    @Override
-    public void spanClicked(View widget) {
-        isSpanClicked = true;
-    }
-
     public static class Bean implements Serializable {
         /**
          * 起始位置
@@ -238,6 +159,7 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
          */
         @JSONField(name = "color")
         public String colorString;
+
         @JSONField(name = "bg_color")
         public String bgColorString;
         /**
@@ -247,17 +169,34 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
         public String size;
 
         /**
-         * 超链接地址
-         */
-        @Nullable
-        @JSONField(name = "link_url")
-        public String link;
-
-        /**
          * 字体名称
          */
-        @JSONField(name = "font_name")
+        @JSONField(name = "font_family")
         public String fontName;
+
+        /**
+         * 点击标识
+         */
+        @JSONField(name = "click")
+        public boolean click;
+
+        /**
+         * 是否斜体
+         */
+        @JSONField(name = "font_style")
+        public String fontStyle;
+
+        /**
+         * 是否粗体
+         */
+        @JSONField(name = "font_weight")
+        public String fontWeight;
+
+        /**
+         * 是否下划线
+         */
+        @JSONField(name = "text_decoration")
+        public String textDecoration;
 
         // 已经解析过的颜色，直接可用
         transient int colorValue;
@@ -265,8 +204,6 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
         transient int bgColorValue;
         // 已经解析过的大小，直接可用
         transient int realSize;
-
-        public boolean bold;
 
         @Override
         public boolean equals(Object o) {
@@ -303,30 +240,6 @@ public class CmlRichInfo implements Serializable, CmlClickSpanListener {
             result = 31 * result + (bgColorString != null ? bgColorString.hashCode() : 0);
             result = 31 * result + (size != null ? size.hashCode() : 0);
             return result;
-        }
-    }
-
-    public void bindView(TextView tv) {
-        if (this.isEmpty()) {
-            return;
-        }
-        if (!isHaveBorder() && !TextUtils.isEmpty(background) && !TextUtils.isEmpty(message)) {
-            setPadding(new RichInfoPadding(5, 3, 5, 3));
-        }
-        if (tv != null) {
-            setRichInfo(tv);
-
-            if (!TextUtils.isEmpty(msgUrl)) {
-                tv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (isSpanClicked) {
-                            isSpanClicked = false;
-                            return;
-                        }
-                    }
-                });
-            }
         }
     }
 

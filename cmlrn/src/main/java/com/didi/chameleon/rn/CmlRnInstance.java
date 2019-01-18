@@ -6,20 +6,20 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.didi.chameleon.rn.bridge.CmlRnBridgePackage;
-import com.didi.chameleon.sdk.CmlBaseLifecycle;
 import com.didi.chameleon.sdk.CmlConstant;
-import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
+import com.didi.chameleon.sdk.ICmlBaseLifecycle;
+import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
 import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
@@ -36,87 +36,105 @@ import java.util.HashMap;
 
 import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE;
 
-public class CmlRnInstance implements ICmlActivityInstance, CmlBaseLifecycle, DefaultHardwareBackBtnHandler {
+public class CmlRnInstance implements ICmlActivityInstance, ICmlBaseLifecycle, DefaultHardwareBackBtnHandler {
     private static final String TAG = "CmlRnInstance";
     private String mUrl;
     private String mTotalUrl;
 
-    private Activity mActivity;
-    private ICmlInstanceListener mInstanceListener;
+    private String mInstanceId;
+    private int mRequestCode;
     private ICmlActivity mCmlActivity;
-    public ReactInstanceManager rnInstance;
-    public String reactInstanceId;
+    private ICmlInstanceListener mInstanceListener;
+    private ICmlLaunchCallback mLaunchCallback;
+    private ReactInstanceManager rnInstance;
 
     private HashMap<String, Object> extendsParam;
 
-    public CmlRnInstance(@NonNull Activity activity,
-                         @NonNull ICmlActivity cmlActivity,
-                         @NonNull ICmlInstanceListener listener) {
-        mActivity = activity;
+    public CmlRnInstance(@NonNull ICmlActivity cmlActivity,
+                         @NonNull ICmlInstanceListener listener,
+                         @NonNull String instanceId,
+                         int requestCode) {
         mInstanceListener = listener;
-        this.mCmlActivity = cmlActivity;
+        mCmlActivity = cmlActivity;
+        mInstanceId = instanceId;
+        mRequestCode = requestCode;
+        mLaunchCallback = CmlInstanceManage.getInstance().getLaunchCallback(instanceId);
     }
-
-    /**
-     * 初始化param状态，当reload页面时不需要再次初始化param
-     */
-    private boolean initInstanceSuccess = false;
 
     @Override
     public void onCreate() {
-        initInstanceSuccess = false;
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onCreate();
+        }
     }
 
     @Override
     public void onResume() {
         if (rnInstance != null) {
-            rnInstance.onHostResume(mActivity, this);
+            rnInstance.onHostResume(mCmlActivity.getActivity(), this);
+        }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResume();
         }
     }
 
     @Override
     public void onPause() {
         if (rnInstance != null) {
-            rnInstance.onHostPause(mActivity);
+            rnInstance.onHostPause(mCmlActivity.getActivity());
+        }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onPause();
         }
     }
 
     @Override
     public void onStop() {
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onStop();
+        }
     }
 
     @Override
     public void onDestroy() {
         if (rnInstance != null) {
-            rnInstance.onHostDestroy(mActivity);
+            rnInstance.onHostDestroy(mCmlActivity.getActivity());
             rnInstance = null;
         }
 
-        if (reactInstanceId != null) {
-            CmlInstanceManage.getInstance().removeActivityInstance(reactInstanceId);
+        if (mInstanceId != null) {
+            CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+        }
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onDestroy();
+        }
+    }
+
+    @Override
+    public void onResult(int resultCode, String result) {
+        if (null != mLaunchCallback) {
+            mLaunchCallback.onResult(this, mRequestCode, resultCode, result);
         }
     }
 
     private static final String RN_BUNDLE_NAME = "hello.android.bundle";
 
     private void createInstance(String jsBundleFile) {
-        reactInstanceId = CmlEngine.getInstance().generateInstanceId();
-
         rnInstance = ReactInstanceManager.builder()
-                .setApplication(mActivity.getApplication())
-                .setCurrentActivity(mActivity)
+                .setApplication(mCmlActivity.getActivity().getApplication())
+                .setCurrentActivity(mCmlActivity.getActivity())
 //                .setBundleAssetName(RN_BUNDLE_NAME)
                 .setJSMainModulePath("HelloWorld")
-                .addPackages(Arrays.<ReactPackage>asList(
+                .addPackages(Arrays.asList(
                         new MainReactPackage(),
-                        new CmlRnBridgePackage(reactInstanceId)
+                        new CmlRnBridgePackage(mInstanceId)
                 ))
                 .setUseDeveloperSupport(true)
 //                .setJSBundleFile(jsBundleFile)
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .build();
         // 注册到框架里
-        CmlInstanceManage.getInstance().addActivityInstance(mActivity, reactInstanceId, this);
+        CmlInstanceManage.getInstance().addActivityInstance(mCmlActivity.getActivity(), mInstanceId, this);
 
         mInstanceListener.onReactInstanceCreated(rnInstance);
     }
@@ -240,7 +258,18 @@ public class CmlRnInstance implements ICmlActivityInstance, CmlBaseLifecycle, De
 
     @Override
     public Context getContext() {
-        return mActivity;
+        return mCmlActivity.getContext();
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return mCmlActivity.getObjectView();
+    }
+
+    @Override
+    public Activity getActivity() {
+        return mCmlActivity.getActivity();
     }
 
     @Override
@@ -309,13 +338,13 @@ public class CmlRnInstance implements ICmlActivityInstance, CmlBaseLifecycle, De
     }
 
     public String getInstanceId() {
-        return reactInstanceId;
+        return mInstanceId;
     }
 
     @Override
     public void invokeDefaultOnBackPressed() {
-        if (mActivity != null) {
-            mActivity.onBackPressed();
+        if (mCmlActivity.getActivity() != null) {
+            mCmlActivity.getActivity().onBackPressed();
         }
     }
 

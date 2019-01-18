@@ -1,5 +1,6 @@
 package com.didi.chameleon.sdk.extend;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -29,12 +30,12 @@ public class CmlCommonModule {
     }
 
     @CmlMethod(alias = "openPage")
-    public void openNativePage(ICmlInstance instance, Context context,
+    public void openNativePage(ICmlInstance instance, Activity activity,
                                @CmlParam(name = "url") String url, @CmlParam(name = "closeCurrent") boolean closeWeb) {
         if (closeWeb) {
             instance.finishSelf();
         }
-        CmlEngine.getInstance().launchPage(context, url, null);
+        CmlEngine.getInstance().launchPage(activity, url, null);
     }
 
     @CmlMethod(alias = "closePage")
@@ -63,8 +64,8 @@ public class CmlCommonModule {
     }
 
     @CmlMethod(alias = "getSystemInfo", uiThread = false)
-    public void getSystemInfo(Context context, CmlCallback<JSONObject> callback) {
-        context = context.getApplicationContext();
+    public void getSystemInfo(ICmlInstance instance, CmlCallback<JSONObject> callback) {
+        Context context = instance.getContext().getApplicationContext();
         JSONObject object = new JSONObject();
         JSONObject extObject = new JSONObject();
         try {
@@ -75,6 +76,9 @@ public class CmlCommonModule {
             extObject.put("model", CmlSystemUtil.getModel());
             extObject.put("imei", CmlSystemUtil.getIMEI(context));
             extObject.put("netType", CmlSystemUtil.getNetworkType(context));
+            extObject.put("statusbarHeight", CmlViewUtil.getStatusBarHeight(context));
+            extObject.put("navigationHeight", CmlViewUtil.getVirtualBarHeight(context));
+            extObject.put("viewHeight", instance.getObjectView() == null ? 0 : instance.getObjectView().getHeight());
             object.put("extraParams", extObject);
         } catch (JSONException e) {
             e.printStackTrace();

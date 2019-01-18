@@ -1,6 +1,8 @@
 package com.didi.chameleon.sdk.container;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 /**
 
@@ -15,6 +17,12 @@ public interface ICmlContainer {
      * @return {@link Context}
      */
     Context getContext();
+
+    /**
+     * 获取当前目标view
+     */
+    @Nullable
+    View getObjectView();
 
     /**
      * 当前容器是否为Activity

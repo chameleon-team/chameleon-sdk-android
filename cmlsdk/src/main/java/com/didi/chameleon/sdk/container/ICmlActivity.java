@@ -1,5 +1,6 @@
 package com.didi.chameleon.sdk.container;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.AnimRes;
 
@@ -8,6 +9,13 @@ import android.support.annotation.AnimRes;
  * 增加全屏容器特有的能力
  */
 public interface ICmlActivity extends ICmlContainer {
+    /**
+     * 获取Activity实例
+     *
+     * @return
+     */
+    Activity getActivity();
+
     /**
      * 设置结果，类似对比与Activity的setResult()
      *

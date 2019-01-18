@@ -38,15 +38,16 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
  */
 
 public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener {
-    private static final String TAG = "cml_weex_debug";
+    private static final String TAG = "CmlWeexViewInstance";
+
     private CmlWXSDKInstanceWrapper mWeexInstance;
-    private ICmlView ICmlView;
+    private ICmlView mCmlView;
     private String mCmlUrl;
     private String mTotalUrl;
     private long mCreateTime, mStartRenderTime;
 
-    private Context mContext;
-    private ICmlInstanceListener instanceListener;
+    private ICmlInstanceListener mInstanceListener;
+    private String mInstanceId;
 
     private HashMap<String, Object> extendsParam;
 
@@ -55,12 +56,10 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      */
     private boolean hasRenderSuccess = false;
 
-    public CmlWeexViewInstance(@NonNull Context context,
-                               @NonNull ICmlView cmlView,
+    public CmlWeexViewInstance(@NonNull ICmlView cmlView,
                                @NonNull ICmlInstanceListener listener) {
-        this.mContext = context;
-        this.instanceListener = listener;
-        this.ICmlView = cmlView;
+        mInstanceListener = listener;
+        mCmlView = cmlView;
     }
 
     /**
@@ -74,12 +73,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         hasRenderSuccess = false;
         createWXInstance();
         if (!initParamSuccess) {
-            initParam();
             initParamSuccess = true;
         }
-    }
-
-    private void initParam() {
     }
 
     @Override
@@ -106,6 +101,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     @Override
     public void onDestroy() {
         destroyWeexInstance();
+    }
+
+    @Override
+    public void onResult(int resultCode, String result) {
+        // do nothing
     }
 
     /**
@@ -208,8 +208,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     @Override
     public void onViewCreated(WXSDKInstance instance, View view) {
-        if (instanceListener != null) {
-            instanceListener.onViewCreate(view);
+        if (mInstanceListener != null) {
+            mInstanceListener.onViewCreate(view);
         }
     }
 
@@ -237,8 +237,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * render渲染成功，调用回调
      */
     private void onRenderSuccess() {
-        if (instanceListener != null) {
-            instanceListener.onRenderSuccess();
+        if (mInstanceListener != null) {
+            mInstanceListener.onRenderSuccess();
         }
     }
 
@@ -269,11 +269,10 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * @param info 信息
      */
     private void showDebugInfo(String info) {
-        TextView view = new TextView(mContext);
+        TextView view = new TextView(mCmlView.getContext());
         view.setText(info);
         view.setTextIsSelectable(true);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        AlertDialog dialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(mCmlView.getContext());
         builder.setView(view);
         builder.setTitle("发生错误了！");
         builder.setPositiveButton("知道了", new DialogInterface.OnClickListener() {
@@ -284,7 +283,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
                 }
             }
         });
-        dialog = builder.create();
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 
@@ -308,23 +307,25 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * 降级到{@link ICmlDegradeAdapter} 实现页面
      */
     public void degradeToH5(int degradeCode) {
-        if (instanceListener != null) {
-            instanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+        if (mInstanceListener != null) {
+            mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
         }
     }
 
     private void createWXInstance() {
         destroyWeexInstance();
-        mWeexInstance = new CmlWXSDKInstanceWrapper(mContext);
+        mWeexInstance = new CmlWXSDKInstanceWrapper(mCmlView.getContext());
         mWeexInstance.setCmlInstance(this);
         mWeexInstance.registerRenderListener(this);
         mWeexInstance.onActivityCreate();
 
         // 注册到框架里
-        CmlInstanceManage.getInstance().addViewInstance(mContext, mWeexInstance.getInstanceId(), this);
+        mInstanceId = mWeexInstance.getInstanceId();
+        CmlInstanceManage.getInstance().addViewInstance(mCmlView.getContext(), mInstanceId, this);
     }
 
     private void destroyWeexInstance() {
+        CmlInstanceManage.getInstance().removeViewInstance(mInstanceId);
         if (mWeexInstance != null) {
             mWeexInstance.registerRenderListener(null);
             mWeexInstance.onActivityDestroy();
@@ -336,27 +337,33 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     @Override
     public Context getContext() {
-        return mContext;
+        return mCmlView.getContext();
+    }
+
+    @Nullable
+    @Override
+    public View getObjectView() {
+        return mCmlView.getObjectView();
     }
 
     @Override
     public boolean isActivity() {
-        return ICmlView.isActivity();
+        return mCmlView.isActivity();
     }
 
     @Override
     public boolean isView() {
-        return ICmlView.isView();
+        return mCmlView.isView();
     }
 
     @Override
     public boolean isInDialog() {
-        return ICmlView.isInDialog();
+        return mCmlView.isInDialog();
     }
 
     @Override
     public boolean isValid() {
-        return ICmlView.isValid();
+        return mCmlView.isValid();
     }
 
     @Override
@@ -395,13 +402,13 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * 构造包装类，封装更多参数
      */
     public class CmlWXSDKInstanceWrapper extends WXSDKInstance {
-        public CmlWeexViewInstance cmlInstance;
+        private CmlWeexViewInstance cmlInstance;
 
-        public CmlWXSDKInstanceWrapper(Context context) {
+        CmlWXSDKInstanceWrapper(Context context) {
             super(context);
         }
 
-        public void setCmlInstance(CmlWeexViewInstance cmlInstance) {
+        void setCmlInstance(CmlWeexViewInstance cmlInstance) {
             this.cmlInstance = cmlInstance;
         }
     }

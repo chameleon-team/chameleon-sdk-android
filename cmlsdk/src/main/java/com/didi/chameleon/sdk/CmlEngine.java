@@ -1,5 +1,6 @@
 package com.didi.chameleon.sdk;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -40,17 +41,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <tr>
  * <td>weex 方案</td>
  * <td>
- * compile "com.didi.chameleon:cmlsdk:$VERSION" <br />
- * compile "com.didi.chameleon:cmlweex:$VERSION" <br />
- * compile "com.didi.chameleon:cmlweb:$VERSION"
+ * compile "com.didiglobal.chameleon:cmlsdk:$VERSION" <br />
+ * compile "com.didiglobal.chameleon:cmlweex:$VERSION" <br />
+ * compile "com.didiglobal.chameleon:cmlweb:$VERSION"
  * </td>
  * </tr>
  * <tr>
  * <td>react native 方案</td>
  * <td>
- * compile "com.didi.chameleon:cmlsdk:$VERSION" <br />
- * compile "com.didi.chameleon:cmlrn:$VERSION" <br />
- * compile "com.didi.chameleon:cmlweb:$VERSION"
+ * compile "com.didiglobal.chameleon:cmlsdk:$VERSION" <br />
+ * compile "com.didiglobal.chameleon:cmlrn:$VERSION" <br />
+ * compile "com.didiglobal.chameleon:cmlweb:$VERSION"
  * </td>
  * </tr>
  * </tbody>
@@ -61,8 +62,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>
  * <h3>容器调起入口</h3>
  * <p>
- * 容器调起能力入口 {@link #launchPage(Context, String, HashMap)} 会根据用户传入的 url 调起相应的容器。
+ * 容器调起能力入口 {@link #launchPage(Activity, String, HashMap)} 会根据用户传入的 url 调起相应的容器。
  * 则会调起native 渲染容器渲染界面。如果渲染过程中出现问题则自动调起Web 渲染容器渲染降级页面。
+ * </p>
+ * <p>
+ * <p>
+ * {@link #launchPage(Activity, String, HashMap, int, ICmlLaunchCallback)} 则是需要和调起的子页面通讯时使用的入口，被调起的子页面可以和
+ * 主页面之间进行数据通信，具体可参照demo。
  * </p>
  */
 public class CmlEngine {
@@ -70,7 +76,7 @@ public class CmlEngine {
 
     private static volatile CmlEngine instance;
 
-    private static AtomicInteger sInstanceId = new AtomicInteger(0);
+    private static AtomicInteger sInstanceId = new AtomicInteger(101); // 跳过100个，防止和weex重复
 
     private Context mContext;
     private ICmlEngine mCmlEngine;
@@ -101,7 +107,7 @@ public class CmlEngine {
      *
      * @param context Application 对象
      */
-    public void init(Context context, CmlConfig config) {
+    public void init(Context context, ICmlConfig config) {
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
@@ -172,7 +178,7 @@ public class CmlEngine {
      * @param url      Chameleon url，也可以只传入一个标准的http/https地址
      * @param options  调起参数，可以传 null
      */
-    public void launchPage(@NonNull Context activity, String url, HashMap<String, Object> options) {
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options) {
         if (TextUtils.isEmpty(url)) {
             CmlLogUtil.e(TAG, "CmlEngine launchPage, url is empty.");
             return;
@@ -191,6 +197,29 @@ public class CmlEngine {
                 return;
             }
             mCmlWebEngine.launchPage(activity, url, options);
+        }
+    }
+
+    public void launchPage(@NonNull Activity activity, String url, HashMap<String, Object> options,
+                           int requestCode, ICmlLaunchCallback launchCallback) {
+        if (TextUtils.isEmpty(url)) {
+            CmlLogUtil.e(TAG, "CmlEngine launchPage, url is empty.");
+            return;
+        }
+
+        String cmlUrl = Util.parseCmlUrl(url);
+        if (!TextUtils.isEmpty(cmlUrl)) {
+            if (null == mCmlEngine) {
+                CmlLogUtil.e(TAG, "CmlEngine launchPage, engine class not found !!!");
+                return;
+            }
+            mCmlEngine.launchPage(activity, url, options, requestCode, launchCallback);
+        } else {
+            if (null == mCmlWebEngine) {
+                CmlLogUtil.e(TAG, "CmlWebEngine launchPage, web engine class not found !!!");
+                return;
+            }
+            mCmlWebEngine.launchPage(activity, url, options, requestCode, launchCallback);
         }
     }
 
