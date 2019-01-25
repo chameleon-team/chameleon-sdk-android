@@ -2,6 +2,8 @@ package com.didi.chameleon.sdk;
 
 import android.content.Context;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,5 +106,12 @@ public class CmlInstanceManage {
         for (CmlInstanceChangeListener listener : mListener) {
             listener.onRemoveInstance(instanceId);
         }
+    }
+
+    public Collection<ICmlInstance> getInstanceList() {
+        if (mInstances == null) {
+            return Collections.emptyList();
+        }
+        return mInstances.values();
     }
 }

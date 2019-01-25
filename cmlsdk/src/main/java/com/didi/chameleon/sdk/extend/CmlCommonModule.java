@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.didi.chameleon.sdk.CmlConstant;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
 import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.utils.CmlSystemUtil;
@@ -109,6 +110,14 @@ public class CmlCommonModule {
             callback.onSuccess();
         } else {
             callback.onFail();
+        }
+    }
+
+    @CmlMethod(alias = "broadcast")
+    public void broadcast(String data) {
+        for (ICmlInstance instance : CmlInstanceManage.getInstance().getInstanceList()) {
+            CmlModuleManager.getInstance().invokeWeb(instance.getInstanceId(),
+                    "cml", "onBroadcast", data, null);
         }
     }
 
