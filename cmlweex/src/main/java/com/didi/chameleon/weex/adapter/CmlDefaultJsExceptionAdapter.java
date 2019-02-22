@@ -9,7 +9,7 @@ import com.taobao.weex.common.WXJSExceptionInfo;
 public class CmlDefaultJsExceptionAdapter implements ICmlJSExceptionAdapter {
     @Override
     public void onJSException(WXJSExceptionInfo exception) {
-        if (!CmlEnvironment.DEBUG) {
+        if (!CmlEnvironment.CML_DEBUG) {
             return;
         }
         try {

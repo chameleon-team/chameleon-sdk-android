@@ -5,7 +5,9 @@ import com.didi.chameleon.sdk.CmlEnvironment;
 public class CmlLogUtil {
 
     public static void d(String tag, String msg) {
-        CmlEnvironment.getLoggerAdapter().d(tag, msg);
+        if (CmlEnvironment.CML_DEBUG) {
+            CmlEnvironment.getLoggerAdapter().d(tag, msg);
+        }
     }
 
     public static void i(String tag, String msg) {

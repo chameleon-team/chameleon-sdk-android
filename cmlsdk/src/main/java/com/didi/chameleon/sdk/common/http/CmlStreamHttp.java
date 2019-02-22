@@ -243,7 +243,7 @@ public class CmlStreamHttp {
                 mCallback.onResponse(response, mRespHeaders);
             }
 
-            if (CmlEnvironment.DEBUG) {
+            if (CmlEnvironment.CML_DEBUG) {
                 CmlLogUtil.d("cmlStreamModule", response != null && response.originalData != null ? new String(response.originalData) : "response data is NUll!");
             }
         }

@@ -2,9 +2,9 @@ package com.didi.chameleon.example;
 
 import android.app.Application;
 
-import com.didi.chameleon.sdk.ICmlConfig;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.ICmlConfig;
 
 public class MyApplication extends Application implements ICmlConfig {
     @Override
@@ -18,6 +18,8 @@ public class MyApplication extends Application implements ICmlConfig {
     public void configAdapter() {
         // 开发阶段可以禁用js bundle缓存
         CmlEnvironment.CML_ALLOW_BUNDLE_CACHE = false;
+        // Debug开关
+        CmlEnvironment.CML_DEBUG = true;
         // 开发阶段手动降级测试
 //        CmlEnvironment.CML_DEGRADE = false;
 

@@ -17,6 +17,8 @@ import com.didi.chameleon.sdk.ICmlViewInstance;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlStatisticsAdapter;
 import com.didi.chameleon.sdk.container.ICmlView;
+import com.didi.chameleon.sdk.module.CmlCallback;
+import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
@@ -32,13 +34,13 @@ import java.util.Set;
 import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
 
 /**
-
  * @since 18/7/30
  * 主要功能:
  */
 
 public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener {
     private static final String TAG = "CmlWeexViewInstance";
+    private static final String CML_PAGE_NAME = "cml_weex_view";
 
     private CmlWXSDKInstanceWrapper mWeexInstance;
     private ICmlView mCmlView;
@@ -128,6 +130,12 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             degradeToH5(CmlConstant.FAILED_TYPE_DOWNLOAD);
             return;
         }
+
+        if (CmlEnvironment.CML_DEBUG && mCmlUrl.startsWith("file://")) {
+            mWeexInstance.renderByUrl(CML_PAGE_NAME, mCmlUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
+            return;
+        }
+
         mWeexInstance.addUserTrackParameter(CmlConstant.WEEX_INSTANCE_URL, mTotalUrl);
         CmlWeexEngine.getInstance().performGetCode(mCmlUrl, new CmlGetCodeStringCallback() {
             @Override
@@ -154,6 +162,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
                 degradeToH5(CmlConstant.FAILED_TYPE_DOWNLOAD);
             }
         });
+    }
+
+    @Override
+    public void invokeJsMethod(String module, String method, String args, CmlCallback callback) {
+        CmlModuleManager.getInstance().invokeWeb(mInstanceId, module, method, args, callback);
     }
 
     /**
@@ -203,7 +216,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      */
     private void renderView(String template, Map<String, Object> options) {
         mStartRenderTime = System.currentTimeMillis();
-        mWeexInstance.render(CmlEnvironment.CML_PAGE_NAME, template, options, null, WXRenderStrategy.APPEND_ASYNC);
+        mWeexInstance.render(CML_PAGE_NAME, template, options, null, WXRenderStrategy.APPEND_ASYNC);
     }
 
     @Override
@@ -414,7 +427,6 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     }
 
     /**
-
      * @since 18/7/30
      * 主要功能:
      */

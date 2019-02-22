@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.container.ICmlView;
-import com.didi.chameleon.weex.CmlWeexEngine;
+import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.weex.CmlWeexViewInstance;
 
 import java.util.HashMap;
@@ -20,7 +20,6 @@ import java.util.HashMap;
 /**
  * 用来展示 Chameleon Weex view，需要调用相应的生命周期。渲染通过调用 {@link #render(String, HashMap)}
  *
-
  * @since 18/5/24
  */
 public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInstanceListener, ICmlView {
@@ -59,6 +58,13 @@ public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInst
         }
         this.options = options;
         wxInstance.render(url, options);
+    }
+
+    @Override
+    public void invokeJsMethod(String module, String method, String args, CmlCallback callback) {
+        if (wxInstance != null) {
+            wxInstance.invokeJsMethod(module, method, args, callback);
+        }
     }
 
     @Override

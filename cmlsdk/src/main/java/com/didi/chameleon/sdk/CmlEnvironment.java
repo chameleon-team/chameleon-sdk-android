@@ -30,11 +30,11 @@ public class CmlEnvironment {
     /**
      * SDK版本
      */
-    public static final String VERSION = "0.0.5";
+    public static final String VERSION = "0.0.2";
     /**
      * 调试开关
      */
-    public static final boolean DEBUG = true;
+    public static boolean CML_DEBUG = false;
     /**
      * 页面是否直接降级
      */
@@ -48,10 +48,6 @@ public class CmlEnvironment {
      * 是否输出分析日志
      */
     public static boolean CML_OUTPUT_STATISTICS = false;
-    /**
-     * 开启页面名称，一般用于 weex 内部输出 log 的 tag
-     */
-    public static String CML_PAGE_NAME = "cml_weex";
     /**
      * sdk环境tag,与url
      */

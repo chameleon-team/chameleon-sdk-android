@@ -91,7 +91,7 @@ public class CmlWeexEngine implements ICmlEngine {
     private void initJsBundleManager(Context context) {
         cmlJsBundleManager = CmlJsBundleEngine.getInstance();
         CmlJsBundleEnvironment.CML_ALLOW_WEEX_CACHE = CmlEnvironment.CML_ALLOW_BUNDLE_CACHE;
-        CmlJsBundleEnvironment.DEBUG = CmlEnvironment.DEBUG;
+        CmlJsBundleEnvironment.DEBUG = CmlEnvironment.CML_DEBUG;
         cmlJsBundleManager.initConfig(context, new CmlJsBundleMgrConfig.Builder()
                 .setMaxPreloadSize(CmlEnvironment.getMaxPreloadSize())
                 .setMaxRuntimeSize(CmlEnvironment.getMaxRuntimeSize())

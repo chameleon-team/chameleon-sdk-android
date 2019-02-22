@@ -191,12 +191,14 @@ public class CmlEngine {
                 return;
             }
             mCmlEngine.launchPage(activity, url, options);
-        } else {
+        } else if (Util.isWebPageUrl(url)) {
             if (null == mCmlWebEngine) {
                 CmlLogUtil.e(TAG, "CmlWebEngine launchPage, web engine class not found !!!");
                 return;
             }
             mCmlWebEngine.launchPage(activity, url, options);
+        } else {
+            CmlLogUtil.e(TAG, "check url, render local jsbundle make sure `CmlEnvironment.CML_DEGRADE` is been true");
         }
     }
 
@@ -214,7 +216,7 @@ public class CmlEngine {
                 return;
             }
             mCmlEngine.launchPage(activity, url, options, requestCode, launchCallback);
-        } else {
+        } else if (Util.isWebPageUrl(url)) {
             if (null == mCmlWebEngine) {
                 CmlLogUtil.e(TAG, "CmlWebEngine launchPage, web engine class not found !!!");
                 return;
