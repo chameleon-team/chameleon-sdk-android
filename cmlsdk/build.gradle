@@ -11,6 +11,7 @@ android {
         targetSdkVersion TARGET_SDK
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
         abortOnError false
@@ -27,7 +28,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation "com.android.support:support-annotations:$SUPPORT_VER"
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
 
     compileOnly 'com.github.bumptech.glide:glide:3.8.0' // 图片默认加载框架
     compileOnly 'com.google.code.gson:gson:2.8.5'

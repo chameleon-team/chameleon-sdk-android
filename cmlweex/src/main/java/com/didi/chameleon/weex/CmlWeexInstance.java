@@ -42,6 +42,7 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
 
 public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle, IWXRenderListener {
     private static final String TAG = "CmlWeexInstance";
+    private static final String CML_PAGE_NAME = "cml_weex";
 
     private String mInstanceId;
     private int mRequestCode;
@@ -152,6 +153,12 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
             degradeToH5(CmlConstant.FAILED_TYPE_DEGRADE);
             return;
         }
+
+        if (CmlEnvironment.CML_DEBUG && mWXUrl.startsWith("file://")) {
+            mWeexInstance.renderByUrl(CML_PAGE_NAME, mWXUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
+            return;
+        }
+
         mWeexInstance.addUserTrackParameter(CmlConstant.WEEX_INSTANCE_URL, mTotalUrl);
         CmlWeexEngine.getInstance().performGetCode(mWXUrl, new CmlGetCodeStringCallback() {
             @Override
@@ -232,7 +239,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
      */
     private void render(String template, Map<String, Object> options) {
         mStartRenderTime = System.currentTimeMillis();
-        mWeexInstance.render(CmlEnvironment.CML_PAGE_NAME, template, options, null, WXRenderStrategy.APPEND_ASYNC);
+        mWeexInstance.render(CML_PAGE_NAME, template, options, null, WXRenderStrategy.APPEND_ASYNC);
     }
 
     @Override
