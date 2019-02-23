@@ -286,7 +286,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
         CmlLogUtil.e(TAG, "onException msg = " + msg);
-        if (CmlEnvironment.DEBUG) {
+        if (CmlEnvironment.CML_DEBUG) {
             showDebugInfo(msg);
         } else {
             if (!hasRenderSuccess) {
