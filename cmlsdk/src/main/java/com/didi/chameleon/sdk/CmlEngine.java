@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
+import com.didi.chameleon.sdk.bridge.ICmlProtocolWrapper;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
@@ -254,6 +256,10 @@ public class CmlEngine {
      */
     public <T> void registerModule(Class<T> moduleClass) {
         CmlModuleManager.getInstance().addCmlModule(moduleClass);
+    }
+
+    public void addProtocolWrapper(ICmlProtocolWrapper wrapper) {
+        CmlProtocolProcessor.addCmlProtocolWrapper(wrapper);
     }
 
 }

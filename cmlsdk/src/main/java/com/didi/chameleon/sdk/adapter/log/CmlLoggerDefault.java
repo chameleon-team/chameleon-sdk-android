@@ -20,18 +20,8 @@ public class CmlLoggerDefault implements CmlLoggerAdapter {
     }
 
     @Override
-    public void w(Throwable tr) {
-        Log.w("cml", "warn", tr);
-    }
-
-    @Override
     public void w(String tag, String msg) {
         Log.w(tag, msg);
-    }
-
-    @Override
-    public void w(String tag, String msg, Throwable tr) {
-
     }
 
     @Override

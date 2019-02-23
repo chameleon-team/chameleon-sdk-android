@@ -36,7 +36,6 @@ import java.util.Set;
 import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
 
 /**
-
  * @since 18/7/30
  * 主要功能:
  */
@@ -280,7 +279,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
         CmlLogUtil.e(TAG, "onException msg = " + msg);
-        if (BuildConfig.DEBUG) {
+        if (CmlEnvironment.DEBUG) {
             showDebugInfo(msg);
         } else {
             if (!hasRenderSuccess) {
@@ -467,7 +466,6 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
     }
 
     /**
-
      * @since 18/7/30
      * 主要功能:
      */

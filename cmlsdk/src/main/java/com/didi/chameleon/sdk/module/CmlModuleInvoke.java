@@ -151,7 +151,7 @@ public class CmlModuleInvoke {
                 try {
                     jsonObject = new JSONObject(params);
                 } catch (JSONException e) {
-                    CmlLogUtil.wt(CmlMethodException.throwParseParam(method, params));
+                    CmlLogUtil.et(CmlMethodException.throwParseParam(method, params));
                 }
                 String keyValue = jsonObject == null ? null : jsonObject.optString(key);
                 args[i] = parseParam(paramType, TextUtils.isEmpty(keyValue) ? admin : keyValue);

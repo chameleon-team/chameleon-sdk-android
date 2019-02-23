@@ -250,7 +250,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
         CmlLogUtil.e(TAG, "onException msg = " + msg);
-        if (BuildConfig.DEBUG) {
+        if (CmlEnvironment.DEBUG) {
             showDebugInfo(msg);
         } else {
             if (!hasRenderSuccess) {

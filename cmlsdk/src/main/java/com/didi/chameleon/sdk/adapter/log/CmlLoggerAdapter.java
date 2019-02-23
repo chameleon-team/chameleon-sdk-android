@@ -8,11 +8,7 @@ public interface CmlLoggerAdapter {
 
     void i(String tag, String msg);
 
-    void w(Throwable tr);
-
     void w(String tag, String msg);
-
-    void w(String tag, String msg, Throwable tr);
 
     void e(Throwable tr);
 

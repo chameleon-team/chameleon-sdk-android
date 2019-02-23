@@ -2,6 +2,11 @@ package com.didi.chameleon.sdk.module;
 
 import android.support.annotation.NonNull;
 
+import com.didi.chameleon.sdk.CmlInstanceManage;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 public class CmlModuleFactory {
 
     @NonNull
@@ -19,11 +24,28 @@ public class CmlModuleFactory {
     public Object newModuleInstance(String instanceId, Class moduleClass) throws CmlModuleException {
         Object object;
         try {
-            object = moduleClass.newInstance();
+            Constructor constructor = moduleClass.getConstructors()[0];
+            switch (constructor.getParameterTypes().length) {
+                case 0:
+                    object = moduleClass.newInstance();
+                    break;
+                case 1:
+                    object = constructor.newInstance(CmlInstanceManage.getInstance().getCmlInstance(instanceId));
+                    break;
+                default:
+                    throw CmlModuleException.throwInitFail(moduleClass, new IllegalAccessError());
+            }
         } catch (InstantiationException e) {
             throw CmlModuleException.throwInitFail(moduleClass, e);
         } catch (IllegalAccessException e) {
             throw CmlModuleException.throwInitFail(moduleClass, e);
+        } catch (InvocationTargetException e) {
+            throw CmlModuleException.throwInitFail(moduleClass, e);
+        }
+        for (Class interfaceClass : moduleClass.getInterfaces()) {
+            if (interfaceClass == ICmlModuleDestroy.class) {
+                CmlModuleDestroyWrapper.register(instanceId, (ICmlModuleDestroy) object);
+            }
         }
         return object;
     }
