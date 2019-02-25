@@ -6,6 +6,6 @@
             android:name=".container.CmlWeexActivity"
             android:configChanges="orientation|screenSize|keyboard|mcc|mnc|locale|keyboardHidden|uiMode|fontScale"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
     </application>
 </manifest>
