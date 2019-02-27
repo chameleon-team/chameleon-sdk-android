@@ -364,11 +364,11 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
 
         // 注册到框架里
         mInstanceId = mWeexInstance.getInstanceId();
-        CmlInstanceManage.getInstance().addActivityInstance(mCmlActivity.getActivity(), mInstanceId, this);
+        CmlInstanceManage.getInstance().addInstance(this);
     }
 
     private void destroyWeexInstance() {
-        CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+        CmlInstanceManage.getInstance().removeInstance(mInstanceId);
         if (mWeexInstance != null) {
             mWeexInstance.registerRenderListener(null);
             mWeexInstance.onActivityDestroy();

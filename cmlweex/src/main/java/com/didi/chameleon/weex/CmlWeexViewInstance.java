@@ -150,8 +150,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
                     if (extendsParam != null) {
                         params.putAll(extendsParam);
                     }
+                    params.put(CmlEnvironment.CML_QUERY_SDK, CmlEnvironment.VERSION);
+                    params.put(CmlEnvironment.CML_QUERY_URL, mTotalUrl);
                     params.putAll(parseUrl(url));
                     options.put(CmlConstant.WEEX_OPTIONS_KEY, params);
+
                     renderView(template, options);
                 }
             }
@@ -334,11 +337,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
         // 注册到框架里
         mInstanceId = mWeexInstance.getInstanceId();
-        CmlInstanceManage.getInstance().addViewInstance(mCmlView.getContext(), mInstanceId, this);
+        CmlInstanceManage.getInstance().addInstance(this);
     }
 
     private void destroyWeexInstance() {
-        CmlInstanceManage.getInstance().removeViewInstance(mInstanceId);
+        CmlInstanceManage.getInstance().removeInstance(mInstanceId);
         if (mWeexInstance != null) {
             mWeexInstance.registerRenderListener(null);
             mWeexInstance.onActivityDestroy();
