@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
+import com.didi.chameleon.sdk.bridge.ICmlProtocolWrapper;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
@@ -12,6 +14,7 @@ import com.didi.chameleon.sdk.extend.CmlModalModule;
 import com.didi.chameleon.sdk.extend.CmlStorageModule;
 import com.didi.chameleon.sdk.extend.CmlStreamModule;
 import com.didi.chameleon.sdk.extend.CmlWebSocketModule;
+import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.utils.CmlClassInitManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
@@ -256,6 +259,14 @@ public class CmlEngine {
      */
     public <T> void registerModule(Class<T> moduleClass) {
         CmlModuleManager.getInstance().addCmlModule(moduleClass);
+    }
+
+    public void addProtocolWrapper(ICmlProtocolWrapper wrapper) {
+        CmlProtocolProcessor.addCmlProtocolWrapper(wrapper);
+    }
+
+    public <T> void callToJs(ICmlInstance instance, String module, String method, Object param, CmlCallback<T> callback) {
+        CmlModuleManager.getInstance().invokeWeb(instance.getInstanceId(), module, method, param, callback);
     }
 
 }

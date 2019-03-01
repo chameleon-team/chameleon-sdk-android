@@ -19,5 +19,6 @@ public interface ICmlBridgeProtocol {
     String ACTION_CALLBACK_FROM_JS = "callbackFromJs";
 
     // native -> js
-    String CML_JS_CHANNEL = "javascript:cmlBridge.channel('%s');";
+    String CML_JS_CHANNEL_METHOD = "cmlBridge.channel"; //对应的js方法
+    String CML_JS_CHANNEL = "javascript:" + CML_JS_CHANNEL_METHOD + "('%s');";
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.container.ICmlView;
 import com.didi.chameleon.sdk.module.CmlCallback;
@@ -166,5 +167,9 @@ public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInst
     @Override
     public void finishSelf() {
         // NOTHING
+    }
+
+    public CmlWeexViewInstance getInstance() {
+        return wxInstance;
     }
 }

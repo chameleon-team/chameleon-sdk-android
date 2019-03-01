@@ -18,10 +18,6 @@ public class CmlLogUtil {
         CmlEnvironment.getLoggerAdapter().w(tag, msg);
     }
 
-    public static void wt(Throwable throwable) {
-        CmlEnvironment.getLoggerAdapter().w(throwable);
-    }
-
     public static void e(String tag, String msg) {
         CmlEnvironment.getLoggerAdapter().e(tag, msg);
     }

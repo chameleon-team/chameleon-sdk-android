@@ -103,7 +103,7 @@ public class CmlRnInstance implements ICmlActivityInstance, ICmlBaseLifecycle, D
         }
 
         if (mInstanceId != null) {
-            CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+            CmlInstanceManage.getInstance().removeInstance(mInstanceId);
         }
         if (null != mLaunchCallback) {
             mLaunchCallback.onDestroy();
@@ -134,7 +134,7 @@ public class CmlRnInstance implements ICmlActivityInstance, ICmlBaseLifecycle, D
                 .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .build();
         // 注册到框架里
-        CmlInstanceManage.getInstance().addActivityInstance(mCmlActivity.getActivity(), mInstanceId, this);
+        CmlInstanceManage.getInstance().addInstance(this);
 
         mInstanceListener.onReactInstanceCreated(rnInstance);
     }

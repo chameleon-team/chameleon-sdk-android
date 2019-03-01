@@ -58,7 +58,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
     @Override
     public void onCreate() {
         // 注册到框架里
-        CmlInstanceManage.getInstance().addActivityInstance(mCmlContainer.getActivity(), mInstanceId, this);
+        CmlInstanceManage.getInstance().addInstance(this);
         if (null != mLaunchCallback) {
             mLaunchCallback.onCreate();
         }
@@ -87,7 +87,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
 
     @Override
     public void onDestroy() {
-        CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+        CmlInstanceManage.getInstance().removeInstance(mInstanceId);
 
         if (null != mLaunchCallback) {
             mLaunchCallback.onDestroy();
