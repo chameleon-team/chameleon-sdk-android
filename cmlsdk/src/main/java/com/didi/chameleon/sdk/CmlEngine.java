@@ -111,44 +111,16 @@ public class CmlEngine {
      * @param context Application 对象
      */
     public void init(Context context, ICmlConfig config) {
+        init(context, config, true);
+    }
+
+    public void init(Context context, ICmlConfig config, boolean autoInitEngine) {
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
-        try {
-            // engine 获取并初始化
-            Class cmlEngine = Class.forName("com.didi.chameleon.weex.CmlWeexEngine");
-            if (null == cmlEngine) {
-                cmlEngine = Class.forName("com.didi.chameleon.rn.CmlRnEngine");
-            }
-            if (null == cmlEngine) {
-                String error = "CmlEngine init error, engine class not found !!!";
-                CmlLogUtil.e(TAG, error);
-                return;
-            }
-            Object objEngine = cmlEngine.newInstance();
-            if (objEngine instanceof ICmlEngine) {
-                mCmlEngine = (ICmlEngine) objEngine;
-                mCmlEngine.init(context);
-            }
 
-            // web engine 获取并初始化
-            Class cmlWebEngine = Class.forName("com.didi.chameleon.web.CmlWebEngine");
-            if (null == cmlWebEngine) {
-                String error = "CmlWebEngine init error, engine class not found !!!";
-                CmlLogUtil.e(TAG, error);
-                return;
-            }
-            Object objWebEngine = cmlWebEngine.newInstance();
-            if (objWebEngine instanceof ICmlEngine) {
-                mCmlWebEngine = (ICmlEngine) objWebEngine;
-                mCmlWebEngine.init(context);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (autoInitEngine) {
+            initEngine(context);
         }
 
         registerModule(CmlCommonModule.class);
@@ -160,6 +132,45 @@ public class CmlEngine {
         CmlClassInitManager.initClass(CmlClassInitManager.INIT_POSITION);
         CmlClassInitManager.initClass(CmlClassInitManager.INIT_IMAGE);
         CmlClassInitManager.initClass(CmlClassInitManager.INIT_RICH_TEXT);
+    }
+
+    private void initEngine(Context context) {
+        try {
+            // engine 获取并初始化
+            Class cmlEngine = Class.forName("com.didi.chameleon.weex.CmlWeexEngine");
+            if (null == cmlEngine) {
+                cmlEngine = Class.forName("com.didi.chameleon.rn.CmlRnEngine");
+            }
+            if (null == cmlEngine) {
+                String error = "CmlEngine init error, engine class not found !!!";
+                CmlLogUtil.e(TAG, error);
+            } else {
+                Object objEngine = cmlEngine.newInstance();
+                if (objEngine instanceof ICmlEngine) {
+                    mCmlEngine = (ICmlEngine) objEngine;
+                    mCmlEngine.init(context);
+                }
+            }
+
+            // web engine 获取并初始化
+            Class cmlWebEngine = Class.forName("com.didi.chameleon.web.CmlWebEngine");
+            if (null == cmlWebEngine) {
+                String error = "CmlWebEngine init error, engine class not found !!!";
+                CmlLogUtil.e(TAG, error);
+            } else {
+                Object objWebEngine = cmlWebEngine.newInstance();
+                if (objWebEngine instanceof ICmlEngine) {
+                    mCmlWebEngine = (ICmlEngine) objWebEngine;
+                    mCmlWebEngine.init(context);
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public Context getAppContext() {
@@ -236,6 +247,7 @@ public class CmlEngine {
     public void initPreloadList(List<CmlBundle> preloadList) {
         if (null == mCmlEngine) {
             CmlLogUtil.e(TAG, "CmlEngine performPreload, engine class not found !!!");
+            return;
         }
         mCmlEngine.initPreloadList(preloadList);
     }
@@ -246,6 +258,7 @@ public class CmlEngine {
     public void performPreload() {
         if (null == mCmlEngine) {
             CmlLogUtil.e(TAG, "CmlEngine performPreload, engine class not found !!!");
+            return;
         }
         mCmlEngine.performPreload();
     }
