@@ -21,7 +21,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:background="@drawable/common_titlebar_bg">
+            android:background="@drawable/cml_common_titlebar_bg">
 
             <ImageView
                 android:id="@+id/cml_title_left"
@@ -31,7 +31,7 @@
                 android:layout_marginLeft="11dp"
                 android:clickable="true"
                 android:padding="5dp"
-                android:src="@drawable/common_title_bar_btn_back_selector" />
+                android:src="@drawable/cml_common_title_bar_btn_back_selector" />
 
 
             <Button
@@ -55,7 +55,7 @@
             android:id="@+id/common_title_bar_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@drawable/common_titlebar_shadow"
+            android:background="@drawable/cml_common_titlebar_shadow"
             android:clickable="false" />
     </LinearLayout>
 </RelativeLayout>

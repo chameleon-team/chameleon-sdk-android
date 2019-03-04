@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 public class CmlClassInitManager {
 
-    public static final String INIT_IMAGE = "com.didi.chameleon.sdk.image.CmlImageInit";
-
     public static final String INIT_RICH_TEXT = "com.didi.chameleon.weex.richtextcomponent.CmlRichTextInit";
 
     private static HashMap<String, ICmlClassInit> initSet = new HashMap<>();

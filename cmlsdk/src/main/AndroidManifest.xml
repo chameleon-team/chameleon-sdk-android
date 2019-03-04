@@ -6,5 +6,21 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application>
+        <activity android:name=".extend.image.CmlCropActivity" />
+        <activity android:name=".extend.image.CmlImageActivity" />
+
+        <provider
+            android:name=".extend.image.CmlFileProvider"
+            android:authorities="com.didi.chameleon.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/cml_file_paths" />
+        </provider>
+    </application>
 
 </manifest>

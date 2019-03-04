@@ -1,1 +1,1 @@
-include ':app', ':cmlweex', ':js-bundle-mgr', ':rich-text-component', ':cmlsdk', ':sdk-image', ':cmlrn', ':cmlweb'
+include ':app', ':cmlweex', ':js-bundle-mgr', ':rich-text-component', ':cmlsdk', ':cmlrn', ':cmlweb'

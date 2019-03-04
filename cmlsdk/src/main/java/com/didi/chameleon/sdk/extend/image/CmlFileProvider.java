@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.image;
+package com.didi.chameleon.sdk.extend.image;
 
 import android.support.v4.content.FileProvider;
 
