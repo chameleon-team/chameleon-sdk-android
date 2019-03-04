@@ -59,7 +59,6 @@ dependencies {
         implementation project(':cmlweb')
         implementation project(':rich-text-component')
         implementation project(':sdk-image')
-        implementation project(':sdk-location')
     }
 
     //SNAPSHOT版本的缓存有效时间为0秒，每次同步时都尝试更新

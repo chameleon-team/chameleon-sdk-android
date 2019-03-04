@@ -11,6 +11,7 @@ import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
 import com.didi.chameleon.sdk.extend.CmlModalModule;
+import com.didi.chameleon.sdk.extend.CmlPositionModule;
 import com.didi.chameleon.sdk.extend.CmlStorageModule;
 import com.didi.chameleon.sdk.extend.CmlStreamModule;
 import com.didi.chameleon.sdk.extend.CmlWebSocketModule;
@@ -129,7 +130,7 @@ public class CmlEngine {
         registerModule(CmlWebSocketModule.class);
         registerModule(CmlStreamModule.class);
         registerModule(CmlModalModule.class);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_POSITION);
+        registerModule(CmlPositionModule.class);
         CmlClassInitManager.initClass(CmlClassInitManager.INIT_IMAGE);
         CmlClassInitManager.initClass(CmlClassInitManager.INIT_RICH_TEXT);
     }
