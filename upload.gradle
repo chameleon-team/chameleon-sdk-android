@@ -45,7 +45,7 @@ publishing {
     repositories {
         maven {
             name 'release'
-            url 'https://oss.sonatype.org/content/repositories/releases/'
+            url 'https://oss.sonatype.org/service/local/repositories/releases/content/'
             credentials {
                 username = properties.getProperty("oss.usr")
                 password = properties.getProperty("oss.pwd")
