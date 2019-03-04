@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.didi.chameleon.sdk.image">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -10,13 +10,13 @@
         <activity android:name=".CmlCropActivity" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".CmlFileProvider"
             android:authorities="com.didi.chameleon.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/cml_file_paths" />
         </provider>
     </application>
 
