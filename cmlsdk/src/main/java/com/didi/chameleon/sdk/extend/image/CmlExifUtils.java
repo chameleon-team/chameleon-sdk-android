@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.image;
+package com.didi.chameleon.sdk.extend.image;
 
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;

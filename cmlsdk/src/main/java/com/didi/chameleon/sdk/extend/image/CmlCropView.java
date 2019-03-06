@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.image;
+package com.didi.chameleon.sdk.extend.image;
 
 import android.content.Context;
 import android.graphics.Canvas;

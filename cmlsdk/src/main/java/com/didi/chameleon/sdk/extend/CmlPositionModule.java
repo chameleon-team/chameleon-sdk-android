@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.location;
+package com.didi.chameleon.sdk.extend;
 
 import android.Manifest;
 import android.app.Activity;

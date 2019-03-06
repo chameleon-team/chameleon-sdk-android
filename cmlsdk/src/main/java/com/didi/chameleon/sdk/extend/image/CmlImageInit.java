@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.image;
+package com.didi.chameleon.sdk.extend.image;
 
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.utils.ICmlClassInit;

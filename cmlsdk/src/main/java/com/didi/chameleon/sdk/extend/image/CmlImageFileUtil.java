@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.image;
+package com.didi.chameleon.sdk.extend.image;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
