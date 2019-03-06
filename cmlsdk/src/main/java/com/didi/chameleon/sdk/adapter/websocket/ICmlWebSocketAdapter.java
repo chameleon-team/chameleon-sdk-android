@@ -2,7 +2,7 @@ package com.didi.chameleon.sdk.adapter.websocket;
 
 import android.support.annotation.Nullable;
 
-public interface CmlWebSocketAdapter {
+public interface ICmlWebSocketAdapter {
 
     void connect(String url, @Nullable String protocol, EventListener listener);
 

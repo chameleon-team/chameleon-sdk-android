@@ -1,6 +1,6 @@
 package com.didi.chameleon.sdk.adapter.thread;
 
-public interface CmlThreadAdapter {
+public interface ICmlThreadAdapter {
 
     void runOnUiThread(Runnable runnable);
 

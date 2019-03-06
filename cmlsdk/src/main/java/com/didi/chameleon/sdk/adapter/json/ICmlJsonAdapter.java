@@ -1,6 +1,6 @@
 package com.didi.chameleon.sdk.adapter.json;
 
-public interface CmlJsonAdapter {
+public interface ICmlJsonAdapter {
 
     <T> String toJson(T object);
 

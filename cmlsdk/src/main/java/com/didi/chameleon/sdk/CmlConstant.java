@@ -13,11 +13,6 @@ public class CmlConstant {
     public static final String WEEX_OPTIONS_KEY = "query";
 
     /**
-     * global callback 的key
-     */
-    public static final String GLOBAL_CALLBACK_KEY = "_beatlesCommunicate";
-
-    /**
      * 容器中存放的url的key
      */
     public static final String WEEX_INSTANCE_URL = "url";

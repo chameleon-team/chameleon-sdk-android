@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.alibaba.fastjson.JSON;
 
-public class CmlFastJsonDefault implements CmlJsonAdapter {
+public class CmlFastJsonDefault implements ICmlJsonAdapter {
 
     @NonNull
-    public static CmlJsonAdapter getDefault() throws ClassNotFoundException {
+    public static ICmlJsonAdapter getDefault() throws ClassNotFoundException {
         Class.forName("com.alibaba.fastjson.JSON");
         return new CmlFastJsonDefault();
     }

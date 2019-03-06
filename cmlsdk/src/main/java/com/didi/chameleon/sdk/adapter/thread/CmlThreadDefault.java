@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class CmlThreadDefault implements CmlThreadAdapter {
+public class CmlThreadDefault implements ICmlThreadAdapter {
 
     public static CmlThreadDefault getDefault() {
         return new CmlThreadDefault();

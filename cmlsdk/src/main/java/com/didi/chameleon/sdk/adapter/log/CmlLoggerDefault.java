@@ -2,7 +2,7 @@ package com.didi.chameleon.sdk.adapter.log;
 
 import android.util.Log;
 
-public class CmlLoggerDefault implements CmlLoggerAdapter {
+public class CmlLoggerDefault implements ICmlLoggerAdapter {
 
     @Override
     public void v(String tag, String msg) {

@@ -1,22 +1,20 @@
 package com.didi.chameleon.sdk.extend;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.didi.chameleon.sdk.CmlConstant;
-import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
 import com.didi.chameleon.sdk.ICmlInstance;
-import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlCallbackSimple;
 import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.module.CmlParam;
+import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 import com.didi.chameleon.sdk.utils.CmlViewUtil;
 
 import org.json.JSONException;
@@ -31,12 +29,12 @@ public class CmlCommonModule {
     }
 
     @CmlMethod(alias = "openPage")
-    public void openNativePage(ICmlInstance instance, Activity activity,
+    public void openNativePage(ICmlInstance instance, Context context,
                                @CmlParam(name = "url") String url, @CmlParam(name = "closeCurrent") boolean closeWeb) {
         if (closeWeb) {
             instance.finishSelf();
         }
-        CmlEngine.getInstance().launchPage(activity, url, null);
+        CmlEnvironment.getNavigatorAdapter().navigator(context, url);
     }
 
     @CmlMethod(alias = "closePage")

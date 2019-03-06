@@ -16,17 +16,17 @@ import okhttp3.WebSocketListener;
  * Chameleon 默认 WebSocket，基于 OkHttp3
  * Created by youzicong on 2018/10/12
  */
-public class CmlWebSocketDefault implements CmlWebSocketAdapter {
+public class CmlWebSocketDefault implements ICmlWebSocketAdapter {
     private static final String HEADER_SEC_WEB_SOCKET_PROTOCOL = "Sec-WebSocket-Protocol";
     private WebSocket ws;
-    private CmlWebSocketAdapter.EventListener eventListener;
+    private ICmlWebSocketAdapter.EventListener eventListener;
 
     @Override
     public void connect(String url, @Nullable String protocol, final EventListener listener) {
         try {
             Class.forName("okhttp3.OkHttpClient");
         } catch (Exception e) {
-            throw CmlAdapterException.throwAdapterNone(CmlWebSocketAdapter.class);
+            throw CmlAdapterException.throwAdapterNone(ICmlWebSocketAdapter.class);
         }
         eventListener = listener;
         OkHttpClient okHttpClient = new OkHttpClient();

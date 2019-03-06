@@ -5,8 +5,8 @@ import android.os.Looper;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlInstance;
-import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketAdapter;
 import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketCloseCodes;
+import com.didi.chameleon.sdk.adapter.websocket.ICmlWebSocketAdapter;
 import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
@@ -26,7 +26,7 @@ public class CmlWebSocketModule {
     private static final String KEY_WAS_CLEAN = "wasClean";
 
     private String instanceId;
-    private CmlWebSocketAdapter webSocketAdapter;
+    private ICmlWebSocketAdapter webSocketAdapter;
     private WebSocketAdapter eventListener;
 
     public CmlWebSocketModule(ICmlInstance instance) {
@@ -89,7 +89,7 @@ public class CmlWebSocketModule {
         }
     }
 
-    private class WebSocketAdapter implements CmlWebSocketAdapter.EventListener {
+    private class WebSocketAdapter implements ICmlWebSocketAdapter.EventListener {
 
         @Override
         public void onOpen() {

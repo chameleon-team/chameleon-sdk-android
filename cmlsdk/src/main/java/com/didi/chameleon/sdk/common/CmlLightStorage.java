@@ -4,14 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.didi.chameleon.sdk.adapter.storage.CmlStorageAdapter;
 import com.didi.chameleon.sdk.adapter.storage.CmlStorageDefault;
+import com.didi.chameleon.sdk.adapter.storage.ICmlStorageAdapter;
 
-public class CmlLightStorage implements CmlStorageAdapter {
+public class CmlLightStorage implements ICmlStorageAdapter {
 
-    private CmlStorageAdapter adapter;
+    private ICmlStorageAdapter adapter;
 
-    public CmlLightStorage(@NonNull Context context, @Nullable CmlStorageAdapter adapter) {
+    public CmlLightStorage(@NonNull Context context, @Nullable ICmlStorageAdapter adapter) {
         this.adapter = adapter != null ? adapter : CmlStorageDefault.getDefault(context);
     }
 

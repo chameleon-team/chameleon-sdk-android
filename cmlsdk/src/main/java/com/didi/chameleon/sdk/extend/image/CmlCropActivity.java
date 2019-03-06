@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
