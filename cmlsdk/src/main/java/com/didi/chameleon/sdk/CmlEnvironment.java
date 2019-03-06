@@ -10,6 +10,7 @@ import com.didi.chameleon.sdk.adapter.log.CmlLoggerDefault;
 import com.didi.chameleon.sdk.adapter.log.ICmlLoggerAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
+import com.didi.chameleon.sdk.adapter.navigator.CmlNavigatorDefault;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
 import com.didi.chameleon.sdk.adapter.storage.ICmlStorageAdapter;
 import com.didi.chameleon.sdk.adapter.thread.ICmlThreadAdapter;
@@ -188,6 +189,9 @@ public class CmlEnvironment {
     }
 
     public static ICmlNavigatorAdapter getNavigatorAdapter() {
+        if (navigatorAdapter == null) {
+            navigatorAdapter = new CmlNavigatorDefault();
+        }
         return navigatorAdapter;
     }
 

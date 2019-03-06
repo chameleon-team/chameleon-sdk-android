@@ -1,11 +1,9 @@
 package com.didi.chameleon.sdk.extend;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.didi.chameleon.sdk.CmlConstant;
-import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
@@ -31,12 +29,12 @@ public class CmlCommonModule {
     }
 
     @CmlMethod(alias = "openPage")
-    public void openNativePage(ICmlInstance instance, Activity activity,
+    public void openNativePage(ICmlInstance instance, Context context,
                                @CmlParam(name = "url") String url, @CmlParam(name = "closeCurrent") boolean closeWeb) {
         if (closeWeb) {
             instance.finishSelf();
         }
-        CmlEngine.getInstance().launchPage(activity, url, null);
+        CmlEnvironment.getNavigatorAdapter().navigator(context, url);
     }
 
     @CmlMethod(alias = "closePage")
