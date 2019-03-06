@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -15,12 +16,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 
 /**
  * 用于缩放裁剪的自定义ImageView视图.
  */
-public class CmlCropImageView extends ImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
+public class CmlCropImageView extends AppCompatImageView implements View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final int BORDERDISTANCE = CmlCropView.BORDERDISTANCE;
 
@@ -95,8 +95,8 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
         final int drawableHeight = d.getIntrinsicHeight();
 
         // 边框长度，据屏幕左右边缘50px
-        borderWidthLength= (int) (viewWidth - BORDERDISTANCE * 2);
-        borderHeightLength = (int) (borderWidthLength*heightScale/widthScale);
+        borderWidthLength = (int) (viewWidth - BORDERDISTANCE * 2);
+        borderHeightLength = (int) (borderWidthLength * heightScale / widthScale);
 
         float scale = 1.0f;
 
@@ -142,11 +142,11 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
         //图片尺寸超过显示大小，按最大比例压缩
         if (drawableHeight > viewHeight && drawableWidth > viewWidth) {
             baseMatrix.reset();
-            float distanceHeight=drawableHeight-viewHeight;
-            float distanceWidth=drawableWidth-viewWidth;
-            if(distanceHeight>distanceWidth){
+            float distanceHeight = drawableHeight - viewHeight;
+            float distanceWidth = drawableWidth - viewWidth;
+            if (distanceHeight > distanceWidth) {
                 scale = viewWidth / drawableWidth;
-            }else{
+            } else {
                 scale = viewHeight / drawableHeight;
             }
             baseMatrix.postScale(scale, scale);
@@ -453,8 +453,7 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
     /**
      * Helper method that maps the supplied Matrix to the current Drawable
      *
-     * @param matrix
-     *            - Matrix to map Drawable against
+     * @param matrix - Matrix to map Drawable against
      * @return RectF - Displayed Rectangle
      */
     private RectF getDisplayRect(Matrix matrix) {
@@ -488,11 +487,8 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
     /**
      * 剪切图片，返回剪切后的bitmap对象
      *
-     * @param outputX
-     *            - 输出图片的宽度.
-     * @param outputY
-     *            - 输出图片的高度.
-     *
+     * @param outputX - 输出图片的宽度.
+     * @param outputY - 输出图片的高度.
      * @return bitmap
      */
     public Bitmap crop(float outputX, float outputY) {
@@ -539,11 +535,8 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
     /**
      * 剪切图片，返回剪切后的bitmap对象
      *
-     * @param outputX
-     *            - 输出图片的宽度.
-     * @param outputY
-     *            - 输出图片的高度.
-     *
+     * @param outputX - 输出图片的宽度.
+     * @param outputY - 输出图片的高度.
      * @return bitmap
      */
     public Bitmap cropUpPercentTen(float outputX, float outputY) {
@@ -566,27 +559,27 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
         float curScale = curDrawableHeight / srcHeight;
 
         // 获取截取位置的左上角相对坐标,如果左上角可以刻外扩图片，默认扩大图片的10%
-        float widthTenPercent= (float) ((outputX*0.1)/curScale);
-        float heightTenPercent= (float) ((outputY*0.1)/curScale);
+        float widthTenPercent = (float) ((outputX * 0.1) / curScale);
+        float heightTenPercent = (float) ((outputY * 0.1) / curScale);
         float cropDrawableTop = (viewHeight - borderHeightLength) / 2;
-        float relativeTop=cropDrawableTop - rect.top;
-        if(Math.round(cropDrawableTop-rect.top)>heightTenPercent){
-            relativeTop-=heightTenPercent;
+        float relativeTop = cropDrawableTop - rect.top;
+        if (Math.round(cropDrawableTop - rect.top) > heightTenPercent) {
+            relativeTop -= heightTenPercent;
         }
         float cropDrawableLeft = (viewWidth - borderWidthLength) / 2;
         float relativeLeft = cropDrawableLeft - rect.left;
-        if(Math.round(cropDrawableLeft-rect.left)>widthTenPercent){
-            relativeLeft -=widthTenPercent;
+        if (Math.round(cropDrawableLeft - rect.left) > widthTenPercent) {
+            relativeLeft -= widthTenPercent;
         }
-        float cropDrawableRight=((viewWidth - borderWidthLength) / 2)+borderWidthLength;
-        float relativeRight=borderWidthLength;
-        if(Math.round(rect.right-cropDrawableRight)>widthTenPercent){
-            relativeRight+=widthTenPercent;
+        float cropDrawableRight = ((viewWidth - borderWidthLength) / 2) + borderWidthLength;
+        float relativeRight = borderWidthLength;
+        if (Math.round(rect.right - cropDrawableRight) > widthTenPercent) {
+            relativeRight += widthTenPercent;
         }
-        float cropDrawableBottom=((viewHeight - borderHeightLength) / 2)+borderHeightLength;
-        float relativeBottom=borderHeightLength;
-        if(Math.round(rect.bottom-cropDrawableBottom)>heightTenPercent){
-            relativeBottom+=heightTenPercent;
+        float cropDrawableBottom = ((viewHeight - borderHeightLength) / 2) + borderHeightLength;
+        float relativeBottom = borderHeightLength;
+        if (Math.round(rect.bottom - cropDrawableBottom) > heightTenPercent) {
+            relativeBottom += heightTenPercent;
         }
 
         // 缩放、截取原图
@@ -596,8 +589,8 @@ public class CmlCropImageView extends ImageView implements View.OnTouchListener,
         Bitmap bitmap;
         try {
             bitmap = Bitmap.createBitmap(
-                    d.getBitmap(), (int)(relativeLeft/curScale), (int)(relativeTop/curScale), (int) (relativeRight/curScale),
-                    (int) (relativeBottom/curScale), m, true);
+                    d.getBitmap(), (int) (relativeLeft / curScale), (int) (relativeTop / curScale), (int) (relativeRight / curScale),
+                    (int) (relativeBottom / curScale), m, true);
         } catch (Exception e) {
             return null;
         }

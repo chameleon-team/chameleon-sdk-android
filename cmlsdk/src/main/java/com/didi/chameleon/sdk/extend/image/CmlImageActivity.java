@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.R;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 
@@ -90,7 +91,7 @@ public class CmlImageActivity extends FragmentActivity {
     @Override
     public void finish() {
         super.finish();
-        overridePendingTransition(R.anim.down_to_up_slide_in, R.anim.up_to_down_slide_out);
+        overridePendingTransition(R.anim.cml_down_to_up_slide_in, R.anim.cml_up_to_down_slide_out);
         sImageCallback = null;
     }
 
@@ -131,7 +132,7 @@ public class CmlImageActivity extends FragmentActivity {
                 startActivityForResult(intent, REQ_ALBUM_ACTIVITY);
                 break;
             default:
-                overridePendingTransition(R.anim.down_to_up_slide_in, R.anim.up_to_down_slide_out);
+                overridePendingTransition(R.anim.cml_down_to_up_slide_in, R.anim.cml_up_to_down_slide_out);
                 setContentView(R.layout.cml_image_pick_dialog);
                 initView();
                 break;
