@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
-public class CmlToastDefault implements CmlToastAdapter {
+public class CmlToastDefault implements ICmlToastAdapter {
 
     private Toast toast;
 

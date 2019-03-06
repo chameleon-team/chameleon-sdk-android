@@ -1,6 +1,6 @@
 package com.didi.chameleon.sdk.adapter.log;
 
-public interface CmlLoggerAdapter {
+public interface ICmlLoggerAdapter {
 
     void v(String tag, String msg);
 

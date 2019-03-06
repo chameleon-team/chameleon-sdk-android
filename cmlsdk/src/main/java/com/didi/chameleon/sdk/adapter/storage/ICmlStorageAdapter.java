@@ -1,6 +1,6 @@
 package com.didi.chameleon.sdk.adapter.storage;
 
-public interface CmlStorageAdapter {
+public interface ICmlStorageAdapter {
 
     void save(String key, String data);
 

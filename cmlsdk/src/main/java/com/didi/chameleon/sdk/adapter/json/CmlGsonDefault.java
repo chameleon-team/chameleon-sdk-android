@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-public class CmlGsonDefault implements CmlJsonAdapter {
+public class CmlGsonDefault implements ICmlJsonAdapter {
 
     @NonNull
-    public static CmlJsonAdapter getDefault() throws ClassNotFoundException {
+    public static ICmlJsonAdapter getDefault() throws ClassNotFoundException {
         Class.forName("com.google.gson.Gson");
         return new CmlGsonDefault();
     }

@@ -21,7 +21,7 @@ package com.didi.chameleon.sdk.adapter.http;
 import java.util.List;
 import java.util.Map;
 
-public interface CmlHttpAdapter {
+public interface ICmlHttpAdapter {
 
     /**
      * http request method

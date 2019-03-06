@@ -3,7 +3,7 @@ package com.didi.chameleon.sdk.extend;
 import android.content.Context;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
-import com.didi.chameleon.sdk.adapter.modal.CmlDialogAdapter;
+import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlCallbackSimple;
 import com.didi.chameleon.sdk.module.CmlMethod;
@@ -28,7 +28,7 @@ public class CmlModalModule {
     @CmlMethod(alias = "alert")
     public void alert(Context context, @CmlParam(name = MESSAGE) String msg,
                       @CmlParam(name = CONFIRM_TITLE) String ok, final CmlCallbackSimple callback) {
-        CmlEnvironment.getModalTip().showAlert(context, msg, ok, new CmlDialogAdapter.CmlTapListener() {
+        CmlEnvironment.getModalTip().showAlert(context, msg, ok, new ICmlDialogAdapter.CmlTapListener() {
             @Override
             public void onTap() {
                 callback.onSuccess();
@@ -40,12 +40,12 @@ public class CmlModalModule {
     public void confirm(Context context, @CmlParam(name = MESSAGE) String msg,
                         final @CmlParam(name = CONFIRM_TITLE) String ok, final @CmlParam(name = CANCEL_TITLE) String cancel,
                         final CmlCallback<String> callback) {
-        CmlEnvironment.getModalTip().showConfirm(context, msg, ok, cancel, new CmlDialogAdapter.CmlTapListener() {
+        CmlEnvironment.getModalTip().showConfirm(context, msg, ok, cancel, new ICmlDialogAdapter.CmlTapListener() {
             @Override
             public void onTap() {
                 callback.onCallback(ok);
             }
-        }, new CmlDialogAdapter.CmlTapListener() {
+        }, new ICmlDialogAdapter.CmlTapListener() {
             @Override
             public void onTap() {
                 callback.onCallback(cancel);

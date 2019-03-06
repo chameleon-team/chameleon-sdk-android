@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
-public class CmlDialogDefault implements CmlDialogAdapter {
+public class CmlDialogDefault implements ICmlDialogAdapter {
 
     private static final String OK = "OK";
     private static final String CANCEL = "Cancel";

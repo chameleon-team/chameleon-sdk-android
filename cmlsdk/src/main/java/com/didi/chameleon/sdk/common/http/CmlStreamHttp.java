@@ -3,10 +3,10 @@ package com.didi.chameleon.sdk.common.http;
 import android.net.Uri;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
-import com.didi.chameleon.sdk.adapter.http.CmlHttpAdapter;
 import com.didi.chameleon.sdk.adapter.http.CmlHttpAdapterDefault;
 import com.didi.chameleon.sdk.adapter.http.CmlRequest;
 import com.didi.chameleon.sdk.adapter.http.CmlResponse;
+import com.didi.chameleon.sdk.adapter.http.ICmlHttpAdapter;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
@@ -25,10 +25,10 @@ public class CmlStreamHttp {
 
     private static final String STATUS_TEXT = "statusText";
     private static final String STATUS = "status";
-    private final CmlHttpAdapter mAdapter;
+    private final ICmlHttpAdapter mAdapter;
     static final Pattern CHARSET_PATTERN = Pattern.compile("charset=([a-z0-9-]+)");
 
-    public CmlStreamHttp(CmlHttpAdapter adapter) {
+    public CmlStreamHttp(ICmlHttpAdapter adapter) {
         if (adapter == null) {
             adapter = new CmlHttpAdapterDefault();
         }
@@ -177,7 +177,7 @@ public class CmlStreamHttp {
         void onResponse(CmlResponse response, Map<String, String> headers);
     }
 
-    private static class StreamHttpListener implements CmlHttpAdapter.OnHttpListener {
+    private static class StreamHttpListener implements ICmlHttpAdapter.OnHttpListener {
         private ResponseCallback mCallback;
         private CmlCallback<Map> mProgressCallback;
         private Map<String, Object> mResponse = new HashMap<>();

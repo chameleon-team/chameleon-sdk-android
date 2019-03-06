@@ -3,9 +3,6 @@ package com.didi.chameleon.sdk.module;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class CmlCallbackModel<T> {
 
     private static final String CALLBACK_NO = "errno";

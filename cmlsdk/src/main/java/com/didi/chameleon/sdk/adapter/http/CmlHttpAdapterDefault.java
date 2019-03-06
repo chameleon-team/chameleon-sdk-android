@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class CmlHttpAdapterDefault implements CmlHttpAdapter {
+public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
 
     private static final IEventReporterDelegate DEFAULT_DELEGATE = new NOPEventReportDelegate();
     private ExecutorService mExecutorService;

@@ -2,7 +2,7 @@ package com.didi.chameleon.sdk.adapter.modal;
 
 import android.content.Context;
 
-public interface CmlDialogAdapter {
+public interface ICmlDialogAdapter {
 
     void showAlert(Context context, String msg, String okTxt, CmlTapListener tap);
 

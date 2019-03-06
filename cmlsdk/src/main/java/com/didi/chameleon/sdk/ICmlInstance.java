@@ -1,7 +1,6 @@
 package com.didi.chameleon.sdk;
 
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.didi.chameleon.sdk.container.ICmlContainer;
 

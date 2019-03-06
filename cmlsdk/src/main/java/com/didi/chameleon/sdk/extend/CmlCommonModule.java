@@ -10,13 +10,13 @@ import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlActivityInstance;
 import com.didi.chameleon.sdk.ICmlInstance;
-import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlCallbackSimple;
 import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.module.CmlParam;
+import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 import com.didi.chameleon.sdk.utils.CmlViewUtil;
 
 import org.json.JSONException;

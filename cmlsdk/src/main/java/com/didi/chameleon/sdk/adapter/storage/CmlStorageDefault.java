@@ -3,7 +3,7 @@ package com.didi.chameleon.sdk.adapter.storage;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class CmlStorageDefault implements CmlStorageAdapter {
+public class CmlStorageDefault implements ICmlStorageAdapter {
 
     public static final String SP_NAME = "cml_sp";
 

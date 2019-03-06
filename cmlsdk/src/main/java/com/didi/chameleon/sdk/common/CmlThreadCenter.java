@@ -1,13 +1,13 @@
 package com.didi.chameleon.sdk.common;
 
-import com.didi.chameleon.sdk.adapter.thread.CmlThreadAdapter;
 import com.didi.chameleon.sdk.adapter.thread.CmlThreadDefault;
+import com.didi.chameleon.sdk.adapter.thread.ICmlThreadAdapter;
 
 public class CmlThreadCenter {
 
-    private CmlThreadAdapter adapter;
+    private ICmlThreadAdapter adapter;
 
-    public CmlThreadCenter(CmlThreadAdapter adapter) {
+    public CmlThreadCenter(ICmlThreadAdapter adapter) {
         this.adapter = adapter;
     }
 
