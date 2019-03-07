@@ -32,10 +32,8 @@ public class CmlJsonWrapper implements ICmlJsonAdapter {
         }
         try {
             this.adapter = CmlFastJsonDefault.getDefault();
-            return;
         } catch (ClassNotFoundException ignored) {
-
+            throw CmlAdapterException.throwAdapterNone(ICmlJsonAdapter.class);
         }
-        throw CmlAdapterException.throwAdapterNone(ICmlJsonAdapter.class);
     }
 }
