@@ -18,7 +18,6 @@ import com.didi.chameleon.sdk.extend.CmlWebSocketModule;
 import com.didi.chameleon.sdk.extend.image.CmlImageModule;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
-import com.didi.chameleon.sdk.utils.CmlClassInitManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 
@@ -127,7 +126,6 @@ public class CmlEngine {
         registerModule(CmlModalModule.class);
         registerModule(CmlPositionModule.class);
         registerModule(CmlImageModule.class);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_RICH_TEXT);
     }
 
     private void initEngine(Context context) {
