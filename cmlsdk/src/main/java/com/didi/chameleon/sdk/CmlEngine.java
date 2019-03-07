@@ -113,17 +113,11 @@ public class CmlEngine {
      * @param context Application 对象
      */
     public void init(Context context, ICmlConfig config) {
-        init(context, config, true);
-    }
-
-    public void init(Context context, ICmlConfig config, boolean autoInitEngine) {
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
 
-        if (autoInitEngine) {
-            initEngine(context);
-        }
+        initEngine(context);
 
         registerModule(CmlCommonModule.class);
         registerModule(CmlClipboardModule.class);
