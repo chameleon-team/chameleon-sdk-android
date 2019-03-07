@@ -1,5 +1,6 @@
 package com.didi.chameleon.weex.richtextcomponent.richinfo;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -24,10 +25,12 @@ public class CmlRichInfoSpan extends SpannableString {
         void onItemClick(View widget, String tag, int index);
     }
 
+    private Context context;
     private CmlSpanAction action;
 
-    public CmlRichInfoSpan(CmlRichInfo info, CmlSpanAction action) {
+    public CmlRichInfoSpan(Context context, CmlRichInfo info, CmlSpanAction action) {
         super(info.message);
+        this.context = context;
         this.action = action;
         addSpans(info);
     }
@@ -108,7 +111,7 @@ public class CmlRichInfoSpan extends SpannableString {
                     default:
                         if (!TextUtils.isEmpty(b.fontName)) {
                             //从assets下获取字体文件
-                            typeface = CmlFontUtil.getTypeface(b.fontName);
+                            typeface = CmlFontUtil.getTypeface(context, b.fontName);
                         }
                 }
 

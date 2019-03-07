@@ -70,7 +70,7 @@ public class CmlRichInfoBinder {
         if (!TextUtils.isEmpty(richInfo.message)) {
             richInfo.message = richInfo.message.replace("\\n", "\n");
         }
-        textView.setText(new CmlRichInfoSpan(richInfo, new CmlRichInfoSpan.CmlSpanAction() {
+        textView.setText(new CmlRichInfoSpan(textView.getContext(), richInfo, new CmlRichInfoSpan.CmlSpanAction() {
             @Override
             public void onItemClick(View widget, String tag, int index) {
                 isSpanClicked = true;

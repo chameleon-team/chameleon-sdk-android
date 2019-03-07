@@ -37,11 +37,11 @@ dependencies {
 
     if (Boolean.parseBoolean(PUBLISH)) {
         implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-//        compile "com.didiglobal.chameleon:rich-text:$VERSION"
+        implementation "com.didiglobal.chameleon:rich-text-component:$VERSION"
         implementation "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
     } else {
         implementation project(':cmlsdk')
-//        implementation project(':rich-text-component')
+        implementation project(':rich-text-component')
         implementation project(':js-bundle-mgr')
     }
 }
