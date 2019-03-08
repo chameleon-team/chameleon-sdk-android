@@ -98,6 +98,9 @@ public class CmlRichInfoSpan extends SpannableString {
                 }
 
                 Typeface typeface = null;
+                if (b.fontName == null) {
+                    b.fontName = "";
+                }
                 switch (b.fontName) {
                     case "sans":
                         typeface = Typeface.SANS_SERIF;
