@@ -22,12 +22,14 @@ import com.didi.chameleon.weex.adapter.WXImgLoaderAdapter;
 import com.didi.chameleon.weex.adapter.WxJsExceptionAdapter;
 import com.didi.chameleon.weex.bridge.CmlWeexBridge;
 import com.didi.chameleon.weex.bridge.CmlWeexBridgeJsToNative;
+import com.didi.chameleon.weex.component.CmlWeexRichText;
 import com.didi.chameleon.weex.container.CmlWeexActivity;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleEngine;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleEnvironment;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleManager;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleMgrConfig;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
+import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
@@ -105,6 +107,7 @@ public class CmlWeexEngine implements ICmlEngine {
         WXSDKEngine.initialize((Application) context.getApplicationContext(), builder.build());
         try {
             WXSDKEngine.registerModule(ICmlBridgeProtocol.CML_BRIDGE, CmlWeexBridgeJsToNative.class, false);
+            WXSDKEngine.registerComponent(CmlRichTextComponent.NAME, CmlWeexRichText.class);
         } catch (WXException e) {
             CmlLogUtil.d(TAG, "register weex bridge module error.");
         }

@@ -50,14 +50,10 @@ dependencies {
         implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
         implementation "com.didiglobal.chameleon:cmlweex:$VERSION"
         implementation "com.didiglobal.chameleon:cmlweb:$VERSION"
-        implementation "com.didiglobal.chameleon:rich-text-component:$VERSION"
-        implementation "com.didiglobal.chameleon:sdk-image:$VERSION"
-        implementation "com.didiglobal.chameleon:sdk-location:$VERSION"
     } else {
         implementation project(':cmlsdk')
         implementation project(':cmlweex')
         implementation project(':cmlweb')
-        implementation project(':rich-text-component')
     }
 
     //SNAPSHOT版本的缓存有效时间为0秒，每次同步时都尝试更新

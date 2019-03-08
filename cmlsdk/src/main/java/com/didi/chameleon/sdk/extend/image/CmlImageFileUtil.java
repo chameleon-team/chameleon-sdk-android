@@ -247,7 +247,7 @@ public class CmlImageFileUtil {
 
     public static Uri getUriForPath(Context context, File file) {
         if (Build.VERSION.SDK_INT >= 24) {
-            return FileProvider.getUriForFile(context, "com.didi.chameleon.fileprovider", file);
+            return FileProvider.getUriForFile(context, context.getApplicationInfo().processName + ".com.didi.chameleon.fileprovider", file);
         } else {
             return Uri.fromFile(file);
         }

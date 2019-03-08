@@ -14,7 +14,7 @@
 
         <provider
             android:name=".extend.image.CmlFileProvider"
-            android:authorities="com.didi.chameleon.fileprovider"
+            android:authorities="${applicationId}.com.didi.chameleon.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

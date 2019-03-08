@@ -33,15 +33,7 @@ public class Util {
     }
 
     public static boolean isWebPageUrl(String url) {
-        if (!url.startsWith("https://") && !url.startsWith("http://") && !url.startsWith("file://")) {
-            return false;
-        }
-        if (!url.endsWith(".html") && !url.endsWith(".htm") && !url.endsWith(".aspx")
-                && !url.endsWith(".jsp") && !url.endsWith(".php") && !url.endsWith(".perl")
-                && !url.endsWith(".cgi")) {
-            return false;
-        }
-        return true;
+        return url.startsWith("https://") || url.startsWith("http://") || url.startsWith("file://");
     }
 
     /**

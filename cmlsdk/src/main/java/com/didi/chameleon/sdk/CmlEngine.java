@@ -18,7 +18,6 @@ import com.didi.chameleon.sdk.extend.CmlWebSocketModule;
 import com.didi.chameleon.sdk.extend.image.CmlImageModule;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
-import com.didi.chameleon.sdk.utils.CmlClassInitManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 
@@ -113,17 +112,11 @@ public class CmlEngine {
      * @param context Application 对象
      */
     public void init(Context context, ICmlConfig config) {
-        init(context, config, true);
-    }
-
-    public void init(Context context, ICmlConfig config, boolean autoInitEngine) {
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
 
-        if (autoInitEngine) {
-            initEngine(context);
-        }
+        initEngine(context);
 
         registerModule(CmlCommonModule.class);
         registerModule(CmlClipboardModule.class);
@@ -133,7 +126,6 @@ public class CmlEngine {
         registerModule(CmlModalModule.class);
         registerModule(CmlPositionModule.class);
         registerModule(CmlImageModule.class);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_RICH_TEXT);
     }
 
     private void initEngine(Context context) {
