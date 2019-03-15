@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleConstant;
+import com.didi.chameleon.weex.jsbundlemgr.net.CmlRequest;
+import com.didi.chameleon.weex.jsbundlemgr.net.CmlResponse;
 import com.didi.chameleon.weex.jsbundlemgr.utils.CmlCodeUtils;
 import com.didi.chameleon.weex.jsbundlemgr.utils.CmlLogUtils;
 
@@ -15,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
-
  * @since 2018/9/10
  * 网络获取代码方式的实现
  */
@@ -24,7 +25,7 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
 
     private CmlCache mPreloadCache;
     private CmlCache mCommonCache;
-    private CmlFileDownloader mDownLoader;
+    protected CmlFileDownloader mDownLoader;
     private final Map<String, List<CmlGetCodeCallback>> callbackMaps = new HashMap<>();
 
 
@@ -55,6 +56,26 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
      */
     @Override
     public void getCode(final String url, @Nullable CmlGetCodeCallback callback) {
+        if (!storeCallbackNewRequest(url, callback)) {
+            return;
+        }
+        mDownLoader.startDownload(new CmlRequest(url), new CmlFileDownloader.FileDownloaderListener() {
+
+            @Override
+            public void onSuccess(CmlResponse response, String template) {
+                CmlLogUtils.i(CmlJsBundleConstant.TAG, "download success");
+                handleDownLoadResult(response, url, template);
+            }
+
+            @Override
+            public void onFailed(String errorMsg) {
+                CmlLogUtils.e(CmlJsBundleConstant.TAG, "download failed, url = " + url + ",errorMsg = " + errorMsg);
+                handleDownLoadResult(null, url, null);
+            }
+        });
+    }
+
+    protected boolean storeCallbackNewRequest(String url, @Nullable CmlGetCodeCallback callback) {
         synchronized (callbackMaps) {
             if (callbackMaps.containsKey(url)) {
                 // 如果已经有同样链接的正在下载的任务，直接复用这个任务，不再新开
@@ -63,7 +84,7 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
                     list = new ArrayList<>();
                 }
                 list.add(callback);
-                return;
+                return false;
             } else if (callback != null) {
                 List<CmlGetCodeCallback> list = new ArrayList<>();
                 list.add(callback);
@@ -71,27 +92,14 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
             } else {
                 callbackMaps.put(url, null);
             }
+            return true;
         }
-        CmlLogUtils.v("CmlGetterNetImpl", "" + callbackMaps);
-        mDownLoader.startDownload(url, new CmlFileDownloader.FileDownloaderListener() {
-            @Override
-            public void onSuccess(String template) {
-                CmlLogUtils.i(CmlJsBundleConstant.TAG, "download success");
-                handleDownLoadResult(url, template);
-            }
-
-            @Override
-            public void onFailed(String errorMsg) {
-                CmlLogUtils.e(CmlJsBundleConstant.TAG, "download failed, url = " + url + ",errorMsg = " + errorMsg);
-                handleDownLoadResult(url, null);
-            }
-        });
     }
 
     /**
      * 处理下载结果。如果下载失败，返回错误回调。如果下载成功，先回调返回数据，再进行缓存
      */
-    private void handleDownLoadResult(String url, String template) {
+    protected void handleDownLoadResult(CmlResponse response, String url, String template) {
         boolean isPreload = false;
         if (callbackMaps.get(url) == null) {
             isPreload = true;

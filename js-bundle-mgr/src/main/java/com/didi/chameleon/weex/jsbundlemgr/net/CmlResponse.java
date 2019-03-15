@@ -19,6 +19,8 @@
 package com.didi.chameleon.weex.jsbundlemgr.net;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * limeihong
@@ -44,6 +46,9 @@ public class CmlResponse {
      * 出错时的错误信息
      */
     public String errorMsg;
+
+
+    public Map<String, List<String>> header;
 
 
     @Override

@@ -35,5 +35,5 @@ public interface CmlJsBundleManager {
      * @param url                      js的路径
      * @param cmlGetCodeStringCallback 回调接口
      */
-    void getWXTemplate(String url, CmlGetCodeStringCallback cmlGetCodeStringCallback);
+    void getTemplate(String url, CmlGetCodeStringCallback cmlGetCodeStringCallback);
 }

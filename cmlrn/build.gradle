@@ -36,9 +36,9 @@ dependencies {
 
     if (Boolean.parseBoolean(PUBLISH)) {
         implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-        implementation "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
+        api "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
     } else {
         implementation project(':cmlsdk')
-        implementation project(':js-bundle-mgr')
+        api project(':js-bundle-mgr')
     }
 }
