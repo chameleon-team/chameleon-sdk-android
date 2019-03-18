@@ -46,15 +46,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    if (Boolean.parseBoolean(PUBLISH)) {
-        implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-        implementation "com.didiglobal.chameleon:cmlweex:$VERSION"
-        implementation "com.didiglobal.chameleon:cmlweb:$VERSION"
-    } else {
-        implementation project(':cmlsdk')
-        implementation project(':cmlweex')
-        implementation project(':cmlweb')
-    }
+    api project(':cmlsdk')
+    api project(':cmlweex')
+    api project(':cmlweb')
 
     //SNAPSHOT版本的缓存有效时间为0秒，每次同步时都尝试更新
     configurations.all {

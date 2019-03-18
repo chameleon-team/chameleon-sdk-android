@@ -35,13 +35,7 @@ dependencies {
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
 
-    if (Boolean.parseBoolean(PUBLISH)) {
-        implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-        api "com.didiglobal.chameleon:rich-text-component:$VERSION"
-        api "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
-    } else {
-        implementation project(':cmlsdk')
-        api project(':rich-text-component')
-        api project(':js-bundle-mgr')
-    }
+    api project(':cmlsdk')
+    api project(':rich-text-component')
+    api project(':js-bundle-mgr')
 }

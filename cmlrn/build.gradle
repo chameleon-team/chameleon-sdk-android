@@ -33,12 +33,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    if (Boolean.parseBoolean(PUBLISH)) {
-        implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-        api "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
-    } else {
-        implementation project(':cmlsdk')
-        api project(':js-bundle-mgr')
-    }
+    
+    api project(':cmlsdk')
+    api project(':js-bundle-mgr')
 }

@@ -25,6 +25,9 @@ allprojects {
             url "$rootDir/node_modules/react-native/android"
         }
         maven {
+            url 'file:///Users/didi/.m2/repository'
+        }
+        maven {
             url 'https://oss.sonatype.org/content/repositories/snapshots/' //这个是chameleon的临时仓库地址
         }
     }
