@@ -22,6 +22,18 @@ public class CmlBridgeManager {
     private static CmlBridgeManager instance = new CmlBridgeManager();
 
     private CmlBridgeManager() {
+        CmlInstanceManage.getInstance().registerListener(new CmlInstanceManage.CmlInstanceChangeListener() {
+            @Override
+            public void onAddInstance(String instanceId) {
+
+            }
+
+            @Override
+            public void onRemoveInstance(String instanceId) {
+                mNativeToJsBridges.remove(instanceId);
+                mJsToNativeBridges.remove(instanceId);
+            }
+        });
     }
 
     public static CmlBridgeManager getInstance() {
