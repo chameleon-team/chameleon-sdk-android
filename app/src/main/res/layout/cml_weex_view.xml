@@ -9,7 +9,7 @@
     <com.didi.chameleon.weex.container.CmlWeexView
         android:id="@+id/cml_view"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="320dp"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toTopOf="@id/txt_change_txt"
         app:layout_constraintLeft_toLeftOf="parent"

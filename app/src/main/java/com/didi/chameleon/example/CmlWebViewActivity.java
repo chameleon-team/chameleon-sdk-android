@@ -16,7 +16,7 @@ import org.json.JSONObject;
 public class CmlWebViewActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "CmlWeexViewActivity";
 
-    private static final String URL_NORMAL = "http://172.24.30.151:8000/cml/h5/index";
+    private static final String WEB_URL = "http://jalon.wang/cml-demo-say/dist/web/cml-demo-say.html";
 //    private static final String URL_NORMAL = "http://10.179.17.54:8000/cml/h5/index";
 
     private TextView txtChangeTxt;
@@ -33,7 +33,7 @@ public class CmlWebViewActivity extends AppCompatActivity implements View.OnClic
         cmlWebView = findViewById(R.id.cml_view);
 
         cmlWebView.onCreate();
-        cmlWebView.render(URL_NORMAL, null); // 加载远程jsbundle
+        cmlWebView.render(WEB_URL, null); // 加载远程jsbundle
 //        cmlWebView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
 
         txtChangeTxt.setOnClickListener(this);

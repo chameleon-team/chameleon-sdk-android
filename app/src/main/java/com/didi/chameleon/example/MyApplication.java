@@ -17,7 +17,7 @@ public class MyApplication extends Application implements ICmlConfig {
     @Override
     public void configAdapter() {
         // 开发阶段可以禁用js bundle缓存
-        CmlEnvironment.CML_ALLOW_BUNDLE_CACHE = false;
+        CmlEnvironment.CML_ALLOW_BUNDLE_CACHE = true;
         // Debug开关
         CmlEnvironment.CML_DEBUG = true;
         // 开发阶段手动降级测试

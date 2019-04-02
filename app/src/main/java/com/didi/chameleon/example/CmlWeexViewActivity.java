@@ -17,11 +17,8 @@ import org.json.JSONObject;
 public class CmlWeexViewActivity extends AppCompatActivity implements View.OnClickListener, CmlWeexView.IDegradeToH5 {
     private static final String TAG = "CmlWeexViewActivity";
 
-    //    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";
-    private static final String URL_JS_BUNDLE_OK = "http://172.24.30.151:8000/cml/h5/index?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";
-//    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.138.92:8000/weex/index.js";
-
-//    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.136.152:8081/dist/cml-demo-say.js";
+    private static final String WEB_URL = "http://jalon.wang/cml-demo-say/dist/web/cml-demo-say.html";
+    private static final String URL_JS_BUNDLE = WEB_URL + "?cml_addr=http%3a%2f%2fjalon.wang%2fcml-demo-say%2fdist%2fweex%2fcml-demo-say_0c731e1c5e428213d27a.js";
 
     private TextView txtChangeTxt;
     private CmlWeexView cmlWeexView;
@@ -39,8 +36,8 @@ public class CmlWeexViewActivity extends AppCompatActivity implements View.OnCli
 
         cmlWeexView.setDegradeToH5(this);
         cmlWeexView.onCreate();
-//        cmlWeexView.render(URL_JS_BUNDLE_OK, null); // 加载远程jsbundle
-        cmlWeexView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
+        cmlWeexView.render(URL_JS_BUNDLE, null); // 加载远程jsbundle
+//        cmlWeexView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
 
         txtChangeTxt.setOnClickListener(this);
     }
