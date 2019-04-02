@@ -19,8 +19,11 @@ public class CmlWeexViewActivity extends AppCompatActivity implements View.OnCli
 
     private static final String WEB_URL = "http://jalon.wang/cml-demo-say/dist/web/cml-demo-say.html";
     private static final String URL_JS_BUNDLE = WEB_URL + "?cml_addr=http%3a%2f%2fjalon.wang%2fcml-demo-say%2fdist%2fweex%2fcml-demo-say_0c731e1c5e428213d27a.js";
+    // 这是一个错误的 JS_BUNDLE
+    private static final String URL_JS_BUNDLE_ERR = WEB_URL + "?cml_addr=not-exist-bundle.js";
 
     private TextView txtChangeTxt;
+    private TextView txtDegrade;
     private CmlWeexView cmlWeexView;
     private ICmlView cmlView;
 
@@ -32,6 +35,7 @@ public class CmlWeexViewActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.cml_weex_view);
 
         txtChangeTxt = findViewById(R.id.txt_change_txt);
+        txtDegrade = findViewById(R.id.txt_degrade);
         cmlView = cmlWeexView = findViewById(R.id.cml_view);
 
         cmlWeexView.setDegradeToH5(this);
@@ -40,6 +44,7 @@ public class CmlWeexViewActivity extends AppCompatActivity implements View.OnCli
 //        cmlWeexView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
 
         txtChangeTxt.setOnClickListener(this);
+        txtDegrade.setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +82,9 @@ public class CmlWeexViewActivity extends AppCompatActivity implements View.OnCli
                                 CmlLogUtil.d(TAG, "data: " + data);
                             }
                         });
+                break;
+            case R.id.txt_degrade:
+                cmlWeexView.render(URL_JS_BUNDLE_ERR, null); // 加载不存在的 jsbundle，触发降级逻辑
                 break;
         }
     }

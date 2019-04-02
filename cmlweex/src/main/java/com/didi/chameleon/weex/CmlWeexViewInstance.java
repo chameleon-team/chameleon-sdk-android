@@ -322,9 +322,14 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     /**
      * 降级到{@link ICmlDegradeAdapter} 实现页面
      */
-    public void degradeToH5(int degradeCode) {
+    public void degradeToH5(final int degradeCode) {
         if (mInstanceListener != null) {
-            mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+            CmlEnvironment.getThreadCenter().postMain(new Runnable() {
+                @Override
+                public void run() {
+                    mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+                }
+            });
         }
     }
 
