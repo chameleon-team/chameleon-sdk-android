@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
 
     // 演示打开一般的URL
-    private static final String URL_NORMAL = "https://www.didiglobal.com";
+    private static final String URL_NORMAL = "http://172.24.30.151:8000/cml/h5/index";
     // 这是一个可以正常打开的 JS_BUNDLE
 //    private static final String URL_JS_BUNDLE_OK = "https://static.didialift.com/pinche/gift/chameleon-ui-builtin/web/chameleon-ui-builtin.html?cml_addr=https%3A%2F%2Fstatic.didialift.com%2Fpinche%2Fgift%2Fchameleon-ui-builtin%2Fweex%2Fchameleon-ui-builtin.js";
     private static final String URL_JS_BUNDLE_OK = "https://static.didialift.com/pinche/gift/chameleon-ui-builtin/web/chameleon-ui-builtin.html?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";

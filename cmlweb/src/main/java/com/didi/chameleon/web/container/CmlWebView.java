@@ -113,7 +113,7 @@ public class CmlWebView extends FrameLayout implements ICmlView {
 
     @Override
     public void finishSelf() {
-
+        // NOTHING
     }
 
     @Override

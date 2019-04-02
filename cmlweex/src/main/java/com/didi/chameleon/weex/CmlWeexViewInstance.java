@@ -350,7 +350,6 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         }
     }
 
-
     @Override
     public Context getContext() {
         return mCmlView.getContext();
@@ -433,7 +432,6 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * @since 18/7/30
      * 主要功能:
      */
-
     public interface ICmlInstanceListener {
         /**
          * 降级到h5.需要容器自己实现

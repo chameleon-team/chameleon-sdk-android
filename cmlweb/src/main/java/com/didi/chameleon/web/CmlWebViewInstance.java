@@ -68,13 +68,13 @@ public class CmlWebViewInstance implements ICmlViewInstance {
     @Nullable
     @Override
     public String getTargetURL() {
-        return null;
+        return mTotalUrl;
     }
 
     @Nullable
     @Override
     public String getCurrentURL() {
-        return null;
+        return mCmlUrl;
     }
 
     @Override
@@ -105,6 +105,7 @@ public class CmlWebViewInstance implements ICmlViewInstance {
 
     @Override
     public void render(String url, HashMap<String, Object> options) {
+        mTotalUrl = url;
         if (mWebView != null) {
             mWebView.loadUrl(url);
         }
@@ -123,31 +124,31 @@ public class CmlWebViewInstance implements ICmlViewInstance {
     @Nullable
     @Override
     public View getObjectView() {
-        return null;
+        return mCmlView.getObjectView();
     }
 
     @Override
     public boolean isActivity() {
-        return false;
+        return mCmlView.isActivity();
     }
 
     @Override
     public boolean isView() {
-        return false;
-    }
-
-    @Override
-    public void finishSelf() {
-
+        return mCmlView.isView();
     }
 
     @Override
     public boolean isInDialog() {
-        return false;
+        return mCmlView.isInDialog();
     }
 
     @Override
     public boolean isValid() {
-        return false;
+        return mCmlView.isValid();
+    }
+
+    @Override
+    public void finishSelf() {
+        // do nothing
     }
 }

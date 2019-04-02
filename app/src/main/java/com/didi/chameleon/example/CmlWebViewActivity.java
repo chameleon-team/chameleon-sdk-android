@@ -16,11 +16,11 @@ import org.json.JSONObject;
 public class CmlWebViewActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "CmlWeexViewActivity";
 
-    private static final String URL_JS_BUNDLE_OK = "http://172.24.30.151:8000/cml/h5/index";
-//    private static final String URL_JS_BUNDLE_OK = "http://10.179.17.54:8000/cml/h5/index";
+    private static final String URL_NORMAL = "http://172.24.30.151:8000/cml/h5/index";
+//    private static final String URL_NORMAL = "http://10.179.17.54:8000/cml/h5/index";
 
     private TextView txtChangeTxt;
-    private CmlWebView cmlView;
+    private CmlWebView cmlWebView;
 
     private int num;
 
@@ -30,11 +30,11 @@ public class CmlWebViewActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.cml_web_view);
 
         txtChangeTxt = findViewById(R.id.txt_change_txt);
-        cmlView = findViewById(R.id.cml_view);
+        cmlWebView = findViewById(R.id.cml_view);
 
-        cmlView.onCreate();
-        cmlView.render(URL_JS_BUNDLE_OK, null); // 加载远程jsbundle
-//        cmlView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
+        cmlWebView.onCreate();
+        cmlWebView.render(URL_NORMAL, null); // 加载远程jsbundle
+//        cmlWebView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
 
         txtChangeTxt.setOnClickListener(this);
     }
@@ -42,24 +42,24 @@ public class CmlWebViewActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        if (cmlView != null) {
-            cmlView.onResume();
+        if (cmlWebView != null) {
+            cmlWebView.onResume();
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (cmlView != null) {
-            cmlView.onPause();
+        if (cmlWebView != null) {
+            cmlWebView.onPause();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cmlView != null) {
-            cmlView.onDestroy();
+        if (cmlWebView != null) {
+            cmlWebView.onDestroy();
         }
     }
 
@@ -67,7 +67,7 @@ public class CmlWebViewActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txt_change_txt:
-                cmlView.invokeJsMethod("moduleDemo", "NaTellJS", getContent(),
+                cmlWebView.invokeJsMethod("moduleDemo", "NaTellJS", getContent(),
                         new CmlCallback<String>(String.class) {
                             @Override
                             public void onCallback(@Nullable String data) {

@@ -27,6 +27,7 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
     private ICmlDegradeAdapter.DegradeViewWrapper degradeViewWrapper;
     private boolean isDestroy;
     private HashMap<String, Object> options;
+    private IDegradeToH5 degradeToH5;
 
     public CmlWeexView(@NonNull Context context) {
         super(context);
@@ -45,6 +46,10 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
 
     private void init(Context context) {
         wxInstance = new CmlWeexViewInstance(CmlWeexView.this, CmlWeexView.this);
+    }
+
+    public void setDegradeToH5(IDegradeToH5 degradeToH5) {
+        this.degradeToH5 = degradeToH5;
     }
 
     /**
@@ -122,7 +127,11 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
             degradeViewWrapper = degradeAdapter.getDegradeView(degradeCode);
             removeAllViews();
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            addView(degradeViewWrapper.getView(getContext()), layoutParams);
+            View view = degradeViewWrapper.getView(getContext());
+            addView(view, layoutParams);
+            if (null != degradeToH5 && view instanceof ICmlView) {
+                degradeToH5.setView((ICmlView) view);
+            }
         }
         degradeViewWrapper.loadURL(getContext(), url, options);
     }
@@ -166,5 +175,9 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
     @Override
     public void finishSelf() {
         // NOTHING
+    }
+
+    public interface IDegradeToH5 {
+        void setView(ICmlView cmlView);
     }
 }
