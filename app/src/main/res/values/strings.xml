@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">CmlSDKExample</string>
-    <string name="demo_open_url">打开 URL</string>
+    <string name="demo_open_url_activity">全屏Web组件</string>
+    <string name="demo_open_url_view">Web视图组件</string>
     <string name="demo_degrade">降级演示</string>
     <string name="demo_extend_module">CmlSDKExample</string>
     <string name="demo_js_bundle">CmlSDKExample</string>

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
-import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.container.ICmlView;
 import com.didi.chameleon.sdk.module.CmlCallback;
@@ -23,29 +22,29 @@ import java.util.HashMap;
  *
  * @since 18/5/24
  */
-public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInstanceListener, ICmlView {
+public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICmlInstanceListener, ICmlView {
     private CmlWeexViewInstance wxInstance;
     private ICmlDegradeAdapter.DegradeViewWrapper degradeViewWrapper;
     private boolean isDestroy;
     private HashMap<String, Object> options;
 
-    public CmlView(@NonNull Context context) {
+    public CmlWeexView(@NonNull Context context) {
         super(context);
         init(context);
     }
 
-    public CmlView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CmlWeexView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CmlView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CmlWeexView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     private void init(Context context) {
-        wxInstance = new CmlWeexViewInstance(CmlView.this, CmlView.this);
+        wxInstance = new CmlWeexViewInstance(CmlWeexView.this, CmlWeexView.this);
     }
 
     /**
@@ -167,9 +166,5 @@ public class CmlView extends FrameLayout implements CmlWeexViewInstance.ICmlInst
     @Override
     public void finishSelf() {
         // NOTHING
-    }
-
-    public CmlWeexViewInstance getInstance() {
-        return wxInstance;
     }
 }

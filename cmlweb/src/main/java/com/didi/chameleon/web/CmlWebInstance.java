@@ -17,7 +17,7 @@ import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
-import com.didi.chameleon.web.bridge.CmlWebView;
+import com.didi.chameleon.web.bridge.BaseWebView;
 
 import java.util.HashMap;
 
@@ -27,7 +27,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
 
     private String mInstanceId;
     private int mRequestCode;
-    private CmlWebView mWebView;
+    private BaseWebView mWebView;
     private ICmlActivity mCmlContainer;
     private HashMap<String, Object> extendsParam;
     private ICmlLaunchCallback mLaunchCallback;
@@ -35,24 +35,18 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
     private String mUrl;
     private String mTotalUrl;
 
-    public String getInstanceId() {
-        return mInstanceId;
-    }
-
     public CmlWebInstance(@NonNull ICmlActivity cmlContainer,
                           @NonNull String instanceId,
-                          int requestCode) {
+                          int requestCode,
+                          BaseWebView webView) {
         mCmlContainer = cmlContainer;
         mInstanceId = instanceId;
         mRequestCode = requestCode;
+        mWebView = webView;
         mLaunchCallback = CmlInstanceManage.getInstance().getLaunchCallback(instanceId);
 
         CmlLogUtil.d(TAG, "instance id: " + instanceId);
         CmlLogUtil.d(TAG, "request code: " + requestCode);
-    }
-
-    public void setWebView(CmlWebView webView) {
-        mWebView = webView;
     }
 
     @Override
@@ -128,7 +122,6 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
         }
     }
 
-
     @Override
     public void updateNaviTitle(String title) {
         if (null != mCmlContainer) {
@@ -202,6 +195,11 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
     @Override
     public void overrideAnim(int enterAnim, int exitAnim) {
         mCmlContainer.overrideAnim(enterAnim, exitAnim);
+    }
+
+    @Override
+    public String getInstanceId() {
+        return mInstanceId;
     }
 
     @Nullable

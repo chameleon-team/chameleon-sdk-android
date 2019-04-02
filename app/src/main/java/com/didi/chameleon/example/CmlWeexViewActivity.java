@@ -8,35 +8,36 @@ import android.widget.TextView;
 
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
-import com.didi.chameleon.weex.container.CmlView;
+import com.didi.chameleon.weex.container.CmlWeexView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CmlViewActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "CmlViewActivity";
+public class CmlWeexViewActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "CmlWeexViewActivity";
 
-    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";
+//    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";
+    private static final String URL_JS_BUNDLE_OK = "http://172.24.30.151:8000/cml/h5/index?cml_addr=http://172.22.138.92:8000/weex/cml-demo-say.js";
 //    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.138.92:8000/weex/index.js";
 
 //    private static final String URL_JS_BUNDLE_OK = "https://www.example.com/degradle.html?cml_addr=http://172.22.136.152:8081/dist/cml-demo-say.js";
 
     private TextView txtChangeTxt;
-    private CmlView cmlView;
+    private CmlWeexView cmlView;
 
     private int num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cml_view);
+        setContentView(R.layout.cml_weex_view);
 
         txtChangeTxt = findViewById(R.id.txt_change_txt);
         cmlView = findViewById(R.id.cml_view);
 
         cmlView.onCreate();
-//        cmlView.render(URL_JS_BUNDLE_OK, null); // 加载远程jsbundle
-        cmlView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
+        cmlView.render(URL_JS_BUNDLE_OK, null); // 加载远程jsbundle
+//        cmlView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
 
         txtChangeTxt.setOnClickListener(this);
     }

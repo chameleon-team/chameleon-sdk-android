@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.didi.chameleon.weex.container.CmlView
+    <com.didi.chameleon.weex.container.CmlWeexView
         android:id="@+id/cml_view"
         android:layout_width="0dp"
         android:layout_height="220dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@id/txt_open_url"
+        app:layout_constraintBottom_toTopOf="@id/txt_change_txt"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -5,6 +5,7 @@ import com.didi.chameleon.sdk.bridge.ICmlBridge;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeNativeToJs;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeNativeToJsFactory;
 import com.didi.chameleon.web.CmlWebInstance;
+import com.didi.chameleon.web.CmlWebViewInstance;
 
 
 public class CmlWebBridge implements ICmlBridge, ICmlBridgeNativeToJsFactory {
@@ -13,6 +14,7 @@ public class CmlWebBridge implements ICmlBridge, ICmlBridgeNativeToJsFactory {
     @Override
     public void init() {
         CmlBridgeManager.getInstance().addBridgeNativeToJsFactory(CmlWebInstance.class, this);
+        CmlBridgeManager.getInstance().addBridgeNativeToJsFactory(CmlWebViewInstance.class, this);
     }
 
     /**

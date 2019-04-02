@@ -7,21 +7,21 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.utils.Util;
-import com.didi.chameleon.web.CmlWebInstance;
 
-public class CmlWebView extends WebView {
-    public CmlWebView(Context context) {
+public class BaseWebView extends WebView {
+    public BaseWebView(Context context) {
         super(context);
         init(context);
     }
 
-    public CmlWebView(Context context, AttributeSet attrs) {
+    public BaseWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public CmlWebView(Context context, AttributeSet attrs, int defStyle) {
+    public BaseWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
@@ -50,9 +50,8 @@ public class CmlWebView extends WebView {
         webSettings.setUserAgentString(agent + " cml/" + CmlEnvironment.VERSION);
     }
 
-    public void startApplication(CmlWebInstance webInstance) {
-        CmlWebBridgeModule webBridgeModule = new CmlWebBridgeModule(webInstance.getInstanceId());
+    public void startApplication(ICmlInstance cmlInstance) {
+        CmlWebBridgeModule webBridgeModule = new CmlWebBridgeModule(cmlInstance.getInstanceId());
         setWebViewClient(new CmlWebViewClient(webBridgeModule));
-        webInstance.setWebView(this);
     }
 }

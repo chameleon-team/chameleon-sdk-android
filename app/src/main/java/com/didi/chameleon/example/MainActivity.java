@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String URL_JS_BUNDLE_PRELOAD = "https://static.didialift.com/pinche/gift/chameleon-ui-builtin/web/chameleon-ui-builtin.html?cml_addr=https%3A%2F%2Fstatic.didialift.com%2Fpinche%2Fgift%2Fchameleon-ui-builtin%2Fweex%2Fchameleon-ui-builtin.js";
     // 演示自定义Module 和 JS 通信, 加载本地jsbundle需设置 CmlEnvironment.CML_DEBUG = true
     private static final String URL_MODULE_DEMO = "file://local/cml-demo-say.js";
-//    private static final String URL_MODULE_DEMO = "file://local/index1.js";
 
-    private TextView txtOpenUrl;
+    private TextView txtOpenUrlInActivity;
+    private TextView txtOpenUrlInView;
     private TextView txtOpenJSBundle;
     private TextView txtPreload;
     private TextView txtDegrade;
@@ -41,13 +41,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtOpenUrl = findViewById(R.id.txt_open_url);
+        txtOpenUrlInActivity = findViewById(R.id.txt_open_url_activity);
+        txtOpenUrlInView = findViewById(R.id.txt_open_url_view);
         txtOpenJSBundle = findViewById(R.id.txt_open_js_bundle);
         txtPreload = findViewById(R.id.txt_preload);
         txtDegrade = findViewById(R.id.txt_auto_degrade);
         txtJsCallNative = findViewById(R.id.txt_full_screen);
         txtNativeCallJs = findViewById(R.id.txt_module_native_to_js);
-        txtOpenUrl.setOnClickListener(this);
+        txtOpenUrlInActivity.setOnClickListener(this);
+        txtOpenUrlInView.setOnClickListener(this);
         txtOpenJSBundle.setOnClickListener(this);
         txtPreload.setOnClickListener(this);
         txtDegrade.setOnClickListener(this);
@@ -63,8 +65,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_open_url:
+            case R.id.txt_open_url_activity:
                 CmlEngine.getInstance().launchPage(this, URL_NORMAL, null);
+                break;
+            case R.id.txt_open_url_view:
+                startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
             case R.id.txt_open_js_bundle:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_OK, null);
@@ -79,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
                 break;
             case R.id.txt_module_native_to_js:
-                startActivity(new Intent(this, CmlViewActivity.class));
+                startActivity(new Intent(this, CmlWeexViewActivity.class));
                 break;
         }
     }
