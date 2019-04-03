@@ -50,7 +50,7 @@ public class BaseWebView extends WebView {
         webSettings.setUserAgentString(agent + " cml/" + CmlEnvironment.VERSION);
     }
 
-    public void startApplication(ICmlInstance cmlInstance) {
+    public void setWebViewClient(ICmlInstance cmlInstance) {
         CmlWebBridgeModule webBridgeModule = new CmlWebBridgeModule(cmlInstance.getInstanceId());
         setWebViewClient(new CmlWebViewClient(webBridgeModule));
     }

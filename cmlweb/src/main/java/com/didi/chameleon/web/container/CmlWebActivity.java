@@ -47,7 +47,7 @@ public class CmlWebActivity extends CmlContainerActivity implements ICmlActivity
         final int requestCode = getIntent().getIntExtra(PARAM_REQUEST_CODE, -1);
         mWebInstance = new CmlWebInstance(this, instanceId, requestCode, mWebView);
         mWebInstance.onCreate();
-        mWebView.startApplication(mWebInstance);
+        mWebView.setWebViewClient(mWebInstance);
         renderByUrl();
         mIsViewValid = true;
     }

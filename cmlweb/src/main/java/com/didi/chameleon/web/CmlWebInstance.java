@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -105,7 +107,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
         mTotalUrl = url;
         mUrl = Util.parseH5Url(url);
         this.extendsParam = extendsParam;
-        StringBuilder loadUrl = new StringBuilder(mTotalUrl);
+        final StringBuilder loadUrl = new StringBuilder(mTotalUrl);
         if (loadUrl.indexOf("?") < 0) {
             loadUrl.append("?");
         } else {
@@ -118,7 +120,12 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
             }
         }
         if (null != mWebView) {
-            mWebView.loadUrl(loadUrl.toString());
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl(loadUrl.toString());
+                }
+            }, 100);
         }
     }
 

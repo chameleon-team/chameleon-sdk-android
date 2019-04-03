@@ -2,15 +2,19 @@ package com.didi.chameleon.web;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlViewInstance;
 import com.didi.chameleon.sdk.container.ICmlView;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
+import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.web.bridge.BaseWebView;
 
 import java.util.HashMap;
@@ -20,7 +24,8 @@ public class CmlWebViewInstance implements ICmlViewInstance {
 
     private BaseWebView mWebView;
     private ICmlView mCmlView;
-    private String mCmlUrl;
+
+    private String mUrl;
     private String mTotalUrl;
 
     private String mInstanceId;
@@ -74,7 +79,7 @@ public class CmlWebViewInstance implements ICmlViewInstance {
     @Nullable
     @Override
     public String getCurrentURL() {
-        return mCmlUrl;
+        return mUrl;
     }
 
     @Override
@@ -104,10 +109,29 @@ public class CmlWebViewInstance implements ICmlViewInstance {
     }
 
     @Override
-    public void render(String url, HashMap<String, Object> options) {
+    public void render(final String url, HashMap<String, Object> options) {
         mTotalUrl = url;
-        if (mWebView != null) {
-            mWebView.loadUrl(url);
+        mUrl = Util.parseH5Url(url);
+        this.extendsParam = extendsParam;
+        final StringBuilder loadUrl = new StringBuilder(mTotalUrl);
+        if (loadUrl.indexOf("?") < 0) {
+            loadUrl.append("?");
+        } else {
+            loadUrl.append("&");
+        }
+        loadUrl.append(CmlEnvironment.CML_QUERY_SDK).append("=").append(CmlEnvironment.VERSION);
+        if (extendsParam != null) {
+            for (String key : extendsParam.keySet()) {
+                loadUrl.append("&").append(key).append("=").append(extendsParam.get(key));
+            }
+        }
+        if (null != mWebView) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl(loadUrl.toString());
+                }
+            }, 100);
         }
     }
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.didi.chameleon.sdk.CmlEngine;
@@ -57,12 +58,13 @@ public class CmlWebView extends FrameLayout implements ICmlView {
     @Override
     public void onCreate() {
         mBaseWebView = new BaseWebView(getContext());
-        addView(mBaseWebView);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        addView(mBaseWebView, layoutParams);
 
         String instanceId = CmlEngine.getInstance().generateInstanceId();
         mWebInstance = new CmlWebViewInstance(CmlWebView.this, instanceId, mBaseWebView);
-        mBaseWebView.startApplication(mWebInstance);
         mWebInstance.onCreate();
+        mBaseWebView.setWebViewClient(mWebInstance);
         isDestroy = false;
     }
 
