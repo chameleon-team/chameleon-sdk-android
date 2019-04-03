@@ -82,6 +82,7 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
                 List<CmlGetCodeCallback> list = callbackMaps.get(url);
                 if (list == null) {
                     list = new ArrayList<>();
+                    callbackMaps.put(url, list);
                 }
                 list.add(callback);
                 return false;

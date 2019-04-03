@@ -12,5 +12,5 @@ public class CmlJsBundleEnvironment {
     public static boolean CML_ALLOW_CACHE = true;
 
     // 是否使用304缓存
-    public static boolean CML_HTTP_304 = false;
+    public static boolean CML_HTTP_304 = true;
 }
