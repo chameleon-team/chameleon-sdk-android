@@ -49,10 +49,20 @@ public class Util {
         if (TextUtils.isEmpty(cmlUrl)) {
             cmlUrl = parseCmlUrl(url, CmlConstant.OLD_PARAM_KEY);
         }
+        if (TextUtils.isEmpty(cmlUrl)) {
+            cmlUrl = parseThanosUrl(url, CmlConstant.THANOS_PARAM_KEY);
+        }
         return cmlUrl;
     }
 
-    public static String parseCmlUrl(String url, String keyWord) {
+    private static String parseThanosUrl(String url, String keyWord) {
+        if (url.contains(keyWord)) {
+            return url;
+        }
+        return "";
+    }
+
+    private static String parseCmlUrl(String url, String keyWord) {
         if (TextUtils.isEmpty(url)) {
             return "";
         }

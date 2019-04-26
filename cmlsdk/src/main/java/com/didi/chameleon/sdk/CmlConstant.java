@@ -6,6 +6,7 @@ public class CmlConstant {
      */
     public static final String CML_PARAM_KEY = "cml_addr";
     public static final String OLD_PARAM_KEY = "wx_addr";
+    public static final String THANOS_PARAM_KEY = "thanos_js";
 
     /**
      * 给weex传参数时，自定义数据在options map中的key
