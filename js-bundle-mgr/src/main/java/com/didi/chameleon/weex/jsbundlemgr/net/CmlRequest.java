@@ -48,6 +48,10 @@ public class CmlRequest {
      */
     public int timeoutMs = 3000;
 
+    public CmlRequest(String url) {
+        this.url = url;
+    }
+
     @Override
     public String toString() {
         return "CmlRequest{" +

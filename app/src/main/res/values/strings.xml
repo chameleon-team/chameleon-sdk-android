@@ -1,7 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">CmlSDKExample</string>
-    <string name="demo_open_url">打开 URL</string>
+    <string name="demo_web_activity">全屏Web组件</string>
+    <string name="demo_web_view">Web视图组件</string>
     <string name="demo_degrade">降级演示</string>
     <string name="demo_extend_module">CmlSDKExample</string>
     <string name="demo_js_bundle">CmlSDKExample</string>
+    <string name="demo_open_js_bundle">打开 JS Bundle</string>
+    <string name="demo_preload">预加载</string>
+    <string name="demo_auto_degrade">自动降级</string>
+    <string name="demo_change_txt">我是native组件\n点我测试</string>
+    <string name="demo_degrade_manually">测试降级H5</string>
+    <string name="demo_change_bg">改变背景</string>
+    <string name="demo_weex_activity">全屏weex组件</string>
+    <string name="demo_weex_view">weex视图组件</string>
 </resources>

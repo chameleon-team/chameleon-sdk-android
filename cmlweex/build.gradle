@@ -26,22 +26,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:$SUPPORT_VER"
+    compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
     compileOnly "com.android.support:recyclerview-v7:$SUPPORT_VER"
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
 
     testImplementation 'junit:junit:4.12'
-    implementation "com.taobao.android:weex_sdk:$WEEX_VER"
+    api "com.taobao.android:weex_sdk:$WEEX_VER"
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
 
-    if (Boolean.parseBoolean(PUBLISH)) {
-        implementation "com.didiglobal.chameleon:cmlsdk:$VERSION"
-//        compile "com.didiglobal.chameleon:rich-text:$VERSION"
-        implementation "com.didiglobal.chameleon:js-bundle-mgr:$VERSION"
-    } else {
-        implementation project(':cmlsdk')
-//        implementation project(':rich-text-component')
-        implementation project(':js-bundle-mgr')
-    }
+    api project(':cmlsdk')
+    api project(':rich-text-component')
+    api project(':js-bundle-mgr')
 }

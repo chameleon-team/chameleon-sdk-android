@@ -1,5 +1,6 @@
 package com.didi.chameleon.example;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,44 +9,51 @@ import android.widget.TextView;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.utils.Util;
-import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    // 演示打开一般的URL
-    private static final String URL_NORMAL = "https://www.didiglobal.com";
-    // 这是一个可以正常打开的 JS_BUNDLE
-    private static final String URL_JS_BUNDLE_OK = "https://static.didialift.com/pinche/gift/chameleon-ui-builtin/web/chameleon-ui-builtin.html?cml_addr=https%3A%2F%2Fstatic.didialift.com%2Fpinche%2Fgift%2Fchameleon-ui-builtin%2Fweex%2Fchameleon-ui-builtin.js";
-    // 这是一个错误的 JS_BUNDLE
-    private static final String URL_JS_BUNDLE_ERR = "https://www.didiglobal.com?cml_addr=xxx.js";
-    // 这是一个测试预加载的 JS_BUNDLE
-    private static final String URL_JS_BUNDLE_PRELOAD = "https://static.didialift.com/pinche/gift/chameleon-ui-builtin/web/chameleon-ui-builtin.html?cml_addr=https%3A%2F%2Fstatic.didialift.com%2Fpinche%2Fgift%2Fchameleon-ui-builtin%2Fweex%2Fchameleon-ui-builtin.js";
-    // 演示Module 和 JS 通信
-    private static final String URL_MODULE_DEMO = "file:///android_asset/WebTest.html";
+    private static final String TAG = "MainActivity";
 
-    private TextView txtOpenUrl;
+    // 演示打开一般的URL
+    private static final String WEB_URL = "http://jalon.wang/cml-demo-say/dist/web/cml-demo-say.html";
+    // 这是一个可以正常打开的 JS_BUNDLE
+    private static final String URL_JS_BUNDLE_OK = WEB_URL + "?cml_addr=http%3a%2f%2fjalon.wang%2fcml-demo-say%2fdist%2fweex%2fcml-demo-say_0c731e1c5e428213d27a.js";
+    // 这是一个错误的 JS_BUNDLE
+    private static final String URL_JS_BUNDLE_ERR = WEB_URL + "?cml_addr=not-exist-bundle.js";
+    // 这是一个测试预加载的 JS_BUNDLE
+    private static final String URL_JS_BUNDLE_PRELOAD = WEB_URL + "?cml_addr=http%3a%2f%2fjalon.wang%2fcml-demo-say%2fdist%2fweex%2fcml-demo-say_0c731e1c5e428213d27a.js";
+    // 演示自定义Module 和 JS 通信, 加载本地jsbundle需设置 CmlEnvironment.CML_DEBUG = true
+    private static final String URL_MODULE_DEMO = "file://local/cml-demo-say.js";
+
+    private TextView txtOpenUrlInActivity;
+    private TextView txtOpenUrlInView;
     private TextView txtOpenJSBundle;
     private TextView txtPreload;
     private TextView txtDegrade;
-    private TextView txtModule;
+    private TextView txtJsCallNative;
+    private TextView txtNativeCallJs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtOpenUrl = findViewById(R.id.txt_open_url);
+        txtOpenUrlInActivity = findViewById(R.id.txt_web_activity);
+        txtOpenUrlInView = findViewById(R.id.txt_web_view);
         txtOpenJSBundle = findViewById(R.id.txt_open_js_bundle);
         txtPreload = findViewById(R.id.txt_preload);
-        txtDegrade = findViewById(R.id.txt_degrade);
-        txtModule = findViewById(R.id.txt_module);
-        txtOpenUrl.setOnClickListener(this);
+        txtDegrade = findViewById(R.id.txt_auto_degrade);
+        txtJsCallNative = findViewById(R.id.txt_weex_activity);
+        txtNativeCallJs = findViewById(R.id.txt_weex_view);
+        txtOpenUrlInActivity.setOnClickListener(this);
+        txtOpenUrlInView.setOnClickListener(this);
         txtOpenJSBundle.setOnClickListener(this);
         txtPreload.setOnClickListener(this);
         txtDegrade.setOnClickListener(this);
-        txtModule.setOnClickListener(this);
+        txtJsCallNative.setOnClickListener(this);
+        txtNativeCallJs.setOnClickListener(this);
 
         // 在业务层设置预加载地址
         CmlEngine.getInstance().initPreloadList(getPreloadList());
@@ -56,8 +64,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_open_url:
-                CmlEngine.getInstance().launchPage(this, URL_NORMAL, null);
+            case R.id.txt_web_activity:
+                CmlEngine.getInstance().launchPage(this, WEB_URL, null);
+                break;
+            case R.id.txt_web_view:
+                startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
             case R.id.txt_open_js_bundle:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_OK, null);
@@ -65,17 +76,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.txt_preload:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_PRELOAD, null);
                 break;
-            case R.id.txt_degrade:
+            case R.id.txt_auto_degrade:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_ERR, null);
                 break;
-            case R.id.txt_module:
-                CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
+            case R.id.txt_weex_activity:
+                CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_OK, null);
+                break;
+            case R.id.txt_weex_view:
+                startActivity(new Intent(this, CmlWeexViewActivity.class));
                 break;
         }
     }
 
     private List<CmlBundle> getPreloadList() {
-        CmlJsBundleEnvironment.DEBUG = true;
         List<CmlBundle> cmlModels = new ArrayList<>();
         CmlBundle model = new CmlBundle();
         model.bundle = Util.parseCmlUrl(URL_JS_BUNDLE_PRELOAD);

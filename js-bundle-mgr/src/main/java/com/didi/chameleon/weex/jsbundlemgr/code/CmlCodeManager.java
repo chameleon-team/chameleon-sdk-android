@@ -29,7 +29,6 @@ public class CmlCodeManager implements ICmlCodeManager {
 
     private static CmlCodeManager instance;
     private List<ICmlCodeGetter> mCodeGetterList = new ArrayList<>();
-    private CmlJsBundleMgrConfig mCmlJsBundleMgrConfig;
     private ICmlCodeGetter mNetGetter;
     private ICmlCodeGetter mFileGetter;
     private Context context;
@@ -58,16 +57,20 @@ public class CmlCodeManager implements ICmlCodeManager {
         if (!CmlUtils.isMainThread()) {
             throw new RuntimeException("请在主线程初始化CmlCodeManager");
         }
-        this.context = context;
-        mCmlJsBundleMgrConfig = cmlJsBundleMgrConfig;
+        this.context = context.getApplicationContext();
         CmlCache preLoadCache = new CmlCache(context, cmlJsBundleMgrConfig.maxPreloadSize, CmlJsBundleConstant.FILE_NAME_PRELOAD);
         CmlCache commonCache = new CmlCache(context, cmlJsBundleMgrConfig.maxRuntimeSize, CmlJsBundleConstant.FILE_NAME_COMMON);
         mFileGetter = new CmlGetterFileImpl();
-        mNetGetter = new CmlGetterNetImpl();
+        if (CmlJsBundleEnvironment.CML_HTTP_304) {
+            mNetGetter = new CmlGetterHttpImpl(context, mFileGetter);
+            mCodeGetterList.add(mNetGetter);
+        } else {
+            mNetGetter = new CmlGetterNetImpl();
+            mCodeGetterList.add(mFileGetter);
+            mCodeGetterList.add(mNetGetter);
+        }
         mFileGetter.initCodeGetter(preLoadCache, commonCache);
         mNetGetter.initCodeGetter(preLoadCache, commonCache);
-        mCodeGetterList.add(mFileGetter);
-        mCodeGetterList.add(mNetGetter);
         isInit = true;
     }
 
@@ -132,7 +135,7 @@ public class CmlCodeManager implements ICmlCodeManager {
             }
         };
         for (ICmlCodeGetter getter : mCodeGetterList) {
-            if (!CmlJsBundleEnvironment.CML_ALLOW_WEEX_CACHE && getter instanceof CmlGetterFileImpl) {
+            if (!CmlJsBundleEnvironment.CML_ALLOW_CACHE && getter instanceof CmlGetterFileImpl) {
                 // 支持调试时关闭文件缓存
                 CmlLogUtils.d(CmlJsBundleConstant.TAG, "cml cache is close");
                 continue;
@@ -196,7 +199,6 @@ public class CmlCodeManager implements ICmlCodeManager {
                 }
             }
         }
-
     }
 
     /**
@@ -221,9 +223,6 @@ public class CmlCodeManager implements ICmlCodeManager {
             // 本地已经存在
             return false;
         }
-        if (!isWifi && priority < CmlBundle.PRIORITY_FORCE) {
-            return false;
-        }
-        return true;
+        return isWifi || priority >= CmlBundle.PRIORITY_FORCE;
     }
 }

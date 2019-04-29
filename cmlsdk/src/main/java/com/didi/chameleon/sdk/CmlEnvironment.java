@@ -4,17 +4,18 @@ import com.didi.chameleon.sdk.adapter.CmlDefaultImgLoaderAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlImgLoaderAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlStatisticsAdapter;
-import com.didi.chameleon.sdk.adapter.http.CmlHttpAdapter;
-import com.didi.chameleon.sdk.adapter.json.CmlJsonAdapter;
-import com.didi.chameleon.sdk.adapter.log.CmlLoggerAdapter;
+import com.didi.chameleon.sdk.adapter.http.ICmlHttpAdapter;
+import com.didi.chameleon.sdk.adapter.json.ICmlJsonAdapter;
 import com.didi.chameleon.sdk.adapter.log.CmlLoggerDefault;
-import com.didi.chameleon.sdk.adapter.modal.CmlDialogAdapter;
-import com.didi.chameleon.sdk.adapter.modal.CmlToastAdapter;
+import com.didi.chameleon.sdk.adapter.log.ICmlLoggerAdapter;
+import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
+import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
+import com.didi.chameleon.sdk.adapter.navigator.CmlNavigatorDefault;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
-import com.didi.chameleon.sdk.adapter.storage.CmlStorageAdapter;
-import com.didi.chameleon.sdk.adapter.thread.CmlThreadAdapter;
-import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketAdapter;
+import com.didi.chameleon.sdk.adapter.storage.ICmlStorageAdapter;
+import com.didi.chameleon.sdk.adapter.thread.ICmlThreadAdapter;
 import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketDefault;
+import com.didi.chameleon.sdk.adapter.websocket.ICmlWebSocketAdapter;
 import com.didi.chameleon.sdk.common.CmlJsonWrapper;
 import com.didi.chameleon.sdk.common.CmlLightStorage;
 import com.didi.chameleon.sdk.common.CmlModalTip;
@@ -30,11 +31,11 @@ public class CmlEnvironment {
     /**
      * SDK版本
      */
-    public static final String VERSION = "0.0.5";
+    public static final String VERSION = "0.0.10";
     /**
      * 调试开关
      */
-    public static final boolean DEBUG = true;
+    public static boolean CML_DEBUG = false;
     /**
      * 页面是否直接降级
      */
@@ -48,10 +49,6 @@ public class CmlEnvironment {
      * 是否输出分析日志
      */
     public static boolean CML_OUTPUT_STATISTICS = false;
-    /**
-     * 开启页面名称，一般用于 weex 内部输出 log 的 tag
-     */
-    public static String CML_PAGE_NAME = "cml_weex";
     /**
      * sdk环境tag,与url
      */
@@ -67,14 +64,14 @@ public class CmlEnvironment {
      */
     private static long maxRuntimeSize = 4 * 1024 * 1024;
 
-    private static CmlJsonAdapter jsonAdapter;
-    private static CmlThreadAdapter threadAdapter;
-    private static CmlStorageAdapter storageAdapter;
-    private static CmlLoggerAdapter loggerAdapter;
-    private static CmlWebSocketAdapter webSocketAdapter;
-    private static CmlHttpAdapter httpAdapter;
-    private static CmlToastAdapter toastAdapter;
-    private static CmlDialogAdapter dialogAdapter;
+    private static ICmlJsonAdapter jsonAdapter;
+    private static ICmlThreadAdapter threadAdapter;
+    private static ICmlStorageAdapter storageAdapter;
+    private static ICmlLoggerAdapter loggerAdapter;
+    private static ICmlWebSocketAdapter webSocketAdapter;
+    private static ICmlHttpAdapter httpAdapter;
+    private static ICmlToastAdapter toastAdapter;
+    private static ICmlDialogAdapter dialogAdapter;
 
     private static ICmlNavigatorAdapter navigatorAdapter;
     private static ICmlStatisticsAdapter statisticsAdapter;
@@ -87,40 +84,40 @@ public class CmlEnvironment {
     private static CmlStreamHttp streamHttp;
     private static CmlModalTip modalTip;
 
-    public static void setJsonAdapter(CmlJsonAdapter jsonAdapter) {
+    public static void setJsonAdapter(ICmlJsonAdapter jsonAdapter) {
         CmlEnvironment.jsonAdapter = jsonAdapter;
         jsonWrapper = null;
     }
 
-    public static void setThreadAdapter(CmlThreadAdapter threadAdapter) {
+    public static void setThreadAdapter(ICmlThreadAdapter threadAdapter) {
         CmlEnvironment.threadAdapter = threadAdapter;
         threadCenter = null;
     }
 
-    public static void setStorageAdapter(CmlStorageAdapter storageAdapter) {
+    public static void setStorageAdapter(ICmlStorageAdapter storageAdapter) {
         CmlEnvironment.storageAdapter = storageAdapter;
         lightStorage = null;
     }
 
-    public static void setLoggerAdapter(CmlLoggerAdapter loggerAdapter) {
+    public static void setLoggerAdapter(ICmlLoggerAdapter loggerAdapter) {
         CmlEnvironment.loggerAdapter = loggerAdapter;
     }
 
-    public static void setWebSocketAdapter(CmlWebSocketAdapter webSocketAdapter) {
+    public static void setWebSocketAdapter(ICmlWebSocketAdapter webSocketAdapter) {
         CmlEnvironment.webSocketAdapter = webSocketAdapter;
     }
 
-    public static void setHttpAdapter(CmlHttpAdapter httpAdapter) {
+    public static void setHttpAdapter(ICmlHttpAdapter httpAdapter) {
         CmlEnvironment.httpAdapter = httpAdapter;
         streamHttp = null;
     }
 
-    public static void setToastAdapter(CmlToastAdapter toastAdapter) {
+    public static void setToastAdapter(ICmlToastAdapter toastAdapter) {
         CmlEnvironment.toastAdapter = toastAdapter;
         modalTip = null;
     }
 
-    public static void setDialogAdapter(CmlDialogAdapter dialogAdapter) {
+    public static void setDialogAdapter(ICmlDialogAdapter dialogAdapter) {
         CmlEnvironment.dialogAdapter = dialogAdapter;
         modalTip = null;
     }
@@ -184,7 +181,7 @@ public class CmlEnvironment {
         return lightStorage;
     }
 
-    public static CmlLoggerAdapter getLoggerAdapter() {
+    public static ICmlLoggerAdapter getLoggerAdapter() {
         if (loggerAdapter == null) {
             loggerAdapter = new CmlLoggerDefault();
         }
@@ -192,6 +189,9 @@ public class CmlEnvironment {
     }
 
     public static ICmlNavigatorAdapter getNavigatorAdapter() {
+        if (navigatorAdapter == null) {
+            navigatorAdapter = new CmlNavigatorDefault();
+        }
         return navigatorAdapter;
     }
 
@@ -210,7 +210,7 @@ public class CmlEnvironment {
         return imageLoaderAdapter;
     }
 
-    public static CmlWebSocketAdapter getWebSocketAdapter() {
+    public static ICmlWebSocketAdapter getWebSocketAdapter() {
         if (webSocketAdapter == null) {
             webSocketAdapter = new CmlWebSocketDefault();
         }

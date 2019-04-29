@@ -46,9 +46,12 @@ public class CmlHttpClient {
             HttpURLConnection connection = openConnection(request);
             int responseCode = connection.getResponseCode();
             response.statusCode = String.valueOf(responseCode);
+            response.header = connection.getHeaderFields();
             if (responseCode >= 200 && responseCode <= 299) {
                 InputStream rawStream = connection.getInputStream();
                 response.data = readInputStreamAsBytes(rawStream, connection.getContentLength(), listener);
+            } else if (responseCode == 304) {
+                response.data = null;
             } else {
                 response.errorMsg = readInputStream(connection.getErrorStream(), connection.getContentLength(), listener);
             }

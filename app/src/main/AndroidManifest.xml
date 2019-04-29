@@ -17,6 +17,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CmlWeexViewActivity">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+        </activity>
+        <activity android:name=".CmlWebViewActivity">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+        </activity>
     </application>
 
 </manifest>

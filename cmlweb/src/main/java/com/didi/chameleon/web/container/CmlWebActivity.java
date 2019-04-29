@@ -20,13 +20,13 @@ import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.widget.CmlTitleView;
 import com.didi.chameleon.web.CmlWebInstance;
 import com.didi.chameleon.web.R;
-import com.didi.chameleon.web.bridge.CmlWebView;
+import com.didi.chameleon.web.bridge.BaseWebView;
 
 import java.util.HashMap;
 
 public class CmlWebActivity extends CmlContainerActivity implements ICmlActivity {
     private static final String TAG = "CmlActivity";
-    private CmlWebView mWebView;
+    private BaseWebView mWebView;
     private CmlWebInstance mWebInstance;
     private View loadingView;
     private CmlTitleView titleView;
@@ -40,15 +40,16 @@ public class CmlWebActivity extends CmlContainerActivity implements ICmlActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.cml_container_activity);
+        initView();
 
         final String instanceId = getIntent().getStringExtra(PARAM_INSTANCE_ID);
         final int requestCode = getIntent().getIntExtra(PARAM_REQUEST_CODE, -1);
-        mWebInstance = new CmlWebInstance(this, instanceId, requestCode);
+        mWebInstance = new CmlWebInstance(this, instanceId, requestCode, mWebView);
         mWebInstance.onCreate();
-        mIsViewValid = true;
-        setContentView(R.layout.cml_container_activity);
-        initView();
+        mWebView.setWebViewClient(mWebInstance);
         renderByUrl();
+        mIsViewValid = true;
     }
 
     private void initView() {
@@ -56,12 +57,8 @@ public class CmlWebActivity extends CmlContainerActivity implements ICmlActivity
         loadingView = findViewById(R.id.cml_weex_loading_layout);
         loadingView.setVisibility(View.GONE); // 临时隐藏
         viewContainer = findViewById(R.id.cml_weex_content);
-
-        mWebView = new CmlWebView(this);
+        mWebView = new BaseWebView(this);
         viewContainer.addView(mWebView);
-        if (null != mWebInstance) {
-            mWebView.startApplication(mWebInstance);
-        }
 
         titleView.showLeftBackDrawable(new View.OnClickListener() {
             @Override

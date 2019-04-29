@@ -24,7 +24,6 @@ public class CmlModuleManager {
     private CmlModuleFactory factory = new CmlModuleFactory();
     private CmlModuleTrace trace = new CmlModuleTrace();
 
-
     private CmlModuleManager() {
         mediator.factory = factory;
         mediator.store = store;

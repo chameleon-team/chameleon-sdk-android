@@ -45,16 +45,14 @@ public class CmlFileDownloader {
      *
      * @param listener 下载成功后回调接口
      */
-    public void startDownload(final String url, final FileDownloaderListener listener) {
-        if (TextUtils.isEmpty(url)) {
+    public void startDownload(final CmlRequest cmlRequest, final FileDownloaderListener listener) {
+        if (cmlRequest == null || TextUtils.isEmpty(cmlRequest.url)) {
             return;
         }
 
         sExecutorService.execute(new Runnable() {
             @Override
             public void run() {
-                CmlRequest cmlRequest = new CmlRequest();
-                cmlRequest.url = url;
                 httpClient.execute(cmlRequest, new ICmlHttpListener() {
                     @Override
                     public void onHttpStart() {
@@ -68,20 +66,20 @@ public class CmlFileDownloader {
 
                     @Override
                     public void onHttpFinish(CmlResponse response) {
-                        if (response != null) {
-                            CmlLogUtils.d("CmlFileDownloader", "response：" + response.toString());
-                            if (response.data != null && TextUtils.equals("200", response.statusCode)) {
-                                String template = new String(response.data);
-                                if (TextUtils.isEmpty(template)) {
-                                    listener.onFailed(response.errorMsg);
-                                } else {
-                                    listener.onSuccess(template);
-                                }
-                            } else {
-                                listener.onFailed(response.errorMsg);
-                            }
-
+                        if (response == null) {
+                            listener.onFailed("");
+                            return;
                         }
+                        if (response.errorMsg == null) {
+                            if (response.data == null) {
+                                listener.onSuccess(response, "");
+                            } else {
+                                listener.onSuccess(response, new String(response.data));
+                            }
+                        } else {
+                            listener.onFailed(response.errorMsg);
+                        }
+
                     }
                 });
             }
@@ -94,7 +92,7 @@ public class CmlFileDownloader {
          *
          * @param template 下载后返回js
          */
-        void onSuccess(String template);
+        void onSuccess(CmlResponse response, String template);
 
         /**
          * 下载失败

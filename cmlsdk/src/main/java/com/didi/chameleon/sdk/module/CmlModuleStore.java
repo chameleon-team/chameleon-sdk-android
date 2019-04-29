@@ -8,6 +8,7 @@ import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -147,7 +148,8 @@ public class CmlModuleStore {
         List<MethodHolder> methodHolders = new LinkedList<>();
         for (Class c : classList) {
             for (Method method : c.getMethods()) {
-                if (method.getAnnotation(CmlIgnore.class) == null) {
+                if (!Modifier.isStatic(method.getModifiers())
+                        && method.getAnnotation(CmlIgnore.class) == null) {
                     CmlMethod methodAn = method.getAnnotation(CmlMethod.class);
                     methodHolders.add(new MethodHolder(c, method, methodAn));
                 }

@@ -28,12 +28,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    implementation "com.android.support:support-v4:$SUPPORT_VER"
-    implementation "com.android.support:appcompat-v7:$SUPPORT_VER"
+//    compileOnly "com.android.support:support-v4:$SUPPORT_VER"
+    compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
 
-    if (Boolean.parseBoolean(PUBLISH)) {
-        api "com.didiglobal.chameleon:cmlsdk:$VERSION"
-    } else {
-        implementation project(':cmlsdk')
-    }
+    api project(':cmlsdk')
 }

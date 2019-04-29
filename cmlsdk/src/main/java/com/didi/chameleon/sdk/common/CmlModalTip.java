@@ -2,17 +2,17 @@ package com.didi.chameleon.sdk.common;
 
 import android.content.Context;
 
-import com.didi.chameleon.sdk.adapter.modal.CmlDialogAdapter;
 import com.didi.chameleon.sdk.adapter.modal.CmlDialogDefault;
-import com.didi.chameleon.sdk.adapter.modal.CmlToastAdapter;
 import com.didi.chameleon.sdk.adapter.modal.CmlToastDefault;
+import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
+import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
 
-public class CmlModalTip implements CmlDialogAdapter, CmlToastAdapter {
+public class CmlModalTip implements ICmlDialogAdapter, ICmlToastAdapter {
 
-    private CmlToastAdapter toastAdapter;
-    private CmlDialogAdapter dialogAdapter;
+    private ICmlToastAdapter toastAdapter;
+    private ICmlDialogAdapter dialogAdapter;
 
-    public CmlModalTip(CmlToastAdapter toastAdapter, CmlDialogAdapter dialogAdapter) {
+    public CmlModalTip(ICmlToastAdapter toastAdapter, ICmlDialogAdapter dialogAdapter) {
         this.toastAdapter = toastAdapter;
         this.dialogAdapter = dialogAdapter;
     }

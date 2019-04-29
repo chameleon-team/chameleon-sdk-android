@@ -5,8 +5,8 @@ import android.os.Looper;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlInstance;
-import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketAdapter;
 import com.didi.chameleon.sdk.adapter.websocket.CmlWebSocketCloseCodes;
+import com.didi.chameleon.sdk.adapter.websocket.ICmlWebSocketAdapter;
 import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
@@ -26,28 +26,22 @@ public class CmlWebSocketModule {
     private static final String KEY_WAS_CLEAN = "wasClean";
 
     private String instanceId;
-    private CmlWebSocketAdapter webSocketAdapter;
+    private ICmlWebSocketAdapter webSocketAdapter;
     private WebSocketAdapter eventListener;
 
-    public CmlWebSocketModule() {
+    public CmlWebSocketModule(ICmlInstance instance) {
         CmlLogUtil.e(TAG, "create new instance");
-        CmlInstanceManage.getInstance().registerListener(new CmlInstanceManage.CmlInstanceChangeListener() {
+        instanceId = instance.getInstanceId();
+        CmlInstanceManage.getInstance().registerDestroyListener(instance.getInstanceId(), new CmlInstanceManage.CmlInstanceDestroyListener() {
             @Override
-            public void onAddInstance(String instanceId) {
-
-            }
-
-            @Override
-            public void onRemoveInstance(String instanceId) {
-                if (String.valueOf(instanceId).equals(CmlWebSocketModule.this.instanceId)) {
-                    destroy();
-                }
+            public void onDestroy() {
+                destroy();
             }
         });
     }
 
     @CmlMethod(alias = "WebSocket", uiThread = false)
-    public void WebSocket(ICmlInstance instance, @CmlParam(name = "url") String url, @CmlParam(name = "protocol") String protocol) {
+    public void WebSocket(@CmlParam(name = "url") String url, @CmlParam(name = "protocol") String protocol) {
         if (webSocketAdapter != null) {
             CmlLogUtil.w(TAG, "close");
             webSocketAdapter.close(CmlWebSocketCloseCodes.CLOSE_GOING_AWAY.getCode(), CmlWebSocketCloseCodes.CLOSE_GOING_AWAY.name());
@@ -55,7 +49,6 @@ public class CmlWebSocketModule {
         webSocketAdapter = CmlEnvironment.getWebSocketAdapter();
         eventListener = new WebSocketAdapter();
         webSocketAdapter.connect(url, protocol, eventListener);
-        instanceId = instance.getInstanceId();
     }
 
     @CmlMethod(alias = "send", uiThread = false)
@@ -96,7 +89,7 @@ public class CmlWebSocketModule {
         }
     }
 
-    private class WebSocketAdapter implements CmlWebSocketAdapter.EventListener {
+    private class WebSocketAdapter implements ICmlWebSocketAdapter.EventListener {
 
         @Override
         public void onOpen() {

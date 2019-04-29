@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -17,7 +19,7 @@ import com.didi.chameleon.sdk.ICmlLaunchCallback;
 import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
-import com.didi.chameleon.web.bridge.CmlWebView;
+import com.didi.chameleon.web.bridge.BaseWebView;
 
 import java.util.HashMap;
 
@@ -27,7 +29,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
 
     private String mInstanceId;
     private int mRequestCode;
-    private CmlWebView mWebView;
+    private BaseWebView mWebView;
     private ICmlActivity mCmlContainer;
     private HashMap<String, Object> extendsParam;
     private ICmlLaunchCallback mLaunchCallback;
@@ -35,30 +37,24 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
     private String mUrl;
     private String mTotalUrl;
 
-    public String getInstanceId() {
-        return mInstanceId;
-    }
-
     public CmlWebInstance(@NonNull ICmlActivity cmlContainer,
                           @NonNull String instanceId,
-                          int requestCode) {
+                          int requestCode,
+                          BaseWebView webView) {
         mCmlContainer = cmlContainer;
         mInstanceId = instanceId;
         mRequestCode = requestCode;
+        mWebView = webView;
         mLaunchCallback = CmlInstanceManage.getInstance().getLaunchCallback(instanceId);
 
         CmlLogUtil.d(TAG, "instance id: " + instanceId);
         CmlLogUtil.d(TAG, "request code: " + requestCode);
     }
 
-    public void setWebView(CmlWebView webView) {
-        mWebView = webView;
-    }
-
     @Override
     public void onCreate() {
         // 注册到框架里
-        CmlInstanceManage.getInstance().addActivityInstance(mCmlContainer.getActivity(), mInstanceId, this);
+        CmlInstanceManage.getInstance().addInstance(this);
         if (null != mLaunchCallback) {
             mLaunchCallback.onCreate();
         }
@@ -87,7 +83,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
 
     @Override
     public void onDestroy() {
-        CmlInstanceManage.getInstance().removeActivityInstance(mInstanceId);
+        CmlInstanceManage.getInstance().removeInstance(mInstanceId);
 
         if (null != mLaunchCallback) {
             mLaunchCallback.onDestroy();
@@ -111,7 +107,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
         mTotalUrl = url;
         mUrl = Util.parseH5Url(url);
         this.extendsParam = extendsParam;
-        StringBuilder loadUrl = new StringBuilder(mTotalUrl);
+        final StringBuilder loadUrl = new StringBuilder(mTotalUrl);
         if (loadUrl.indexOf("?") < 0) {
             loadUrl.append("?");
         } else {
@@ -124,10 +120,14 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
             }
         }
         if (null != mWebView) {
-            mWebView.loadUrl(loadUrl.toString());
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl(loadUrl.toString());
+                }
+            }, 100);
         }
     }
-
 
     @Override
     public void updateNaviTitle(String title) {
@@ -202,6 +202,11 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
     @Override
     public void overrideAnim(int enterAnim, int exitAnim) {
         mCmlContainer.overrideAnim(enterAnim, exitAnim);
+    }
+
+    @Override
+    public String getInstanceId() {
+        return mInstanceId;
     }
 
     @Nullable

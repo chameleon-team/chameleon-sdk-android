@@ -8,20 +8,28 @@ import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CmlProtocolProcessor implements ICmlBridgeProtocol {
     private static final String TAG = "CmlProtocolProcessor";
+
+    private static final List<ICmlProtocolWrapper> wrapperList = new ArrayList<>(0);
+
+    public static void addCmlProtocolWrapper(ICmlProtocolWrapper wrapper) {
+        if (wrapper == null) {
+            return;
+        }
+        synchronized (wrapperList) {
+            wrapperList.add(wrapper);
+        }
+    }
 
     public static CmlProtocol parserProtocol(Uri uri) {
         String action = uri.getQueryParameter(KEY_ACTION);
         String module = uri.getQueryParameter(KEY_MODULE);
         String method = uri.getQueryParameter(KEY_METHOD);
         String args = uri.getQueryParameter(KEY_ARGS);
-        try {
-            args = URLDecoder.decode(args, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         String callbackId = uri.getQueryParameter(KEY_CALLBACK_ID);
 
         CmlProtocol protocol = new CmlProtocol();
@@ -30,6 +38,13 @@ public class CmlProtocolProcessor implements ICmlBridgeProtocol {
         protocol.setMethod(method);
         protocol.setArgs(args);
         protocol.setCallbackId(callbackId);
+
+        synchronized (wrapperList) {
+            for (ICmlProtocolWrapper wrapper : wrapperList) {
+                protocol = wrapper.wrapper(protocol);
+            }
+        }
+
         return protocol;
     }
 

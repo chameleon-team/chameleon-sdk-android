@@ -96,7 +96,7 @@ public class CmlModuleInvoke {
             if (autoCallback != null) {
                 autoCallback.onFail();
             }
-            if (CmlEnvironment.DEBUG) {
+            if (CmlEnvironment.CML_DEBUG) {
                 CmlMethodException.throwInvokeFail(object, method, e).printStackTrace();
             }
         }
@@ -111,7 +111,7 @@ public class CmlModuleInvoke {
                 callback.onError(model.errorNo, model.msg, model.data);
             }
         } catch (Exception e) {
-            if (CmlEnvironment.DEBUG) {
+            if (CmlEnvironment.CML_DEBUG) {
                 CmlMethodException.throwCallbackFail(callback, e).printStackTrace();
             }
         }
@@ -151,7 +151,7 @@ public class CmlModuleInvoke {
                 try {
                     jsonObject = new JSONObject(params);
                 } catch (JSONException e) {
-                    CmlLogUtil.wt(CmlMethodException.throwParseParam(method, params));
+                    CmlLogUtil.et(CmlMethodException.throwParseParam(method, params));
                 }
                 String keyValue = jsonObject == null ? null : jsonObject.optString(key);
                 args[i] = parseParam(paramType, TextUtils.isEmpty(keyValue) ? admin : keyValue);

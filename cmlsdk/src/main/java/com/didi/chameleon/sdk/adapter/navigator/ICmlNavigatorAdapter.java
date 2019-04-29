@@ -7,12 +7,10 @@ import android.content.Context;
  * Created by youzicong on 2018/10/11
  */
 public interface ICmlNavigatorAdapter {
-    String KEY = "navigator";
-
     /**
      * @param context Context
      * @param url     跳转地址 url
-     * @return 返回 true 代表处理，返回 false，继续交给{@link android.content.Intent#ACTION_VIEW}处理
      */
-    boolean navigator(Context context, String url);
+    void navigator(Context context, String url);
+
 }

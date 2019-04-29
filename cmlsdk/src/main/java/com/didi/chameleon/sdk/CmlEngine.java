@@ -5,15 +5,19 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
+import com.didi.chameleon.sdk.bridge.ICmlProtocolWrapper;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
 import com.didi.chameleon.sdk.extend.CmlModalModule;
+import com.didi.chameleon.sdk.extend.CmlPositionModule;
 import com.didi.chameleon.sdk.extend.CmlStorageModule;
 import com.didi.chameleon.sdk.extend.CmlStreamModule;
 import com.didi.chameleon.sdk.extend.CmlWebSocketModule;
+import com.didi.chameleon.sdk.extend.image.CmlImageModule;
+import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
-import com.didi.chameleon.sdk.utils.CmlClassInitManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 
@@ -111,42 +115,8 @@ public class CmlEngine {
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
-        try {
-            // engine 获取并初始化
-            Class cmlEngine = Class.forName("com.didi.chameleon.weex.CmlWeexEngine");
-            if (null == cmlEngine) {
-                cmlEngine = Class.forName("com.didi.chameleon.rn.CmlRnEngine");
-            }
-            if (null == cmlEngine) {
-                String error = "CmlEngine init error, engine class not found !!!";
-                CmlLogUtil.e(TAG, error);
-                return;
-            }
-            Object objEngine = cmlEngine.newInstance();
-            if (objEngine instanceof ICmlEngine) {
-                mCmlEngine = (ICmlEngine) objEngine;
-                mCmlEngine.init(context);
-            }
 
-            // web engine 获取并初始化
-            Class cmlWebEngine = Class.forName("com.didi.chameleon.web.CmlWebEngine");
-            if (null == cmlWebEngine) {
-                String error = "CmlWebEngine init error, engine class not found !!!";
-                CmlLogUtil.e(TAG, error);
-                return;
-            }
-            Object objWebEngine = cmlWebEngine.newInstance();
-            if (objWebEngine instanceof ICmlEngine) {
-                mCmlWebEngine = (ICmlEngine) objWebEngine;
-                mCmlWebEngine.init(context);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        initEngine(context);
 
         registerModule(CmlCommonModule.class);
         registerModule(CmlClipboardModule.class);
@@ -154,9 +124,60 @@ public class CmlEngine {
         registerModule(CmlWebSocketModule.class);
         registerModule(CmlStreamModule.class);
         registerModule(CmlModalModule.class);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_POSITION);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_IMAGE);
-        CmlClassInitManager.initClass(CmlClassInitManager.INIT_RICH_TEXT);
+        registerModule(CmlPositionModule.class);
+        registerModule(CmlImageModule.class);
+    }
+
+    private void initEngine(Context context) {
+        Class cmlEngine = null;
+        try {
+            // engine 获取并初始化
+            cmlEngine = Class.forName("com.didi.chameleon.weex.CmlWeexEngine");
+        } catch (ClassNotFoundException e1) {
+            try {
+                cmlEngine = Class.forName("com.didi.chameleon.cmlthanos.CmlThanosEngine");
+            } catch (ClassNotFoundException e2) {
+                String error = "CmlEngine init error, engine class not found !!!";
+                CmlLogUtil.e(TAG, error);
+            }
+        }
+
+        if (null != cmlEngine) {
+            try {
+                Object objEngine = cmlEngine.newInstance();
+                if (objEngine instanceof ICmlEngine) {
+                    mCmlEngine = (ICmlEngine) objEngine;
+                    mCmlEngine.init(context);
+                } else {
+                    String error = "CmlEngine init error, engine class not found !!!";
+                    CmlLogUtil.e(TAG, error);
+                }
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            // web engine 获取并初始化
+            Class cmlWebEngine = Class.forName("com.didi.chameleon.web.CmlWebEngine");
+            if (null != cmlWebEngine) {
+                Object objWebEngine = cmlWebEngine.newInstance();
+                if (objWebEngine instanceof ICmlEngine) {
+                    mCmlWebEngine = (ICmlEngine) objWebEngine;
+                    mCmlWebEngine.init(context);
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            String error = "CmlWebEngine init error, engine class not found !!!";
+            CmlLogUtil.e(TAG, error);
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public Context getAppContext() {
@@ -191,12 +212,14 @@ public class CmlEngine {
                 return;
             }
             mCmlEngine.launchPage(activity, url, options);
-        } else {
+        } else if (Util.isWebPageUrl(url)) {
             if (null == mCmlWebEngine) {
                 CmlLogUtil.e(TAG, "CmlWebEngine launchPage, web engine class not found !!!");
                 return;
             }
             mCmlWebEngine.launchPage(activity, url, options);
+        } else {
+            CmlLogUtil.e(TAG, "check url, render local jsbundle make sure `CmlEnvironment.CML_DEGRADE` is been true");
         }
     }
 
@@ -214,7 +237,7 @@ public class CmlEngine {
                 return;
             }
             mCmlEngine.launchPage(activity, url, options, requestCode, launchCallback);
-        } else {
+        } else if (Util.isWebPageUrl(url)) {
             if (null == mCmlWebEngine) {
                 CmlLogUtil.e(TAG, "CmlWebEngine launchPage, web engine class not found !!!");
                 return;
@@ -231,6 +254,7 @@ public class CmlEngine {
     public void initPreloadList(List<CmlBundle> preloadList) {
         if (null == mCmlEngine) {
             CmlLogUtil.e(TAG, "CmlEngine performPreload, engine class not found !!!");
+            return;
         }
         mCmlEngine.initPreloadList(preloadList);
     }
@@ -241,6 +265,7 @@ public class CmlEngine {
     public void performPreload() {
         if (null == mCmlEngine) {
             CmlLogUtil.e(TAG, "CmlEngine performPreload, engine class not found !!!");
+            return;
         }
         mCmlEngine.performPreload();
     }
@@ -254,6 +279,14 @@ public class CmlEngine {
      */
     public <T> void registerModule(Class<T> moduleClass) {
         CmlModuleManager.getInstance().addCmlModule(moduleClass);
+    }
+
+    public void addProtocolWrapper(ICmlProtocolWrapper wrapper) {
+        CmlProtocolProcessor.addCmlProtocolWrapper(wrapper);
+    }
+
+    public <T> void callToJs(ICmlInstance instance, String module, String method, Object param, CmlCallback<T> callback) {
+        CmlModuleManager.getInstance().invokeWeb(instance.getInstanceId(), module, method, param, callback);
     }
 
 }

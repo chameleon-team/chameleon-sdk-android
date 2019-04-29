@@ -8,11 +8,11 @@ public class CmlJsBundleConstant {
     /**
      * 预加载的缓存文件名
      */
-    public static final String FILE_NAME_PRELOAD = "weex/preload";
+    public static final String FILE_NAME_PRELOAD = "cml/preload";
     /**
      * 普通的缓存文件名
      */
-    public static final String FILE_NAME_COMMON = "weex/common";
+    public static final String FILE_NAME_COMMON = "cml/common";
     /**
      * 解析链接中weex地址的key
      */
