@@ -112,6 +112,11 @@ public class CmlEngine {
      * @param context Application 对象
      */
     public void init(Context context, ICmlConfig config) {
+        if (null != mCmlEngine) {
+            CmlLogUtil.e(TAG, "cml engine has initialized.");
+            return;
+        }
+
         this.mContext = context;
         config.configAdapter();
         config.registerModule();
