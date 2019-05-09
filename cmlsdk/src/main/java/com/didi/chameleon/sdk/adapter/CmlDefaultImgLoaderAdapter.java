@@ -3,28 +3,54 @@ package com.didi.chameleon.sdk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.util.Base64;
 import android.widget.ImageView;
 
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
+
+import java.util.regex.Pattern;
 
 /**
  * Chameleon 默认图片加载实现，基于 Glide 实现
  * Created by youzicong on 2018/10/11
  */
 public class CmlDefaultImgLoaderAdapter implements ICmlImgLoaderAdapter {
-    private static final String TAG = "CmlDefaultImgLoaderAdapter";
 
-    @Override
-    public void setImage(String url, ImageView view) {
+    private void checkGlide() {
         try {
             Class.forName("com.bumptech.glide.Glide");
         } catch (Exception e) {
             throw CmlAdapterException.throwAdapterNone(ICmlImgLoaderAdapter.class);
         }
-        Context context = view.getContext();
-        if (context instanceof Activity && activityValid((Activity) context)) {
-            Glide.with(context).load(url).into(view);
+    }
+
+    @Nullable
+    private DrawableTypeRequest getCommonStep(String url, Context context) {
+        if (url == null) {
+            url = "";
         }
+        if (context instanceof Activity && activityValid((Activity) context)) {
+            DrawableTypeRequest typeRequest;
+            if (Pattern.matches("^data:image/(.*?);base64,(.*?)", url)) {
+                typeRequest = Glide.with(context).load(Base64.decode(url.split(",", 2)[1], Base64.DEFAULT));
+            } else {
+                typeRequest = Glide.with(context).load(url);
+            }
+            return typeRequest;
+        }
+        return null;
+    }
+
+    @Override
+    public void setImage(String url, final ImageView view) {
+        checkGlide();
+        DrawableTypeRequest typeRequest = getCommonStep(url, view.getContext());
+        if (typeRequest == null) {
+            return;
+        }
+        typeRequest.crossFade().into(view);
     }
 
     private boolean activityValid(Activity activity) {
