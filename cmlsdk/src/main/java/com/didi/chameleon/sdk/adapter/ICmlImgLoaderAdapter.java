@@ -14,4 +14,5 @@ public interface ICmlImgLoaderAdapter {
      * @param view 显示图片 view
      */
     void setImage(String url, ImageView view);
+
 }
