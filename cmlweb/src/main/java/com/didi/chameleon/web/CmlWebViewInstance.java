@@ -112,7 +112,7 @@ public class CmlWebViewInstance implements ICmlViewInstance {
     public void render(final String url, HashMap<String, Object> options) {
         mTotalUrl = url;
         mUrl = Util.parseH5Url(url);
-        this.extendsParam = extendsParam;
+        this.extendsParam = options;
         final StringBuilder loadUrl = new StringBuilder(mTotalUrl);
         if (loadUrl.indexOf("?") < 0) {
             loadUrl.append("?");
