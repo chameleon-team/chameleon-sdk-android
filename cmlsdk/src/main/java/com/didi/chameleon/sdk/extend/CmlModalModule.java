@@ -3,6 +3,8 @@ package com.didi.chameleon.sdk.extend;
 import android.content.Context;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
+import com.didi.chameleon.sdk.CmlInstanceManage;
+import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlCallbackSimple;
@@ -10,7 +12,9 @@ import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlParam;
 
-@CmlModule(alias = "modal")
+import org.json.JSONObject;
+
+@CmlModule(alias = "modal", global = false)
 public class CmlModalModule {
 
     private static final String MESSAGE = "message";
@@ -18,6 +22,15 @@ public class CmlModalModule {
     private static final String CONFIRM_TITLE = "confirmTitle";
     private static final String CANCEL_TITLE = "cancelTitle";
 
+    public CmlModalModule(ICmlInstance instance) {
+        final String instanceId = instance.getInstanceId();
+        CmlInstanceManage.getInstance().registerDestroyListener(instanceId, new CmlInstanceManage.CmlInstanceDestroyListener() {
+            @Override
+            public void onDestroy() {
+                hideLoading();
+            }
+        });
+    }
 
     @CmlMethod(alias = "showToast")
     public void toast(Context context, @CmlParam(name = MESSAGE) String msg,
@@ -51,6 +64,18 @@ public class CmlModalModule {
                 callback.onCallback(cancel);
             }
         });
+    }
+
+    @CmlMethod(alias = "showLoading")
+    public void showLoading(Context context, JSONObject params) {
+        String title = params.optString("title", "");
+        boolean mask = params.optBoolean("mask", false);
+        CmlEnvironment.getModalTip().showProgress(context, title, mask);
+    }
+
+    @CmlMethod(alias = "hideLoading")
+    public void hideLoading() {
+        CmlEnvironment.getModalTip().hideProgress();
     }
 
 }

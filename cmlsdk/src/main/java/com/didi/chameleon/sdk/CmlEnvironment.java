@@ -9,6 +9,7 @@ import com.didi.chameleon.sdk.adapter.json.ICmlJsonAdapter;
 import com.didi.chameleon.sdk.adapter.log.CmlLoggerDefault;
 import com.didi.chameleon.sdk.adapter.log.ICmlLoggerAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
+import com.didi.chameleon.sdk.adapter.modal.ICmlProgressAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
 import com.didi.chameleon.sdk.adapter.navigator.CmlNavigatorDefault;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
@@ -72,6 +73,7 @@ public class CmlEnvironment {
     private static ICmlHttpAdapter httpAdapter;
     private static ICmlToastAdapter toastAdapter;
     private static ICmlDialogAdapter dialogAdapter;
+    private static ICmlProgressAdapter progressAdapter;
 
     private static ICmlNavigatorAdapter navigatorAdapter;
     private static ICmlStatisticsAdapter statisticsAdapter;
@@ -122,6 +124,11 @@ public class CmlEnvironment {
         modalTip = null;
     }
 
+    public static void setProgressAdapter(ICmlProgressAdapter progressAdapter) {
+        CmlEnvironment.progressAdapter = progressAdapter;
+        modalTip = null;
+    }
+
     public static void setStatisticsAdapter(ICmlStatisticsAdapter statisticsAdapter) {
         CmlEnvironment.statisticsAdapter = statisticsAdapter;
     }
@@ -150,14 +157,14 @@ public class CmlEnvironment {
      * 设置预加载的最大缓存
      */
     public static void setMaxPreloadSize(long maxPreloadSize) {
-        maxPreloadSize = maxPreloadSize;
+        CmlEnvironment.maxPreloadSize = maxPreloadSize;
     }
 
     /**
      * 设置运行时的最大缓存
      */
     public static void setMaxRuntimeSize(long maxRuntimeSize) {
-        maxRuntimeSize = maxRuntimeSize;
+        CmlEnvironment.maxRuntimeSize = maxRuntimeSize;
     }
 
     public static CmlJsonWrapper getJsonWrapper() {
@@ -226,7 +233,7 @@ public class CmlEnvironment {
 
     public static CmlModalTip getModalTip() {
         if (modalTip == null) {
-            modalTip = new CmlModalTip(toastAdapter, dialogAdapter);
+            modalTip = new CmlModalTip(toastAdapter, dialogAdapter, progressAdapter);
         }
         return modalTip;
     }
