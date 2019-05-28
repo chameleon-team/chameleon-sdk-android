@@ -3,6 +3,7 @@ package com.didi.chameleon.sdk.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -17,6 +18,10 @@ public class CmlViewUtil {
     private static int mStatusBarHeight;
     private static int mNavigationHeight;
     private static float mDensity;
+
+    public static int dp2px(@NonNull Context context, float dp) {
+        return Math.round(dp * context.getResources().getDisplayMetrics().density + 0.5f);
+    }
 
     public static float getDensity(Context ctx) {
         if (ctx != null) {
