@@ -3,6 +3,7 @@ package com.didi.chameleon.sdk.module;
 import android.support.annotation.NonNull;
 
 import com.didi.chameleon.sdk.CmlInstanceManage;
+import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,6 +31,9 @@ public class CmlModuleFactory {
                     object = moduleClass.newInstance();
                     break;
                 case 1:
+                    if (instanceId == null) {
+                        CmlLogUtil.e("CmlModuleFactory", "if module is not global,it can't init has instance");
+                    }
                     object = constructor.newInstance(CmlInstanceManage.getInstance().getCmlInstance(instanceId));
                     break;
                 default:
