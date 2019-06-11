@@ -33,9 +33,7 @@ public class CmlWebViewActivity extends AppCompatActivity implements View.OnClic
         cmlWebView = findViewById(R.id.cml_view);
 
         cmlWebView.onCreate();
-        cmlWebView.render(WEB_URL, null); // 加载远程jsbundle
-//        cmlWebView.render("file://local/cml-demo-say.js", null); // 加载assets目录里的jsbundle
-
+        cmlWebView.render(WEB_URL, null);
         txtChangeTxt.setOnClickListener(this);
     }
 

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView txtOpenUrlInActivity;
     private TextView txtOpenUrlInView;
-    private TextView txtOpenJSBundle;
+    private TextView txtOpenCanvas;
     private TextView txtPreload;
     private TextView txtDegrade;
     private TextView txtJsCallNative;
@@ -43,14 +43,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         txtOpenUrlInActivity = findViewById(R.id.txt_web_activity);
         txtOpenUrlInView = findViewById(R.id.txt_web_view);
-        txtOpenJSBundle = findViewById(R.id.txt_open_js_bundle);
+        txtOpenCanvas = findViewById(R.id.txt_open_canvas);
         txtPreload = findViewById(R.id.txt_preload);
         txtDegrade = findViewById(R.id.txt_auto_degrade);
         txtJsCallNative = findViewById(R.id.txt_weex_activity);
         txtNativeCallJs = findViewById(R.id.txt_weex_view);
         txtOpenUrlInActivity.setOnClickListener(this);
         txtOpenUrlInView.setOnClickListener(this);
-        txtOpenJSBundle.setOnClickListener(this);
+        txtOpenCanvas.setOnClickListener(this);
         txtPreload.setOnClickListener(this);
         txtDegrade.setOnClickListener(this);
         txtJsCallNative.setOnClickListener(this);
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.txt_web_view:
                 startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
-            case R.id.txt_open_js_bundle:
+            case R.id.txt_open_canvas:
                 CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
                 break;
             case R.id.txt_preload:
