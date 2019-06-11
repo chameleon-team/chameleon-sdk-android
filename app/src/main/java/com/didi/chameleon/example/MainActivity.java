@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 这是一个测试预加载的 JS_BUNDLE
     private static final String URL_JS_BUNDLE_PRELOAD = WEB_URL + "?cml_addr=http%3a%2f%2fjalon.wang%2fcml-demo-say%2fdist%2fweex%2fcml-demo-say_0c731e1c5e428213d27a.js";
     // 演示自定义Module 和 JS 通信, 加载本地jsbundle需设置 CmlEnvironment.CML_DEBUG = true
-    private static final String URL_MODULE_DEMO = "file://local/cml-demo-say.js";
+//    private static final String URL_MODULE_DEMO = "file://local/cml-demo-say.js";
+    private static final String URL_MODULE_DEMO = "file://local/test.js";
 
     private TextView txtOpenUrlInActivity;
     private TextView txtOpenUrlInView;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
             case R.id.txt_open_js_bundle:
-                CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_OK, null);
+                CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
                 break;
             case R.id.txt_preload:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_PRELOAD, null);
