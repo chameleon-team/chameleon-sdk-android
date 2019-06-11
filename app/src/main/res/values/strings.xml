@@ -6,6 +6,7 @@
     <string name="demo_extend_module">CmlSDKExample</string>
     <string name="demo_js_bundle">CmlSDKExample</string>
     <string name="demo_open_js_bundle">打开 JS Bundle</string>
+    <string name="demo_open_canvas">canvas</string>
     <string name="demo_preload">预加载</string>
     <string name="demo_auto_degrade">自动降级</string>
     <string name="demo_change_txt">我是native组件\n点我测试</string>

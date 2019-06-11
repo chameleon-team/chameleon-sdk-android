@@ -1,5 +1,6 @@
 package com.taobao.gcanvas.adapters.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -36,12 +37,27 @@ public class CmlImageLoaderGlide implements IGImageLoader {
                 @Override
                 public void run() {
                     Log.i(TAG, "CmlImageLoaderGlide load: " + url);
-                    Glide.with(context).asBitmap().load(url).into(mCurrentTarget);
+                    if (isValidContextForGlide(context)) {
+                        Glide.with(context).asBitmap().load(url).into(mCurrentTarget);
+                    }
                 }
             });
         } else {
             Glide.with(context).asBitmap().load(url).into(mCurrentTarget);
         }
+    }
+
+    private boolean isValidContextForGlide(final Context context) {
+        if (context == null) {
+            return false;
+        }
+        if (context instanceof Activity) {
+            final Activity activity = (Activity) context;
+            if (activity.isFinishing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private class ImageTarget extends SimpleTarget<Bitmap> {
