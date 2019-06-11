@@ -2,13 +2,15 @@ package com.didi.chameleon.sdk.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.widget.ImageView;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.regex.Pattern;
 
@@ -27,12 +29,12 @@ public class CmlDefaultImgLoaderAdapter implements ICmlImgLoaderAdapter {
     }
 
     @Nullable
-    private DrawableTypeRequest getCommonStep(String url, Context context) {
+    private RequestBuilder<Drawable> getCommonStep(String url, Context context) {
         if (url == null) {
             url = "";
         }
         if (context instanceof Activity && activityValid((Activity) context)) {
-            DrawableTypeRequest typeRequest;
+            RequestBuilder<Drawable> typeRequest;
             if (Pattern.matches("^data:image/(.*?);base64,(.*?)", url)) {
                 typeRequest = Glide.with(context).load(Base64.decode(url.split(",", 2)[1], Base64.DEFAULT));
             } else {
@@ -46,11 +48,11 @@ public class CmlDefaultImgLoaderAdapter implements ICmlImgLoaderAdapter {
     @Override
     public void setImage(String url, final ImageView view) {
         checkGlide();
-        DrawableTypeRequest typeRequest = getCommonStep(url, view.getContext());
+        RequestBuilder<Drawable> typeRequest = getCommonStep(url, view.getContext());
         if (typeRequest == null) {
             return;
         }
-        typeRequest.crossFade().into(view);
+        typeRequest.transition(new DrawableTransitionOptions().crossFade()).into(view);
     }
 
     private boolean activityValid(Activity activity) {

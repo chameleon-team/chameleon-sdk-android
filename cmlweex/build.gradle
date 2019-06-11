@@ -38,4 +38,5 @@ dependencies {
     api project(':cmlsdk')
     api project(':rich-text-component')
     api project(':js-bundle-mgr')
+    api project(':weexbridge')
 }

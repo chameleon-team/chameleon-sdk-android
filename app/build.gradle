@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.alibaba:fastjson:1.2.54'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VER"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
