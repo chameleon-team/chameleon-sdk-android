@@ -177,6 +177,10 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
         // NOTHING
     }
 
+    public CmlWeexViewInstance getInstance() {
+        return wxInstance;
+    }
+
     public interface IDegradeToH5 {
         void setView(ICmlView cmlView);
     }
