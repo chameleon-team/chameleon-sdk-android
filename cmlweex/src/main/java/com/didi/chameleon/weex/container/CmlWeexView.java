@@ -7,10 +7,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
+import com.didi.chameleon.sdk.container.CmlContainerView;
 import com.didi.chameleon.sdk.container.ICmlView;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.weex.CmlWeexViewInstance;
@@ -22,7 +22,7 @@ import java.util.HashMap;
  *
  * @since 18/5/24
  */
-public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICmlInstanceListener, ICmlView {
+public class CmlWeexView extends CmlContainerView implements CmlWeexViewInstance.ICmlInstanceListener{
     private CmlWeexViewInstance wxInstance;
     private ICmlDegradeAdapter.DegradeViewWrapper degradeViewWrapper;
     private boolean isDestroy;
@@ -31,20 +31,18 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
 
     public CmlWeexView(@NonNull Context context) {
         super(context);
-        init(context);
     }
 
     public CmlWeexView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
     }
 
     public CmlWeexView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
     }
 
-    private void init(Context context) {
+    @Override
+    protected void init(Context context) {
         wxInstance = new CmlWeexViewInstance(CmlWeexView.this, CmlWeexView.this);
     }
 
@@ -146,35 +144,9 @@ public class CmlWeexView extends FrameLayout implements CmlWeexViewInstance.ICml
 
     }
 
-    @Nullable
-    @Override
-    public View getObjectView() {
-        return this;
-    }
-
-    @Override
-    public boolean isActivity() {
-        return false;
-    }
-
-    @Override
-    public boolean isView() {
-        return true;
-    }
-
-    @Override
-    public boolean isInDialog() {
-        return false;
-    }
-
     @Override
     public boolean isValid() {
         return !isDestroy;
-    }
-
-    @Override
-    public void finishSelf() {
-        // NOTHING
     }
 
     public CmlWeexViewInstance getInstance() {
