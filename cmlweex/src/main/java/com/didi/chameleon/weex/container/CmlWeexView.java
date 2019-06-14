@@ -22,7 +22,7 @@ import java.util.HashMap;
  *
  * @since 18/5/24
  */
-public class CmlWeexView extends CmlContainerView implements CmlWeexViewInstance.ICmlInstanceListener{
+public class CmlWeexView extends CmlContainerView implements CmlWeexViewInstance.ICmlInstanceListener {
     private CmlWeexViewInstance wxInstance;
     private ICmlDegradeAdapter.DegradeViewWrapper degradeViewWrapper;
     private boolean isDestroy;
@@ -43,6 +43,7 @@ public class CmlWeexView extends CmlContainerView implements CmlWeexViewInstance
 
     @Override
     protected void init(Context context) {
+        super.init(context);
         wxInstance = new CmlWeexViewInstance(CmlWeexView.this, CmlWeexView.this);
     }
 
