@@ -173,6 +173,6 @@ public class CmlWebViewInstance implements ICmlViewInstance {
 
     @Override
     public void finishSelf() {
-        // do nothing
+        mCmlView.finishSelf();
     }
 }

@@ -388,7 +388,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     @Override
     public void finishSelf() {
-        // do nothing
+        mCmlView.finishSelf();
     }
 
     @Override
