@@ -93,4 +93,12 @@ public class CmlWebView extends CmlContainerView {
     public boolean isValid() {
         return !isDestroy;
     }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mBaseWebView != null && mBaseWebView.canGoBack()) {
+            return true;
+        }
+        return super.onBackPressed();
+    }
 }

@@ -418,6 +418,13 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         mWeexInstance.fireGlobalEventCallback(CML_BRIDGE_EVENT, params);
     }
 
+    public boolean onBackPress() {
+        if (mWeexInstance != null) {
+            return mWeexInstance.onBackPressed();
+        }
+        return false;
+    }
+
     /**
      * 构造包装类，封装更多参数
      */
