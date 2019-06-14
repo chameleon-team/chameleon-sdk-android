@@ -8,11 +8,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
-public abstract class CmlContainerView extends FrameLayout implements ICmlView{
+public abstract class CmlContainerView extends FrameLayout implements ICmlView {
 
-	private Activity bindActivity;
+    private Activity bindActivity;
 
-	public CmlContainerView(@NonNull Context context) {
+    public CmlContainerView(@NonNull Context context) {
         super(context);
         init(context);
     }
@@ -27,17 +27,24 @@ public abstract class CmlContainerView extends FrameLayout implements ICmlView{
         init(context);
     }
 
-	protected void init(Context context){
-		if (context instanceof Activity) {
-			this.bindActivity = (Activity) context;
-		}
-	}
+    protected void init(Context context) {
+        if (context instanceof Activity) {
+            this.bindActivity = (Activity) context;
+        }
+    }
 
-	public void bindActivity(Activity bindAty){
-		this.bindActivity = bindAty;
-	}
+    /**
+     * @return 是否消耗物理返回键
+     */
+    public boolean onBackPressed() {
+        return false;
+    }
 
-	@Override
+    public void bindActivity(Activity bindAty) {
+        this.bindActivity = bindAty;
+    }
+
+    @Override
     public void finishSelf() {
         if (bindActivity != null) {
             bindActivity.finish();

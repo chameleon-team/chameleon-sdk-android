@@ -112,6 +112,14 @@ public class CmlWeexView extends CmlContainerView implements CmlWeexViewInstance
     }
 
     @Override
+    public boolean onBackPressed() {
+        if (wxInstance != null) {
+            return wxInstance.onBackPress();
+        }
+        return super.onBackPressed();
+    }
+
+    @Override
     public void onDegradeToH5(String url, int degradeCode) {
         if (getContext() == null || isDestroy) {
             return;

@@ -132,6 +132,13 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
         }
     }
 
+    public boolean onBackPress() {
+        if (mWeexInstance != null) {
+            return mWeexInstance.onBackPressed();
+        }
+        return false;
+    }
+
     @Override
     public void onResult(int resultCode, String result) {
         if (null != mLaunchCallback) {

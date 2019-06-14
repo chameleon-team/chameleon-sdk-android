@@ -28,7 +28,6 @@ import java.util.HashMap;
 /**
  * 用来展示 Chameleon Weex 页面，通过{@link Launch} 或者{@link CmlWeexEngine#launchPage(Activity, String, HashMap)}进行启动
  *
-
  * @since 18/5/24
  */
 public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInstance.ICmlInstanceListener, ICmlActivity {
@@ -130,6 +129,13 @@ public class CmlWeexActivity extends CmlContainerActivity implements CmlWeexInst
         mIsViewValid = false;
         if (mWXInstance != null) {
             mWXInstance.onDestroy();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mWXInstance == null || !mWXInstance.onBackPress()) {
+            super.onBackPressed();
         }
     }
 
