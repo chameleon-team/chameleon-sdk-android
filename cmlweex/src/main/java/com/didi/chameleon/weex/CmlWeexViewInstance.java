@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.didi.chameleon.sdk.CmlConstant;
+import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlViewInstance;
@@ -420,7 +421,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     public boolean onBackPress() {
         if (mWeexInstance != null) {
-            return mWeexInstance.onBackPressed();
+            CmlEngine.getInstance().callToJs(this, "cml", "onBackPressed", null, null);
+            return true;
         }
         return false;
     }
