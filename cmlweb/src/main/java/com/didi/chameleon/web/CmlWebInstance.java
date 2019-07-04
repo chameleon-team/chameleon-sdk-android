@@ -107,7 +107,48 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
         mTotalUrl = url;
         mUrl = Util.parseH5Url(url);
         this.extendsParam = extendsParam;
-        final StringBuilder loadUrl = new StringBuilder(mTotalUrl);
+        final String loadUrl = checkUrl(mTotalUrl, extendsParam);
+        if (null != mWebView) {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl(loadUrl);
+                }
+            }, 100);
+        }
+    }
+
+    private String checkUrl(String url, HashMap<String, Object> extendsParam) {
+        //为了兼容url里的#fragment
+        int qpos = url.indexOf('?');
+        int hpos = url.indexOf('#');
+
+        if (qpos != -1 && hpos != -1 && hpos < qpos) {
+            //直接添加。
+            if (url.contains("#/")) {
+                url = url.replace("#/", "$$");
+            }
+
+            url = appendQueryParams(url, extendsParam);
+
+            if (url.contains("$$")) {
+                url = url.replace("$$", "#/");
+            }
+        } else {
+            if (hpos != -1) {
+                String fragment = url.substring(hpos);
+                url = url.substring(0, hpos);
+                url = appendQueryParams(url, extendsParam);
+                url = url + fragment;
+            } else {
+                url = appendQueryParams(url, extendsParam);
+            }
+        }
+        return url;
+    }
+
+    private String appendQueryParams(String url, HashMap<String, Object> extendsParam) {
+        StringBuilder loadUrl = new StringBuilder(url);
         if (loadUrl.indexOf("?") < 0) {
             loadUrl.append("?");
         } else {
@@ -119,14 +160,7 @@ public class CmlWebInstance implements ICmlActivityInstance, ICmlBaseLifecycle {
                 loadUrl.append("&").append(key).append("=").append(extendsParam.get(key));
             }
         }
-        if (null != mWebView) {
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mWebView.loadUrl(loadUrl.toString());
-                }
-            }, 100);
-        }
+        return loadUrl.toString();
     }
 
     @Override
