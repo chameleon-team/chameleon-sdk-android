@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.alibaba.fastjson.JSON;
@@ -24,6 +25,8 @@ public class CmlRichTextComponent extends AppCompatTextView {
     public interface Action {
 
         void onClick(Map<String, Object> info);
+
+        int getMaxHeight();
 
         void updateSize(int width, int height);
 
@@ -75,9 +78,15 @@ public class CmlRichTextComponent extends AppCompatTextView {
 
         setHighlightColor(Color.TRANSPARENT);
 
+        int maxHeight = action == null ? 0 : action.getMaxHeight();
         //根据内容自适应
-        measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        if (maxHeight == 0) {
+            measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        } else {
+            measure(View.MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        }
         if (action != null) {
             action.updateSize(getMeasuredWidth(), getMeasuredHeight());
         }

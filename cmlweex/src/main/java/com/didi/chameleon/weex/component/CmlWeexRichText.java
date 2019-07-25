@@ -54,4 +54,9 @@ public class CmlWeexRichText extends WXComponent<CmlRichTextComponent>
         fireEvent(Constants.Event.CLICK, info);
     }
 
+    @Override
+    public int getMaxHeight() {
+        return getParent() != null ? getParent().getViewPortWidth() : 0;
+    }
+
 }
