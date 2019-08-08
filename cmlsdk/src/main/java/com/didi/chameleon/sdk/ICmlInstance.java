@@ -1,6 +1,8 @@
 package com.didi.chameleon.sdk;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.didi.chameleon.sdk.container.ICmlContainer;
 
@@ -8,6 +10,81 @@ import com.didi.chameleon.sdk.container.ICmlContainer;
  * Instance 需要提供的基础能力
  */
 public interface ICmlInstance extends ICmlContainer {
+
+    ICmlInstance empty = new ICmlInstance() {
+        @Override
+        public String getInstanceId() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public String getTargetURL() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public String getCurrentURL() {
+            return null;
+        }
+
+        @Override
+        public void nativeToJs(String protocol) {
+
+        }
+
+        @Override
+        public void reload(String url) {
+
+        }
+
+        @Override
+        public void degradeToH5(int degradeCode) {
+
+        }
+
+        @Override
+        public void onResult(int resultCode, String result) {
+
+        }
+
+        @Override
+        public Context getContext() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public View getObjectView() {
+            return null;
+        }
+
+        @Override
+        public boolean isActivity() {
+            return false;
+        }
+
+        @Override
+        public boolean isView() {
+            return false;
+        }
+
+        @Override
+        public void finishSelf() {
+
+        }
+
+        @Override
+        public boolean isInDialog() {
+            return false;
+        }
+
+        @Override
+        public boolean isValid() {
+            return false;
+        }
+    };
 
     String getInstanceId();
 

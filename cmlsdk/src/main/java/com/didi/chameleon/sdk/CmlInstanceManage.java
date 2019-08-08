@@ -1,5 +1,9 @@
 package com.didi.chameleon.sdk;
 
+import android.support.annotation.NonNull;
+
+import com.didi.chameleon.sdk.utils.CmlLogUtil;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +28,8 @@ public class CmlInstanceManage {
     public interface CmlInstanceDestroyListener {
         void onDestroy();
     }
+
+    public static final String TAG = "CmlInstanceManage";
 
     private static CmlInstanceManage instance = new CmlInstanceManage();
 
@@ -55,27 +61,33 @@ public class CmlInstanceManage {
         }
     }
 
+    @NonNull
     public ICmlInstance getCmlInstance(String instanceId) {
         if (mInstances.containsKey(instanceId)) {
             return mInstances.get(instanceId);
         }
-        return null;
+        CmlLogUtil.w(TAG, "getCmlInstance empty! " + instanceId);
+        return ICmlInstance.empty;
     }
 
+    @NonNull
     public ICmlViewInstance getCmlViewInstance(String instanceId) {
         ICmlInstance instance = mInstances.get(instanceId);
         if (instance instanceof ICmlViewInstance) {
             return (ICmlViewInstance) instance;
         }
-        return null;
+        CmlLogUtil.w(TAG, "getCmlViewInstance empty! " + instanceId);
+        return ICmlViewInstance.empty;
     }
 
+    @NonNull
     public ICmlActivityInstance getCmlActivityInstance(String instanceId) {
         ICmlInstance instance = mInstances.get(instanceId);
         if (instance instanceof ICmlActivityInstance) {
             return (ICmlActivityInstance) instance;
         }
-        return null;
+        CmlLogUtil.w(TAG, "getCmlActivityInstance empty! " + instanceId);
+        return ICmlActivityInstance.empty;
     }
 
     public ICmlLaunchCallback getLaunchCallback(String instanceId) {
