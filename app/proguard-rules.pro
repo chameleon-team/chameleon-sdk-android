@@ -110,3 +110,5 @@
 -keep public class * extends com.taobao.weex.ui.component.WXComponent{*;}
 -keep class * implements com.taobao.weex.ui.IExternalComponentGetter{*;}
 
+# ========== chameleon 包下的类混淆配置 ==========
+-keep class com.didi.chameleon.** { *; }

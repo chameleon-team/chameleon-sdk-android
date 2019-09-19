@@ -1,6 +1,7 @@
 package com.didi.chameleon.sdk;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
+import com.didichuxing.doraemonkit.DoraemonKit;
 
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +124,7 @@ public class CmlEngine {
         config.configAdapter();
         config.registerModule();
 
+        initDoraemonkit(context);
         initEngine(context);
 
         registerModule(CmlCommonModule.class);
@@ -185,6 +188,20 @@ public class CmlEngine {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initDoraemonkit(Context context) {
+        try {
+            Class.forName("com.didichuxing.doraemonkit.DoraemonKit");
+        } catch (Exception e) {
+            CmlLogUtil.et(e);
+            return;
+        }
+        if (!(context instanceof Application)) {
+            CmlLogUtil.e(TAG, "content is not application");
+            return;
+        }
+        DoraemonKit.install((Application) context);
     }
 
     public Context getAppContext() {
