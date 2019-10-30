@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="cml_small_btn_font_size">12dp</dimen>
+    <dimen name="cml_small_btn_padding">8dp</dimen>
+    <dimen name="cml_big_btn_padding">15dp</dimen>
+    <dimen name="cml_big_btn_font_size">16dp</dimen>
+    <dimen name="cml_big_btn_icon_size">18dp</dimen>
+    <dimen name="cml_mid_btn_padding">12dp</dimen>
+    <dimen name="cml_common_btn_icon_size">12dp</dimen>
+    <dimen name="cml_common_btn_small_corner">1dp</dimen>
+    <dimen name="cml_common_btn_large_corner">2dp</dimen>
+    <dimen name="cml_common_btn_corner_boundary">40dp</dimen>
+    <dimen name="cml_icon_size">12dp</dimen>
+    <dimen name="cml_btn_border_width">1px</dimen>
+    <dimen name="cml_btn_small_corner">1dp</dimen>
+
+    <dimen name="cml_font_size_medium">16sp</dimen>
+
+
+
+</resources>

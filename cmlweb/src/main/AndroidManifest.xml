@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.didi.chameleon.web">
+
+    <application>
+        <activity
+            android:name=".container.CmlWebActivity"
+            android:configChanges="orientation|screenSize|keyboard|mcc|mnc|locale|keyboardHidden|uiMode|fontScale"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    </application>
+</manifest>

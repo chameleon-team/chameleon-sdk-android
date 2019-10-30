@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>
+        js调用java
+    </title>
+</head>
+
+<body>
+<p><input type="button" id="enter" value="invokeNativeMethod" onclick="invokeNativeMethod();"/></p>
+<p><input type="button" id="enter1" value="callbackFromJs" onclick="callbackFromJs();"/></p>
+</body>
+<script>
+    function testDiv() {
+        document.getElementById("show").innerHTML = document.getElementsByTagName("html")[0].innerHTML;
+    }
+
+    function invokeNativeMethod() {
+        window.cmlBridge.channel("cml://channel?action=invokeNativeMethod&module=moduleDemo&method=sayHello&args=xxx&callbackId=xxx");
+    }
+
+    function callbackFromJs() {
+        window.cmlBridge.channel("cml://channel?action=callbackFromJs&args=xxx&callbackId=xxx");
+    }
+</script>
+
+</html>
+

@@ -1,0 +1,45 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://maven.google.com/'
+        }
+    }
+    dependencies {
+        // TODO wangshan 升到3.5.1会有问题，但weex-playground0.28.0版升到3.5.1就没事
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/public/'
+        }
+        maven {
+            url 'https://maven.google.com/'
+        }
+        jcenter()
+        mavenCentral()
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/node_modules/react-native/android"
+        }
+        maven {
+            url 'file:///Users/didi/.m2/repository'
+        }
+    }
+}
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

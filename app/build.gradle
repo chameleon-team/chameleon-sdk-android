@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "cn.zkml.healthmanagement.member"
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../chameleon.keystore")
+            storePassword "12345678"
+            keyAlias "cml.keystore"
+            keyPassword "12345678"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:support-v4:$SUPPORT_VER"
+    implementation "com.android.support:appcompat-v7:$SUPPORT_VER"
+    implementation "com.android.support:recyclerview-v7:$SUPPORT_VER"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.alibaba:fastjson:1.2.54'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
+    implementation "com.github.bumptech.glide:glide:$GLIDE_VER"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    api project(':cmlsdk')
+    api project(':cmlweex')
+    api project(':cmlweb')
+
+    //SNAPSHOT版本的缓存有效时间为0秒，每次同步时都尝试更新
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+}
