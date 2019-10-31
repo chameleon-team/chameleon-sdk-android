@@ -56,6 +56,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    // 引入Dokit工具箱
     implementation 'com.didichuxing.doraemonkit:doraemonkit:1.2.1'
 //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.2.0'
     implementation 'com.didichuxing.doraemonkit:doraemonkit-weex:1.0.0'
@@ -65,8 +66,8 @@ dependencies {
     api project(':cmlweex')
     api project(':cmlweb')
 
-    //SNAPSHOT版本的缓存有效时间为0秒，每次同步时都尝试更新
-    configurations.all {
-        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-    }
+    // 引入Weex调试工具
+    api 'com.taobao.android:weex_inspector:0.24.2.11'
+    api 'com.squareup.okhttp:okhttp:2.3.0'
+    api 'com.squareup.okhttp:okhttp-ws:2.3.0'
 }

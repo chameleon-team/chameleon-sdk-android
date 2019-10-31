@@ -1,17 +1,32 @@
 package com.didi.chameleon.example;
 
 import android.app.Application;
+import android.net.Uri;
 
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlConfig;
+import com.taobao.weex.WXEnvironment;
 
 public class MyApplication extends Application implements ICmlConfig {
     @Override
     public void onCreate() {
         super.onCreate();
 
+//        initDebugEnvironment(true,false,
+//                "https://xx/devtool_fake.html?_wx_devtool=ws://xx");
+
         CmlEngine.getInstance().init(this, this);
+    }
+
+    private void initDebugEnvironment(boolean connectable, boolean debuggable, String url) {
+        Uri uri = Uri.parse(url);
+        if (!uri.getQueryParameterNames().contains("_wx_devtool")) {
+            return;
+        }
+        WXEnvironment.sDebugServerConnectable = connectable;
+        WXEnvironment.sRemoteDebugMode = debuggable;
+        WXEnvironment.sRemoteDebugProxyUrl = uri.getQueryParameter("_wx_devtool");
     }
 
     @Override
