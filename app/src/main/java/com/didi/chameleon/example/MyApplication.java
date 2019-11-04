@@ -2,10 +2,12 @@ package com.didi.chameleon.example;
 
 import android.app.Application;
 import android.net.Uri;
+import android.util.Log;
 
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlConfig;
+import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
 import com.taobao.weex.WXEnvironment;
 
 public class MyApplication extends Application implements ICmlConfig {
@@ -17,6 +19,12 @@ public class MyApplication extends Application implements ICmlConfig {
 //                "https://xx/devtool_fake.html?_wx_devtool=ws://xx");
 
         CmlEngine.getInstance().init(this, this);
+
+        String result = CmlProtocolProcessor.invokeJsMethod("mo","me","arg1 arg2 arg3","1");
+        Log.e("lzc",result);
+
+        String result2 = CmlProtocolProcessor.callbackToJs("arg3 arg4 arg5","2");
+        Log.e("lzc",result2);
     }
 
     private void initDebugEnvironment(boolean connectable, boolean debuggable, String url) {

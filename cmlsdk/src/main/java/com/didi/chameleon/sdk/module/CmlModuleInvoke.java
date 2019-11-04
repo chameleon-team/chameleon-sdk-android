@@ -6,13 +6,13 @@ import android.text.TextUtils;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.common.CmlThreadCenter;
+import com.didi.chameleon.sdk.utils.CmlCodeUtil;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.util.Map;
 
 public class CmlModuleInvoke {
@@ -231,7 +231,7 @@ public class CmlModuleInvoke {
     public String wrapperCallback(CmlCallbackModel model) throws Exception {
         String param = wrapperParam(model.data);
         if (!TextUtils.isEmpty(param)) {
-            param = URLEncoder.encode(param, "UTF-8");
+            param = CmlCodeUtil.encodeUrl(param);
         }
         CmlCallbackModel<String> stringModel = new CmlCallbackModel<>();
         stringModel.errorNo = model.errorNo;
