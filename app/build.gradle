@@ -66,9 +66,9 @@ dependencies {
     api project(':cmlweex')
     api project(':cmlweb')
 
-//    implementation 'com.didiglobal.chameleon:cmlsdk:0.0.12.14@aar'
-//    implementation 'com.didiglobal.chameleon:cmlweex:0.0.12.14@aar'
-//    implementation 'com.didiglobal.chameleon:cmlweb:0.0.12.14@aar'
+//    implementation('com.didiglobal.chameleon:cmlsdk:0.0.12.17')
+//    implementation('com.didiglobal.chameleon:cmlweex:0.0.12.17')
+//    implementation('com.didiglobal.chameleon:cmlweb:0.0.12.17')
 
     // 引入Weex调试工具
     api 'com.taobao.android:weex_inspector:0.24.2.11'

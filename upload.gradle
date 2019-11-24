@@ -21,6 +21,7 @@ publishing {
 
             def rootDir = project.getParent().getName()
 
+            pom.packaging = 'aar'
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
 
@@ -39,7 +40,6 @@ publishing {
                             dependencyNode.appendNode('version', it.version)
                         }
                         dependencyNode.appendNode('artifactId', it.name)
-
                     }
                 }
 
