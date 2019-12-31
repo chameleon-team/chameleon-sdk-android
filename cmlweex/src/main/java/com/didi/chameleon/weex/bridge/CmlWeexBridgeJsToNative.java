@@ -8,8 +8,8 @@ import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeJsToNative;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
-import com.taobao.weex.annotation.JSMethod;
-import com.taobao.weex.common.WXModule;
+import org.apache.weex.annotation.JSMethod;
+import org.apache.weex.common.WXModule;
 
 public class CmlWeexBridgeJsToNative extends WXModule implements ICmlBridgeJsToNative {
     private static final String TAG = "CmlWeexBridgeJsToNative";

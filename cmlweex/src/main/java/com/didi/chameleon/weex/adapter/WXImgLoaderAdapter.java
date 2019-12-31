@@ -3,9 +3,9 @@ package com.didi.chameleon.weex.adapter;
 import android.widget.ImageView;
 
 import com.didi.chameleon.sdk.adapter.ICmlImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXImageQuality;
+import org.apache.weex.adapter.IWXImgLoaderAdapter;
+import org.apache.weex.common.WXImageStrategy;
+import org.apache.weex.dom.WXImageQuality;
 
 /**
  * Weex 图片加载代理类

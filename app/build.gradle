@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply from: 'https://raw.githubusercontent.com/apache/incubator-weex/release/0.28/android/sdk/buildSrc/download_jsc.gradle'
+
 
 android {
     compileSdkVersion 27
