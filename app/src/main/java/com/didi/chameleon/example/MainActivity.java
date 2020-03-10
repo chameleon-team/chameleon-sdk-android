@@ -65,12 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_web_activity:
-                CmlEngine.getInstance().launchPage(this, WEB_URL, null);
-                break;
-            case R.id.txt_web_view:
-                startActivity(new Intent(this, CmlWebViewActivity.class));
-                break;
             case R.id.txt_open_canvas:
                 CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
                 break;
@@ -85,6 +79,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.txt_weex_view:
                 startActivity(new Intent(this, CmlWeexViewActivity.class));
+                break;
+            case R.id.txt_web_activity:
+                CmlEngine.getInstance().launchPage(this, WEB_URL, null);
+                break;
+            case R.id.txt_web_view:
+                startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
         }
     }

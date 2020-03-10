@@ -67,6 +67,9 @@
     public static final android.os.Parcelable$Creator *;
 }
 
+# ========== chameleon 包下的类混淆配置 ==========
+-keep class com.didi.chameleon.** { *; }
+
 # ========== okhttp 混淆配置 ==========
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
