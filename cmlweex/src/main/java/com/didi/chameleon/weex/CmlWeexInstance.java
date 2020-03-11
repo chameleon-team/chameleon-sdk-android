@@ -40,10 +40,11 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
  * @since 18/7/30
  * 主要功能:
  */
-
 public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle, IWXRenderListener {
     private static final String TAG = "CmlWeexInstance";
     private static final String CML_PAGE_NAME = "cml_weex";
+
+    private static final String DEGRADE_TO_H5 = "degrade_to_h5";
 
     private String mInstanceId;
     private int mRequestCode;
@@ -135,6 +136,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
 
     public boolean onBackPress() {
         if (mWeexInstance != null) {
+            CmlLogUtil.i(TAG, "back pressed, weex code should process back event and close current page.");
             CmlEngine.getInstance().callToJs(this, "cml", "onBackPressed", null, null);
             return true;
         }
@@ -358,9 +360,20 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
      * 降级到{@link ICmlDegradeAdapter} 实现页面
      */
     @Override
-    public void degradeToH5(int degradeCode) {
+    public void degradeToH5(final int degradeCode) {
         if (mInstanceListener != null) {
-            mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+            CmlEnvironment.getThreadCenter().postMain(new Runnable() {
+                @Override
+                public void run() {
+                    Uri degradeUri = Uri.parse(mTotalUrl);
+                    String degradeToH5 = degradeUri.getQueryParameter(DEGRADE_TO_H5);
+                    // 原来的uri里不包含降级参数，则添加
+                    if (null == degradeToH5) {
+                        degradeUri = degradeUri.buildUpon().appendQueryParameter(DEGRADE_TO_H5, "1").build();
+                    }
+                    mInstanceListener.onDegradeToH5(degradeUri.toString(), degradeCode);
+                }
+            });
         }
     }
 
@@ -485,7 +498,6 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
      * @since 18/7/30
      * 主要功能:
      */
-
     public interface ICmlInstanceListener {
         /**
          * 降级到h5.需要容器自己实现
