@@ -34,6 +34,7 @@ dependencies {
     api "com.taobao.android:weex_sdk:$WEEX_VER"
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
+    compileOnly 'com.didichuxing.doraemonkit:doraemonkit-weex:1.0.0' // Dokit Weex测试工具
 
     api project(':cmlsdk')
     api project(':rich-text-component')

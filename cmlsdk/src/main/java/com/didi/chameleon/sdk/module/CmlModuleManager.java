@@ -3,6 +3,7 @@ package com.didi.chameleon.sdk.module;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.bridge.CmlBridgeManager;
 import com.didi.chameleon.sdk.bridge.ICmlBridgeJsToNative;
@@ -56,7 +57,16 @@ public class CmlModuleManager {
     }
 
     public void addCmlModule(Class moduleClass) {
-        store.storeModule(moduleClass);
+        try {
+            store.storeModule(moduleClass);
+        } catch (Throwable e) {
+            // 兼容三星手机获取注解失败
+            if (CmlEnvironment.CML_DEBUG) {
+                throw e;
+            } else {
+                CmlLogUtil.et(e);
+            }
+        }
     }
 
     public boolean containsAction(@NonNull String moduleName, @NonNull String methodName) {

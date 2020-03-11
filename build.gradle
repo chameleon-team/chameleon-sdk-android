@@ -17,8 +17,8 @@ buildscript {
 
 allprojects {
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         mavenCentral()
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         maven {
             url 'https://oss.sonatype.org/content/repositories/public/'
         }

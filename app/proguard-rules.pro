@@ -67,6 +67,9 @@
     public static final android.os.Parcelable$Creator *;
 }
 
+# ========== chameleon 包下的类混淆配置 ==========
+-keep class com.didi.chameleon.** { *; }
+
 # ========== okhttp 混淆配置 ==========
 -keep class okhttp3.** { *; }
 -keep interface okhttp3.** { *; }
@@ -110,3 +113,5 @@
 -keep public class * extends com.taobao.weex.ui.component.WXComponent{*;}
 -keep class * implements com.taobao.weex.ui.IExternalComponentGetter{*;}
 
+# ========== chameleon 包下的类混淆配置 ==========
+-keep class com.didi.chameleon.** { *; }

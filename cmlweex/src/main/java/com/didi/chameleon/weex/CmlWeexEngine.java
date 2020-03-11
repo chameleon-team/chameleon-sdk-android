@@ -30,6 +30,7 @@ import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleManager;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleMgrConfig;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
 import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
+import com.didichuxing.doraemonkit.weex.DKWeexInstance;
 import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
 import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
 import com.taobao.weex.InitConfig;
@@ -62,6 +63,22 @@ public class CmlWeexEngine implements ICmlEngine {
         ICmlBridge cmlBridge = new CmlWeexBridge();
         cmlBridge.init();
         initJsBundleManager(context);
+
+        initDoraemonKit(context);
+    }
+
+    private void initDoraemonKit(Context context) {
+        try {
+            Class.forName("com.didichuxing.doraemonkit.weex.DKWeexInstance");
+        } catch (Exception e) {
+            CmlLogUtil.et(e);
+            return;
+        }
+        if (!(context instanceof Application)) {
+            CmlLogUtil.e(TAG, "context is not application");
+            return;
+        }
+        DKWeexInstance.getInstance().init((Application) context);
     }
 
     @Override
