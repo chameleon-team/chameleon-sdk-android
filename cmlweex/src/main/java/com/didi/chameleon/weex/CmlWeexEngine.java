@@ -35,6 +35,7 @@ import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
 import org.apache.weex.InitConfig;
 import org.apache.weex.WXSDKEngine;
 import org.apache.weex.common.WXException;
+import com.didichuxing.doraemonkit.weex.DKWeexInstance;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,22 @@ public class CmlWeexEngine implements ICmlEngine {
         ICmlBridge cmlBridge = new CmlWeexBridge();
         cmlBridge.init();
         initJsBundleManager(context);
+
+        initDoraemonKit(context);
+    }
+
+    private void initDoraemonKit(Context context) {
+        try {
+            Class.forName("com.didichuxing.doraemonkit.weex.DKWeexInstance");
+        } catch (Exception e) {
+            CmlLogUtil.et(e);
+            return;
+        }
+        if (!(context instanceof Application)) {
+            CmlLogUtil.e(TAG, "context is not application");
+            return;
+        }
+        DKWeexInstance.getInstance().init((Application) context);
     }
 
     @Override

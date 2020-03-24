@@ -71,26 +71,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.txt_web_activity: //全屏Web组件
-                CmlEngine.getInstance().launchPage(this, WEB_URL, null);
-                break;
-            case R.id.txt_web_view: //Web视图组件
-                startActivity(new Intent(this, CmlWebViewActivity.class));
-                break;
             case R.id.txt_open_canvas:
-                CmlEngine.getInstance().launchPage(this, CML_DEMO, null);
+                CmlEngine.getInstance().launchPage(this, URL_MODULE_DEMO, null);
                 break;
-            case R.id.txt_preload: //预加载
+            case R.id.txt_preload:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_PRELOAD, null);
                 break;
-            case R.id.txt_auto_degrade: //自动降级
+            case R.id.txt_auto_degrade:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_ERR, null);
                 break;
-            case R.id.txt_weex_activity: //全屏weex组件
+            case R.id.txt_weex_activity:
                 CmlEngine.getInstance().launchPage(this, URL_JS_BUNDLE_OK, null);
                 break;
-            case R.id.txt_weex_view: //weex视图组件
+            case R.id.txt_weex_view:
                 startActivity(new Intent(this, CmlWeexViewActivity.class));
+                break;
+            case R.id.txt_web_activity:
+                CmlEngine.getInstance().launchPage(this, WEB_URL, null);
+                break;
+            case R.id.txt_web_view:
+                startActivity(new Intent(this, CmlWebViewActivity.class));
                 break;
         }
     }

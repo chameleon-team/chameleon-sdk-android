@@ -38,11 +38,19 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
  * @since 18/7/30
  * 主要功能:
  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
 public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener {
     private static final String TAG = "CmlWeexViewInstance";
     private static final String CML_PAGE_NAME = "cml_weex_view";
 
+<<<<<<< HEAD
+=======
+    private static final String DEGRADE_TO_H5 = "degrade_to_h5";
+
+>>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
     private CmlWXSDKInstanceWrapper mWeexInstance;
     private ICmlView mCmlView;
     private String mCmlUrl;
@@ -328,7 +336,17 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             CmlEnvironment.getThreadCenter().postMain(new Runnable() {
                 @Override
                 public void run() {
+<<<<<<< HEAD
                     mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
+=======
+                    Uri degradeUri = Uri.parse(mTotalUrl);
+                    String degradeToH5 = degradeUri.getQueryParameter(DEGRADE_TO_H5);
+                    // 原来的uri里不包含降级参数，则添加
+                    if (null == degradeToH5) {
+                        degradeUri = degradeUri.buildUpon().appendQueryParameter(DEGRADE_TO_H5, "1").build();
+                    }
+                    mInstanceListener.onDegradeToH5(degradeUri.toString(), degradeCode);
+>>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
                 }
             });
         }
