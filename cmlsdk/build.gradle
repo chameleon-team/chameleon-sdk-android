@@ -35,5 +35,6 @@ dependencies {
     compileOnly "com.github.bumptech.glide:glide:$GLIDE_VER" // 图片默认加载框架
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
+    implementation 'com.kailashdabhi:om-recorder:1.1.0'
 
 }

@@ -6,8 +6,8 @@ import android.os.Build;
 import android.view.MotionEvent;
 
 import com.taobao.gcanvas.surface.GTextureView;
-import com.taobao.weex.ui.view.gesture.WXGesture;
-import com.taobao.weex.ui.view.gesture.WXGestureObservable;
+import org.apache.weex.ui.view.gesture.WXGesture;
+import org.apache.weex.ui.view.gesture.WXGestureObservable;
 
 /**
  * @author ertong

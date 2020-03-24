@@ -1,0 +1,142 @@
+<template>
+<view c-if="{{show}}" class="c-popup" style="{{containerStyle}}">
+  <view  class="{{maskClass}}" c-bind:tap="closeevent"></view>
+  <!-- c-catch禁止事件冒泡 -->
+  <view class="c-popup-content" style="{{contentStyle}}" c-catch:tap="contentTap">
+    <slot></slot>
+  </view>
+</view>
+</template>
+<script>
+class CPopup   {
+  props = {
+    mask: {
+      type: Boolean,
+      default: true
+    },
+    show: {
+      type: Boolean,
+      default: false
+    },
+    center: {
+      type: Boolean,
+      default: true
+    },
+    position: {
+      type: String,
+      default: ''
+    }
+  }
+
+  data = {
+  }
+
+  computed = {
+    maskClass() {
+      return this.mask ? "has-mask" : "no-mask";
+    },
+    containerStyle() {
+      if (this.center) {
+        return this.$cmlStyle({
+          'align-items': 'center',
+          'justify-content': 'center'
+        })
+      }
+    },
+    contentStyle() {
+      let style = "position: absolute;left:0;right:0;top:0;bottom:0;"
+      switch (this.position) {
+        case 'top':
+          style = style.replace('bottom:0;', 'display:flex;flex-direction:column;');
+          break;
+        case 'right':
+          style = style.replace('left:0;', 'display:flex;flex-direction:row;');
+          break;
+        case 'bottom':
+          style = style.replace('top:0;', 'display:flex;flex-direction:column;');
+          break;
+        case 'left':
+          style = style.replace('right:0;', 'display:flex;flex-direction:row;');
+          break;
+        default: 
+          style="position:relative;";
+          break;
+      }
+      return this.$cmlStyle(style);
+    }
+  }
+
+  watch  = {
+  }
+
+  methods = {
+    closeevent(){
+      this.$cmlEmit("close");
+    },
+    contentTap(){}
+  }
+
+  beforeCreate() {
+  }
+
+  created() {
+  }
+
+  beforeMount() {
+  }
+
+  mounted() {
+  }
+
+  beforeDestroy() {
+  }
+
+  destroyed() {
+  }
+}
+
+export default new CPopup();
+</script>
+<style scoped>
+.c-popup {
+  position: fixed;
+  z-index: 10000;
+  top: 0cpx;
+  bottom: 0cpx;
+  left: 0cpx;
+  right: 0cpx;
+  display: flex;
+  flex-direction: column;
+}
+.has-mask {
+  position: absolute;
+  top: 0cpx;
+  bottom: 0cpx;
+  left: 0cpx;
+  right: 0cpx;
+  background: rgba(37, 38, 45, .4);
+}
+.no-mask {
+  position: fixed;
+  z-index: 9999;
+  top: 0cpx;
+  bottom: 0cpx;
+  left: 0cpx;
+  right: 0cpx;
+}
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "usingComponents": {
+        }
+    },
+    "wx": {
+        "navigationBarTitleText": "index",
+        "backgroundTextStyle": "dark",
+        "backgroundColor": "#E2E2E2",
+        "component": true
+       
+    }
+}
+</script>

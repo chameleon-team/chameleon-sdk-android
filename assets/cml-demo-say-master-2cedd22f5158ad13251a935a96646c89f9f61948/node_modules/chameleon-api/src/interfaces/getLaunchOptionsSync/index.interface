@@ -1,0 +1,50 @@
+<script cml-type="interface">
+interface launchOptionsInterface {
+  getLaunchOptionsSync(): CMLObject
+}
+</script>
+
+<script cml-type="web">
+import { getQueryParamsFromUrl } from '../../lib/utils';
+
+class Method implements launchOptionsInterface {
+  getLaunchOptionsSync() {
+    return {
+      query: getQueryParamsFromUrl(location.href)
+    };
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements launchOptionsInterface {
+  getLaunchOptionsSync() {
+    return {
+      query: cmlBridge.getQueryObjSync()
+    };
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+class Method implements launchOptionsInterface {
+  getLaunchOptionsSync() {
+    return wx.getLaunchOptionsSync();
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+

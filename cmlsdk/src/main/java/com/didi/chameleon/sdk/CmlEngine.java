@@ -12,6 +12,7 @@ import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
 import com.didi.chameleon.sdk.extend.CmlModalModule;
 import com.didi.chameleon.sdk.extend.CmlAudioModule;
+import com.didi.chameleon.sdk.extend.CmlRecordModule;
 import com.didi.chameleon.sdk.extend.CmlPositionModule;
 import com.didi.chameleon.sdk.extend.CmlStorageModule;
 import com.didi.chameleon.sdk.extend.CmlStreamModule;
@@ -133,6 +134,7 @@ public class CmlEngine {
         registerModule(CmlPositionModule.class);
         registerModule(CmlImageModule.class);
         registerModule(CmlAudioModule.class);
+        registerModule(CmlRecordModule.class);
     }
 
     private void initEngine(Context context) {

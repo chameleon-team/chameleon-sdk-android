@@ -31,7 +31,7 @@ dependencies {
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
 
     testImplementation 'junit:junit:4.12'
-    api "com.taobao.android:weex_sdk:$WEEX_VER"
+    api "org.apache.weex:sdk:$WEEX_VER"
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
 

@@ -1,0 +1,204 @@
+<template>
+<view class="tip" c-if="{{show}}" style="{{tipStyle}}">
+  <image class="tip-angle" src="{{angleImg}}" style="{{angleStyle}}" />
+  <view class="tip-wrap">
+    <view class="tip-close" c-bind:tap="closeTap">
+        <image src="{{closeUrl}}" style="width:24cpx;height:24cpx;"/>
+    </view>
+    <view class="tip-content">
+      <slot></slot>
+    </view>
+  </view>
+</view>
+</template>
+<script>
+class CTip   {
+  props = {
+    show: {
+      type: Boolean,
+      default: false
+    },
+    direction: {
+      type: String,
+      default: "top" //bottom, left, right
+    },
+    closeUrl: {
+      type: String,
+      default: require("./images/close.png")
+    },
+    offsetLeft: {
+      type: Number,
+      default: 0
+    },
+    offsetTop: {
+      type: Number,
+      default: 0
+    },
+    offsetRight: {
+      type: Number,
+      default: 0
+    },
+    offsetBottom: {
+      type: Number,
+      default: 0
+    }
+  }
+
+  data = {
+    iconMap: {
+      left: require("./images/left.png"),
+      right: require("./images/right.png"),
+      top: require("./images/top.png"),
+      bottom: require("./images/bottom.png")
+    }
+  }
+
+  computed = {
+    angleImg() {
+      return this.iconMap[this.direction]
+    },
+    tipStyle() {
+      let style;
+      switch (this.direction) {
+        case 'top':
+          if ( this.offsetLeft || this.offsetRight ) {
+            style = "padding-bottom: 16cpx;"
+          } else {
+            style = "flex-direction: column-reverse;";
+          }
+          break;
+        case 'right':
+          if (this.offsetTop || this.offsetBottom ) {
+            style = "padding-left: 16cpx;"
+          } else {
+            style = "flex-direction: row;";
+          }
+          break;
+        case 'bottom':
+          if (this.offsetLeft || this.offsetRight) {
+            style = "padding-top: 16cpx;"
+          } else {
+            style = 'flex-direction: column;';
+          }
+          break;
+        case 'left': 
+         if (this.offsetTop || this.offsetBottom) {
+            style = "padding-right: 16cpx;"
+          } else {
+            style = 'flex-direction: row-reverse;';
+          }
+          break;
+      }
+      return style;
+    },
+    angleStyle() {
+      let style;
+      switch (this.direction) {
+        case 'top':
+          if (this.offsetLeft || this.offsetRight) {
+            style =  `position: absolute; bottom: 0;width: 32cpx; height: 16cpx;`;
+            if( this.offsetLeft) {
+              style = style + `left:${this.offsetLeft}cpx;`
+            }
+            if (this.offsetRight) {
+              style = style + `right:${this.offsetRight}cpx;`
+            }
+          } else {
+            style = `width: 32cpx; height: 16cpx;`;
+          }
+          break;
+        case 'right':
+          if (this.offsetTop || this.offsetBottom) {
+            style =  `position: absolute; left: 0;width: 16cpx; height: 32cpx;`;
+            if( this.offsetTop) {
+              style = style + `top:${this.offsetTop}cpx;`
+            }
+            if (this.offsetBottom) {
+              style = style + `bottom:${this.offsetBottom}cpx;`
+            }
+          } else {
+            style = `width: 16cpx; height: 32cpx;`;
+          }
+          break;
+        case 'bottom':
+          if (this.offsetLeft || this.offsetRight) {
+            style =  `position: absolute; top: 0;width: 32cpx; height: 16cpx;`;
+            if( this.offsetLeft) {
+              style = style + `left:${this.offsetLeft}cpx;`
+            }
+            if (this.offsetRight) {
+              style = style + `right:${this.offsetRight}cpx;`
+            }
+          } else {
+            style = `width: 32cpx; height: 16cpx;`;
+          }
+          break;
+        case 'left':
+          if (this.offsetTop || this.offsetBottom) {
+            style =  `position: absolute; right: 0;width: 16cpx; height: 32cpx;`;
+            if( this.offsetTop) {
+              style = style + `top:${this.offsetTop}cpx;`
+            }
+            if (this.offsetBottom) {
+              style = style + `bottom:${this.offsetBottom}cpx;`
+            }
+          } else {
+            style = `width: 16cpx; height: 32cpx;`;
+          }
+          break;
+      }
+      return style;
+    }
+  }
+
+  watch  = {
+  }
+
+  methods = {
+    closeTap() {
+      this.$cmlEmit("close");
+    }
+  }
+}
+
+export default new CTip();
+</script>
+<style scoped>
+.tip {
+  position: absolute;
+  display: flex;
+}
+.tip-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  padding: 20cpx 80cpx 20cpx 25cpx;
+  border-radius: 4cpx;
+  background: rgba(74, 76, 91, 0.8);
+}
+.tip-angle {
+  align-self: center;
+}
+.tip-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 76cpx;
+  padding: 20cpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.tip-content {
+  font-size: 24cpx;
+}
+</style>
+<script cml-type="json">
+{
+  "base": {
+    "component": true
+  }
+}
+</script>

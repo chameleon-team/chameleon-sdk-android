@@ -1,0 +1,49 @@
+<script cml-type="interface">
+type paramType = {
+  ref: CMLObject
+}
+type callback = (res: CMLObject) => Void
+
+interface DomInterface {
+  getComponentRect(param: paramType, cb: callback): Void;
+}
+</script>
+
+<script cml-type="web">
+class Method implements DomInterface {
+  getComponentRect(param, cb) {
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+const dom = weex.requireModule('dom');
+
+class Method implements DomInterface {
+  getComponentRect(param, cb) {
+    dom.getComponentRect(param.ref, res => {
+        /**
+        * size:
+        *  width
+        *  height
+        *  left
+        *  top
+        *  right
+        *  bottom
+        */
+        cb(res);
+      });
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="wx">
+class Method implements DomInterface {
+  getComponentRect(param, cb) {
+  }
+}
+export default new Method();
+</script>

@@ -1,0 +1,64 @@
+<template>
+  <origin-picker-view indicator-style="height: 72rpx;" style="height: {{height}}rpx;" value="{{wxValue}}" bindchange="bindwxChange">
+    <origin-picker-view-column>
+      <view c-for="{{data}}" style="line-height: 72rpx; align-items:center"><text>{{item}}</text></view>
+    </origin-picker-view-column>
+  </origin-picker-view>
+</template>
+<script>
+ class CPickerItem implements CPickerItemInterface {
+    props = {
+      data: {
+        type: Array,
+        default: ['']
+      },
+      defaultIndex: {
+        type: Number,
+        default: 0
+      },
+      height: {
+        type: Number,
+        default: 400
+      },
+      textAlign: {
+        type: String,
+        default: "center"
+      }
+    }
+    data = {}
+    computed ={
+      wxValue() {
+        return [this.defaultIndex];
+      }
+    }
+    watch = {}
+    methods = {
+      bindwxChange(e) {
+        const val = e.detail.value;
+        this.$cmlEmit("selectchange", {
+          index: val[0]
+        });
+      }
+    }
+    beforeCreate(){}
+    created() {}
+    beforeMount() {}
+    mounted() {}
+    beforeDestroy() {}
+    destroyed() {}
+  }
+
+  export default new CPickerItem();
+
+</script>
+
+<style scoped>
+</style>
+
+<script cml-type="json">
+{
+  "wx": {
+    "component": true
+  }
+}
+</script>

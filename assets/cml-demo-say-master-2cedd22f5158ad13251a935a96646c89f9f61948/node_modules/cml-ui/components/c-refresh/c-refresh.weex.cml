@@ -1,0 +1,100 @@
+<template>
+<origin-refresh v-if="direction == 'top'" class="refresh" @refresh="onrefresh" display="{{refreshing ? 'show' : 'hide'}}">
+  <block c-if="{{ !customUi }}">
+    <image class="loading-icon" src="{{ icon }}" />
+  </block>
+  <block c-else>
+    <slot></slot>
+  </block>
+</origin-refresh>
+<origin-loading v-else class="loading" @loading="onrefresh"  display="{{refreshing ? 'show' : 'hide'}}">
+  <block c-if="{{ !customUi }}">
+    <image class="loading-icon" src="{{ icon }}" />
+  </block>
+  <block c-else>
+    <slot></slot>
+  </block>
+</origin-loading>
+</template>
+<script>
+import cml from 'chameleon-api'
+ class CRefresh implements CRefreshInterface {
+    props = {
+      display: {
+        type: Boolean,
+        default: false
+      },
+      // top上拉刷新，bottom下拉刷新
+      direction: {
+        type: String,
+        default: 'top'
+      },
+      // 是否通过插槽自定义ui
+      customUi: {
+        type: Boolean,
+        default: false
+      }
+    }
+    
+    watch = {
+      display (val) {
+        if (!val) {
+          this.refreshing = val
+        }
+      }
+    }
+    data = {
+      refreshing: false,
+      icon: require('./images/loading.gif')
+    }
+
+    methods = {
+      onrefresh (e) {
+        this.refreshing = true
+        this.$cmlEmit('refresh', {
+          value: true
+        });
+        this.$cmlEmit('refreshevent', {
+          value: true
+        });
+      }
+    }
+
+    mounted() {
+    }
+
+  }
+  export default new CRefresh();
+
+</script>
+
+<style scoped>
+.refresh {
+  width: 750cpx;
+  display: flex;
+  align-items: center;
+}
+.loading {
+  width: 750cpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 30cpx 0;
+}
+.loading-icon {
+  width:50cpx;
+  height:50cpx;
+  margin: 50cpx 0;
+  text-align: center;
+}
+</style>
+
+<script cml-type="json">
+{
+  "weex": {
+    "component": true
+  }
+}
+</script>

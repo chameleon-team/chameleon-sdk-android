@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
 import com.didi.chameleon.weex.util.CmlWeexUtil;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Constants;
-import com.taobao.weex.ui.action.BasicComponentData;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentProp;
-import com.taobao.weex.ui.component.WXVContainer;
+import org.apache.weex.WXSDKInstance;
+import org.apache.weex.common.Constants;
+import org.apache.weex.ui.action.BasicComponentData;
+import org.apache.weex.ui.component.WXComponent;
+import org.apache.weex.ui.component.WXComponentProp;
+import org.apache.weex.ui.component.WXVContainer;
 
 import java.util.Map;
 

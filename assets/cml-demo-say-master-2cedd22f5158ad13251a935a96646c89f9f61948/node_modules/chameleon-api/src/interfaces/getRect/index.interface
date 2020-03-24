@@ -1,0 +1,95 @@
+<script cml-type="interface">
+  type resData = {
+    width: Number,
+    height: Number,
+    left: Number,
+    top: Number,
+    right: Number,
+    bottom: Number
+  }
+
+  type CallBack = (res: resData) => void;
+    
+  interface UserInfoInterface {
+    getRect(refObj: CMLObject, cb: CallBack): void
+  }
+</script>
+
+<script cml-type="web">
+  class Method implements UserInfoInterface {
+    getRect(refObj, cb) {
+      let dom = refObj.webDom;
+      let domComputedStyle = window.getComputedStyle(dom);
+      let domRect = dom.getBoundingClientRect();
+      let scale = 750 / window.innerWidth;
+      let rectObj = {
+        width: parseFloat(domComputedStyle.width) * scale || 0,
+        height: parseFloat(domComputedStyle.height) * scale || 0,
+        top: domRect && domRect.top * scale || 0,
+        left: domRect && domRect.left * scale || 0,
+        right: domRect && domRect.right * scale || 0,
+        bottom: domRect && domRect.bottom * scale || 0,
+      };
+      cb(rectObj);
+    }
+  }
+
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+  class Method implements UserInfoInterface {
+    getRect(refObj, cb) {
+      setTimeout(() => {
+        cmlBridge.getComponentRect({ref: refObj.weexRef}, res => {
+          cb({
+            width: res.size && res.size.width || 0,
+            height: res.size && res.size.height || 0,
+            left: res.size && res.size.left || 0,
+            top: res.size && res.size.top || 0,
+            right: res.size && res.size.right || 0,
+            bottom: res.size && res.size.bottom || 0
+          });
+        });
+      }, 50)
+    }
+  }
+
+  export default new Method();
+</script>
+
+
+<script cml-type="wx">
+  class Method implements UserInfoInterface {
+    getRect(refObj, cb) {
+      let query = wx.createSelectorQuery().in(refObj.context);
+      query.select(`#${refObj.id}`).boundingClientRect();
+
+      query.exec(function(res) {
+        wx.getSystemInfo({
+          success: (systemRes) => {
+            let windowWidth = systemRes.windowWidth;
+            let scale = 750 / windowWidth;
+            let rectObj = {
+              width: res[0] && res[0].width * scale || 0,
+              height: res[0] && res[0].height * scale || 0,
+              left: res[0] && res[0].left * scale || 0,
+              top: res[0] && res[0].top * scale || 0,
+              right: res[0] && res[0].right * scale || 0,
+              bottom: res[0] && res[0].bottom * scale || 0
+            };
+            cb(rectObj);
+          }
+        });
+      });
+    }
+  }
+
+  export default new Method();
+</script>
+
+
+
+

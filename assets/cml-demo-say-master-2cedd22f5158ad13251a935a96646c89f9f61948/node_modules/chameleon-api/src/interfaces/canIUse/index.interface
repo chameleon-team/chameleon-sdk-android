@@ -1,0 +1,96 @@
+<script cml-type="interface">
+type callback = (res: Boolean) => void
+interface canIUseInterface {
+  canIUse(metName: String, cb: callback): void;
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+import { api } from '../../config';
+
+class Method implements canIUseInterface {
+  canIUse(metName, cb) {
+    if(!api[metName]) {
+      cb(false);
+      return;
+    }
+
+    const allCan = api[metName].allCanUse;
+    if(allCan) {
+      cb(true);
+      return;
+    }
+
+    if(inSDK()) {
+      const method = api[metName].baseOn.sdk;
+      bridge.canIUse({method: metName}, res => {
+        let result = true;
+        if(res.errno != 0) {
+          result = false;
+        }
+        cb(result);
+      })
+    }else {
+      cb(true);
+    }
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { api } from '../../config';
+
+class Method implements canIUseInterface {
+  canIUse(metName, cb) {
+    if(!api[metName]) {
+      cb(false);
+      return;
+    }
+
+    const allCan = api[metName].allCanUse;
+    if(allCan) {
+      cb(true);
+      return;
+    }
+
+    const method = api[metName].baseOn.sdk;
+    cmlBridge.canIUse({ method }, res => {
+      let result = true;
+      if(res.errno != 0) {
+        result = false;
+      }
+      cb(result);
+    })
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="wx">
+import { api } from '../../config';
+
+class Method implements canIUseInterface {
+  canIUse(metName, cb) {
+    if(!api[metName]) {
+      cb(false);
+      return;
+    }
+
+    const allCan = api[metName].allCanUse;
+    if(allCan) {
+      cb(true);
+      return;
+    }
+
+    const method = api[metName].baseOn.wx;
+    const result = wx.canIUse(method);
+    cb(result);
+  }
+}
+
+export default new Method();
+</script>

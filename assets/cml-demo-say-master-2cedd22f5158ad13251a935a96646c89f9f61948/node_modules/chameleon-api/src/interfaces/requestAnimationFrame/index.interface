@@ -1,0 +1,53 @@
+<script cml-type="interface">
+  type AnimationFrameFactory = () => void
+  interface RequestAnimationInterface {
+    init(): AnimationFrameFactory
+  }
+
+</script>
+
+<script cml-type="web">
+  // web端接口实现
+  class Method implements RequestAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        requestAnimationFrame() {
+          return window.requestAnimationFrame.bind(window);
+        }
+      };
+    }
+  }
+
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+  import { requestAnimationFrame } from './animationShim.js';
+  class Method implements RequestAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        requestAnimationFrame() {
+          return requestAnimationFrame;
+        }
+      };
+    }
+  }
+
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  // web端接口实现
+  import { requestAnimationFrame } from './animationShim.js';
+  class Method implements RequestAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        requestAnimationFrame() {
+          return requestAnimationFrame;
+        }
+      };
+    }
+  }
+
+  export default new Method();
+</script>

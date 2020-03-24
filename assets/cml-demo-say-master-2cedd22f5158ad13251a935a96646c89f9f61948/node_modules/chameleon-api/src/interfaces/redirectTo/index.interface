@@ -1,0 +1,84 @@
+<script cml-type="interface">
+type options = {
+  path: String,
+  query: String,
+  url: String
+}
+
+interface UtilsInterface {
+  redirectTo(opt: options): void;
+}
+
+</script>
+
+<script cml-type="web">
+  import { getQueryParamsFromUrl, queryParse } from '../../lib/utils.js';
+  
+  class Method implements UtilsInterface {
+    redirectTo(opt) {
+      let {path, query} = opt;
+      query = queryParse(query);
+
+      let runtime = require("chameleon-runtime").default;
+      let {router, routerConfig} = runtime.getInfo();
+      
+      if (path && router) {
+        let flag = false;
+
+        let routes = routerConfig.routes;
+        for (let i = 0; i < routes.length;i++) {
+          let route = routes[i];
+          if (path === route.path) {          
+            flag = true;
+            router.replace({
+              path: route.url,
+              query
+            })
+            break;
+          }
+        }
+        if (!flag) {
+          router.replace({
+            path: router.options.routes[0].path,
+            query
+          });
+        }
+      } else {
+        router.replace({
+          path: router.options.routes[0].path,
+          query
+        });
+      }
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+  import cmlBridge from '../../lib/sdk/cmlBridge';
+  import { queryParse } from '../../lib/utils.js';
+
+  class Method implements UtilsInterface {
+    redirectTo(opt) {
+      opt.query = queryParse(opt.query);
+      cmlBridge.redirectTo(opt);
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="wx">
+  class Method implements UtilsInterface {
+    redirectTo(opt) {
+      let {path, query} = opt;
+      if (path.indexOf('?') === -1) {
+        query = '?' + query;
+      }
+      path = path + query;
+      wx.navigateTo({
+        url: path
+      });
+    }
+  }
+  export default new Method();
+</script>

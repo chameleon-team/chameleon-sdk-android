@@ -1,0 +1,64 @@
+<template>
+  <origin-picker data="{{data}}" text-align="{{textAlign}}" wraper-style="{{wraperStyle}}" default-index="{{defaultIndex}}" @selectchange="weexSelectChange"></origin-picker>
+</template>
+<script>
+
+ class CPickerItem implements CPickerItemInterface {
+    props = {
+      data: {
+        type: Array,
+        default: ['']
+      },
+      defaultIndex: {
+        type: Number,
+        default: 0
+      },
+      height: {
+        type: Number,
+        default: 400
+      },
+      textAlign: {
+        type: String,
+        default: "center"
+      }
+    }
+   data = {}
+    computed ={
+      wraperStyle() {
+        let style = `height: ${this.height}cpx`;
+        return style;
+      }
+    }
+    watch = {}
+    methods = {
+      weexSelectChange(e) {
+        this.$cmlEmit("selectchange", {
+          index:e.detail.index
+        });
+      }
+    }
+    beforeCreate(){}
+    created() {}
+    beforeMount() {}
+    mounted() {}
+    beforeDestroy() {}
+    destroyed() {}   
+  }
+
+  export default new CPickerItem();
+
+</script>
+
+<style scoped>
+</style>
+
+<script cml-type="json">
+{
+  "weex": {
+    "usingComponents": {
+      "picker": "./com/picker"
+    },
+    "component": true
+  }
+}
+</script>

@@ -1,0 +1,98 @@
+<script cml-type="interface">
+type confirmOpt = {
+  message: string,
+  confirmTitle: string,
+  cancelTitle: string
+}
+
+type successCallBack = (value: string) => void;
+type failCallBack = () => void;
+
+interface uiInterface {
+  confirm(opt: confirmOpt, successCallBack: successCallBack, failCallBack: failCallBack): void
+}
+</script>
+
+<script cml-type="web">
+import { buildConfirm } from '../alert/popupFactory';
+
+class Method implements uiInterface {
+  confirm(opt, successCallBack, failCallBack) {
+    let instance = buildConfirm('confirm', {
+      content: opt.message,
+      confirmText: opt.confirmTitle,
+      cancelText: opt.cancelTitle
+    }, successCallBack);
+  }
+
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements uiInterface {
+  confirm(opt, successCallBack, failCallBack) {
+    if(inSDK()) {
+      cmlBridge.confirm(opt, (res) => {
+        if(res.errno == 0) {
+          successCallBack(res.data);
+        }else {
+          failCallBack();
+        }
+      });
+    }else {
+      const modal = weex.requireModule('modal');
+      let { message, confirmTitle, cancelTitle } = opt;
+      modal.confirm({
+        message,
+        okTitle: confirmTitle,
+        cancelTitle
+      },
+        value => {
+          successCallBack(value);
+        }
+      );
+    }
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements uiInterface {
+  confirm(opt, successCallBack, failCallBack) {
+    let { message, confirmTitle, cancelTitle} = opt;
+    wx.showModal({
+      title: '',
+      content: message,
+      confirmText: confirmTitle,
+      cancelText: cancelTitle,
+      success(res) {
+        if (res.confirm) {
+          successCallBack(confirmTitle);
+        } else {
+          successCallBack(cancelTitle);
+        }
+      },
+      fail() {
+        failCallBack();
+      }
+    });
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+

@@ -1,0 +1,64 @@
+<script cml-type="interface">
+    // 定义模块的interface
+    interface createStoreInterface {
+      createStore(options: CMLObject) : CMLObject;
+    }
+</script>
+
+<script cml-type="web">
+    import createStore from '../../platform/web'
+
+    class Method implements createStoreInterface {
+      createStore(options) {
+        return createStore(options)
+      }
+    }
+    export default new Method();
+</script>
+
+<script cml-type="weex">
+    import createStore from '../../platform/weex'
+
+    class Method implements createStoreInterface {
+      createStore(options) {
+        return createStore(options)
+      }
+    }
+    export default new Method();
+</script>
+
+<script cml-type="wx">
+    import createStore from '../../platform/wx'
+
+    class Method implements createStoreInterface {
+      createStore(options) {
+        return createStore(options)
+      }
+    }
+
+    export default new Method();
+</script>
+
+<script cml-type="alipay">
+    import createStore from '../../platform/alipay'
+
+    class Method implements createStoreInterface {
+      createStore(options) {
+        return createStore(options)
+      }
+    }
+
+    export default new Method();
+</script>
+
+<script cml-type="baidu">
+    import createStore from '../../platform/baidu'
+
+    class Method implements createStoreInterface {
+      createStore(options) {
+        return createStore(options)
+      }
+    }
+
+    export default new Method();
+</script>

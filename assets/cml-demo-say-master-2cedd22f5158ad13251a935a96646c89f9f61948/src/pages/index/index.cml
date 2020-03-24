@@ -1,0 +1,86 @@
+<template>
+  <page title="chameleon">
+    <scroller height="{{winHeight}}">
+      <view class="scroller-wrap">
+        <view style="padding: 20cpx;">
+          <text>1，JS调用Native</text>
+          <text>callback返回内容: {{callbackRes}}</text>
+          <button
+            c-bind:onclick="sayHello"
+            text="JS调用Native sayHello方法"
+            style="margin-top: 20cpx;"
+          ></button>
+        </view>
+        <view style="padding: 20cpx;">
+          <text>2，Native调用JS 的NaTellJS方法已经注册监听，点击Native的改变文字按钮,下发状态文字将改变</text>
+          <text>状态：{{status}}</text>
+        </view>
+      </view>
+    </scroller>
+  </page>
+</template>
+
+<script>
+import cml from "chameleon-api";
+import cmlBridge from "chameleon-bridge";
+
+class Index {
+  data = {
+    title: "chameleon",
+    callbackRes: '',
+    status: '等待Native调用',
+    winHeight: 0
+  }
+  methods = {
+    // 此处的方法实现你可以封装到其他目录，作为统一扩展的api
+    sayHello() {
+      cmlBridge.callNative(
+        'moduleDemo', // 模块名
+        'sayHello', // 方法名
+        { content: 'Hello Chameleon!' }, // 参数
+        res => {
+          this.callbackRes = res;
+        } // 回调方法
+      );
+    }
+  }
+  mounted() {
+    // 主动监听客户端调用js
+    cmlBridge.listenNative(
+      'moduleDemo', // 模块名
+      'NaTellJS', // 方法名
+      res => {
+        this.status = res.content;
+      }
+    );
+
+    cml.getSystemInfo().then((info) => {
+      this.winHeight = Number(info.viewportHeight)
+    });
+  }
+
+}
+
+export default new Index();
+
+</script>
+<style scoped>
+.scroller-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
+<script cml-type="json">
+{
+  "base": {
+    "usingComponents": {
+    }
+  },
+  "wx": {
+    "navigationBarTitleText": "index",
+    "backgroundTextStyle": "dark",
+    "backgroundColor": "#E2E2E2"
+  }
+}
+</script>

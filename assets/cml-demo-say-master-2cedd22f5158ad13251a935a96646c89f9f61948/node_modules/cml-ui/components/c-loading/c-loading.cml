@@ -1,0 +1,202 @@
+<template>
+  <view class="{{containerClassName}}" style="{{containerStyle}}">
+    <view class="{{targetClassName}}" ref="mask">
+      <slot />
+    </view>
+    <view class="{{boxClassName}}" style="{{loadingWrapStyle}}" c-if="{{!!loading}}">
+      <view class="{{targetMaskClassName}}" style="{{rectStyle}}"></view>
+      <view class="{{loadingWrapClassName}}" style="{{rectStyle}}">
+        <view class="{{loadingClassName}}" style="{{loadingStyle}}">
+          <image
+            src="{{icon}}"
+            class="{{loadImgClassName}}"
+            ref="loading"
+          />
+          <text c-if="{{!!tip}}" class="{{loadTextClassName}}">{{tip}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import cml from 'chameleon-api'
+import classNames from 'classnames';
+import interfaceStore from './c-loadingfunc.interface';
+
+
+class CLoading implements CLoadingInterface {
+  props = {
+    tip: {
+      type: String,
+      default: 'loading...',
+    },
+    prefixCls: {
+      type: String,
+      default: 'cml-loading',
+    },
+    loading: {
+      type: Boolean,
+      default: true,
+    },
+  }
+  data = {
+    icon: require('./assets/img/loading.gif'),
+    rectStyle: '',
+    loadingWrapStyle: '',
+    containerStyle: 'position: absolute; visibility: hidden',
+    //由于获取位置信息在weex端为异步。so先隐藏
+    loadingStyle: 'visibility: hidden',
+  }
+  watch = {
+    loading() {
+      setTimeout(() => {
+        interfaceStore.move(this);
+      }, interfaceStore.scheduleTime)
+    }
+  }
+  mounted() {
+    setTimeout(() => {
+      cml.getRect(this.$refs.mask, this).then((res) => {
+        if (res.width > 0 && res.height > 0) {
+          this.rectStyle = `width:${res.width}cpx; height: ${res.height}cpx;`;
+          this.loadingWrapStyle = this.rectStyle;
+          this.containerStyle = `${this.rectStyle}; visibility: visible`;
+          
+        } else {
+          interfaceStore.loadingWrapStyle().then((res) => {
+            this.loadingWrapStyle = res
+          })
+          this.containerStyle = 'position: absolute; visibility: visible; top: 0; left: 0';
+        }
+        this.loadingStyle = 'visibility: visible';
+
+        interfaceStore.move(this);
+      })
+    }, interfaceStore.scheduleTime)
+  }
+  computed = {
+    containerClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-container`]: true,
+      })
+    },
+    loadImgClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-default`]: true,
+      })
+    },
+    boxClassName() {
+      const prefixCls = this.prefixCls;
+      const loading = this.loading;
+      return classNames({
+        [`${prefixCls}-box`]: !!loading,
+      })
+    },
+    targetClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-target`]: true,
+      })
+    },
+    loadTextClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-text`]: true,
+      })
+    },
+    targetMaskClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-target-mask`]: true,
+      })
+    },
+    loadingClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}`]: true,
+      })
+    },
+    loadingWrapClassName() {
+      const prefixCls = this.prefixCls;
+      return classNames({
+        [`${prefixCls}-wrap`]: true,
+      })
+    }
+  }
+}
+
+export default new CLoading();
+
+</script>
+
+<style scoped lang="less">
+@import "../../assets/css/var.less";
+
+@loading-prefix-cls: ~"@{cml-prefix}-loading";
+@loading-default: @fontsize-large-xxx;
+
+.@{loading-prefix-cls} {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  padding: 26cpx 32cpx;
+  color: #ccc;
+  background-color: rgba(37,38,45,.9);
+  border-radius: 2px;
+  z-index: 2000;
+
+  &-container {
+    display: flex;
+  }
+
+  &-target {
+    position: absolute;
+  }
+
+  &-box {
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  &-default {
+    width: @loading-default;
+    height: @loading-default;
+  }
+
+  &-target-mask {
+    position: absolute;
+    background-color: #ffffff;
+    opacity: .5;
+  }
+
+  &-wrap {
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-text {
+    color: #ccc;
+    margin-left: 16cpx;
+    display: inline-block;
+    font-size: @fontsize-medium;
+  }
+}
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "component": true
+    }
+}
+</script>
+
+
+
+

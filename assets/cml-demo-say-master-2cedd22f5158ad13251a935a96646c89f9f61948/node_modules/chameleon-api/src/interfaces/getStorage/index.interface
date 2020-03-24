@@ -1,0 +1,95 @@
+<script cml-type="interface">
+type obj = {
+  errno: Number,
+  errMsg: String,
+  data: String
+}
+type getCallback = (value: obj) => void
+
+interface UtilsInterface {
+  getStorage(key: String, cb: getCallback): void;
+}
+
+</script>
+
+<script cml-type="web">
+  class Method implements UtilsInterface {
+    getStorage(key, cb) {
+      try {
+        let data = localStorage.getItem(key);
+        cb({
+          errno: 0,
+          errMsg: 'success',
+          data: data !== null ? data : ''
+        });
+      } catch (e) {
+        let errMsg;
+        if (typeof e !== 'string') {
+          errMsg = JSON.stringify(e);
+        } else {
+          errMsg = e;
+        }
+        cb({
+          errno: -1,
+          errMsg,
+          data: ''
+        });
+      }
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements UtilsInterface {
+  getStorage(key, cb) {
+    cmlBridge.getStorage({key}, res=>{
+      let { errno, msg = '', data } = res;
+      
+      if(data && typeof data == 'object') {
+        data = JSON.stringify(data);
+      }
+
+      cb({
+        errno,
+        errMsg: msg,
+        data
+      });
+    });
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  class Method implements UtilsInterface {
+    getStorage(key, cb) {
+      try {
+        let data = wx.getStorageSync(key);
+        if (typeof data !== 'string') {
+          data = JSON.stringify(value);
+        }
+        cb({
+          errno: 0,
+          errMsg: 'success',
+          data: data !== null ? data : ''
+        });
+      } catch (e) {
+        let errMsg;
+        if (typeof e !== 'string') {
+          errMsg = JSON.stringify(e);
+        } else {
+          errMsg = e;
+        }
+        cb({
+          errno: -1,
+          errMsg,
+          data: ''
+        });
+      }
+    }
+  }
+  export default new Method();
+</script>

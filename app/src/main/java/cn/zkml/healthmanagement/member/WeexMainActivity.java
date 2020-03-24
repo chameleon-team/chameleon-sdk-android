@@ -21,7 +21,7 @@ import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.widget.CmlTitleView;
 import com.didi.chameleon.weex.CmlWeexInstance;
 
-import com.taobao.weex.WXSDKEngine;
+import org.apache.weex.WXSDKEngine;
 
 import java.util.HashMap;
 
@@ -104,7 +104,7 @@ public class WeexMainActivity extends CmlContainerActivity implements CmlWeexIns
 //        }
 //        if (mWXInstance != null) {
 //            options = (HashMap<String, Object>) intent.getSerializableExtra(PARAM_OPTIONS);
-//            mWXInstance.renderByUrl(url, options);
+//            mWXInstance.renderByUrl(url, options);d
 //        }
     }
 

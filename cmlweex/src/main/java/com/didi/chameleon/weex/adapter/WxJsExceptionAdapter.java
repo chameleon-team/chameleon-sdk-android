@@ -1,6 +1,6 @@
 package com.didi.chameleon.weex.adapter;
 
-import com.taobao.weex.common.WXJSExceptionInfo;
+import org.apache.weex.common.WXJSExceptionInfo;
 
 public class WxJsExceptionAdapter implements ICmlJSExceptionAdapter {
 

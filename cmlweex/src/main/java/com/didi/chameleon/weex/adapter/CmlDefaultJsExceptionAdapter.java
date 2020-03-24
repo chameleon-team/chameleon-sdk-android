@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.CmlInstanceManage;
-import com.taobao.weex.common.WXJSExceptionInfo;
+import org.apache.weex.common.WXJSExceptionInfo;
 
 public class CmlDefaultJsExceptionAdapter implements ICmlJSExceptionAdapter {
     @Override

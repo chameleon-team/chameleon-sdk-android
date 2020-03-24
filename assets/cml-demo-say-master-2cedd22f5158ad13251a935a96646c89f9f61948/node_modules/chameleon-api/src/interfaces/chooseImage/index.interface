@@ -1,0 +1,133 @@
+<script cml-type="interface">
+type params = {
+  type: string
+}
+
+type callbackSuccessReturn = {
+  base64: string,
+  WxTempFilePaths: [string]
+}
+
+type callbackFailReturn = {
+  errMsg: string
+}
+
+type callbackSuccess = (res: callbackSuccessReturn) => void;
+
+type callbackFail = (err: callbackFailReturn) => void;
+
+interface chooseImageInterface {
+  chooseImage(params: params, callbackSuccess: callbackSuccess, callbackFail: callbackFail): void
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+import { tryJsonParse } from '../../lib/utils';
+import ChooseImageByJs from '../../lib/web/chooseImageByJs';
+
+class Method implements chooseImageInterface {
+  chooseImage(params, callbackSuccess, callbackFail) {
+    if (inSDK()) {
+      // 图片质量
+      params.quality = '60';
+      bridge.chooseImage(params, function (res) {
+        const {errno, data} = res;
+        if(errno == 0) {
+          const { type, image } = data;
+          let base64 = '';
+          if (type && image) {
+            base64 = 'data:image/' + type + ';base64,' + image;
+            callbackSuccess({
+              base64,
+              WxTempFilePaths: []
+            });
+          } else {
+            callbackFail({errMsg:'bridge返回字段错误'});
+          }
+        }
+      });
+    } else {
+      const cij = new ChooseImageByJs();
+      cij.chooseImage({
+        quality: 0.8
+      }, (base64) => {
+        callbackSuccess({
+          base64,
+          WxTempFilePaths: []
+        });
+      });
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements chooseImageInterface {
+  chooseImage(params, callbackSuccess, callbackFail) {
+    // 图片质量
+    params.quality = '60';
+    cmlBridge.chooseImage(params, function (res) {
+      const {errno, data} = res;
+      if(errno == 0) {
+        const { type, image } = data;
+        let base64 = '';
+        if (type && image) {
+          base64 = 'data:image/' + type + ';base64,' + image;
+          callbackSuccess({
+            base64,
+            WxTempFilePaths: []
+          });
+        } else {
+          callbackFail({errMsg:'bridge返回字段错误'});
+        }
+      }
+    });
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements chooseImageInterface {
+  chooseImage(params, callbackSuccess, callbackFail) {
+    let sourceType = [];
+    switch (params.type) {
+    case 'camera':
+      sourceType = ['camera'];
+      break;
+    case 'album':
+      sourceType = ['album'];
+      break;
+    default:
+      sourceType = ['album', 'camera'];
+    }
+
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original'],
+      sourceType: sourceType,
+      success(res) {
+        callbackSuccess({
+          base64: '',
+          WxTempFilePaths: res.tempFilePaths
+        });
+      },
+      fail(err) {
+        callbackFail(err);
+      }
+    });
+  }
+}
+
+export default new Method();
+</script>

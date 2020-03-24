@@ -1,0 +1,36 @@
+<template>
+  <view class="pane-item-root">
+    <slot></slot>
+  </view>
+</template>
+<script>
+class CTabPaneItem {
+
+  props = {
+    
+  }
+  data = {
+  }
+  computed = {
+    
+  }
+  watch = {
+  }
+  methods = {
+  }
+}
+export default new CTabPaneItem();
+</script>
+<style scoped>
+.pane-item-root{
+  width:750cpx;
+}
+
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "component": true
+    }
+}
+</script>

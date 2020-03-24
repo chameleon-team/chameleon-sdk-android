@@ -1,0 +1,39 @@
+<script cml-type="interface">
+interface UtilsInterface {
+  navigateBack(backPageNum: Number): void;
+}
+
+</script>
+
+<script cml-type="web">
+  class Method implements UtilsInterface {
+    navigateBack(backPageNum) {
+      let runtime = require("chameleon-runtime").default;
+      let {router, routerConfig} = runtime.getInfo();
+      router.go(backPageNum);
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+  import cmlBridge from '../../lib/sdk/cmlBridge';
+
+  class Method implements UtilsInterface {
+    navigateBack(backPageNum) {
+      cmlBridge.navigateBack(backPageNum);
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="wx">
+  class Method implements UtilsInterface {
+    navigateBack(backPageNum) {
+      wx.navigateBack({
+        delta: Math.abs(backPageNum)
+      });
+    }
+  }
+  export default new Method();
+</script>

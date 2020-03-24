@@ -1,0 +1,136 @@
+<script cml-type="interface">
+type res = {
+  os: String,
+  env: String,
+  viewportWidth: Number,
+  viewportHeight: Number,
+  extraParams: CMLObject
+}
+
+type CallBack = (res: res) => void
+
+interface UserInfoInterface {
+  getSystemInfo(cb: CallBack): void
+}
+</script>
+
+<script cml-type="web">
+  import bridge from '../../lib/sdk/cmlBridge';
+  import { inSDK } from '../../lib/sdk/env';
+  import { isIos } from '../../lib/web/ua';
+  import { getViewportSize } from './common.js';
+
+  class Method implements UserInfoInterface {
+    getSystemInfo(cb) {
+      const os = isIos() ? 'ios' : 'android';
+      let { viewportWidth, viewportHeight } = getViewportSize();
+      if (inSDK()) {
+        bridge.getSystemInfo({}, function (res) {
+          const {errno, data} = res;
+          if(errno == 0) {
+            const { os, viewportWidth, viewportHeight, ...extra } = data;
+            cb({
+              os,
+              env: 'web',
+              viewportWidth,
+              viewportHeight,
+              extraParams: extra || {}
+            });
+          }
+        });
+      } else {
+        cb({
+          os,
+          env: 'web',
+          viewportWidth,
+          viewportHeight,
+          extraParams: {}
+        });
+      }
+    }
+  }
+
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements UserInfoInterface {
+  getSystemInfo(cb) {
+    if(inSDK()) {
+      cmlBridge.getSystemInfo({}, function (res) {
+        const {errno, data} = res;
+        if(errno == 0) {
+          const { os, viewportWidth, viewportHeight, ...extra } = data;
+          cb({
+            os,
+            env: 'web',
+            viewportWidth,
+            viewportHeight,
+            extraParams: extra || {}
+          });
+        }
+      });
+    }else {
+      let viewportWidth = (WXEnvironment.deviceWidth / WXEnvironment.scale) - 0;
+      let viewportHeight = (WXEnvironment.deviceHeight / WXEnvironment.scale) - 0;
+
+      let os = WXEnvironment.platform.toLowerCase();
+      let extraParams = Object.assign({}, WXEnvironment);
+
+      let systemInfo = {
+        os,
+        env: 'weex',
+        viewportWidth,
+        viewportHeight,
+        extraParams: extraParams || {}
+      };
+           
+      cb(systemInfo);
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+
+<script cml-type="wx">
+  class Method implements UserInfoInterface {
+    getSystemInfo(cb) {
+      wx.getSystemInfo({
+        success(res) {
+          let os = /android/i.test(res.system) ? 'android' : 'ios';
+          let viewportWidth = res.windowWidth;
+          let viewportHeight = res.windowHeight;
+          let systemInfo = {
+            os,
+            env: 'wx',
+            viewportWidth,
+            viewportHeight,
+            extraParams: res || {}
+          };
+          cb(systemInfo);
+        },
+        fail(err) {
+          let systemInfo = {
+            os: '',
+            env: 'wx',
+            viewportWidth: 0,
+            viewportHeight: 0,
+            extraParams: {}
+          };
+          cb(systemInfo);
+        }
+      });
+    }
+  }
+
+  export default new Method();
+</script>
+
+
+
+

@@ -1,0 +1,50 @@
+<script cml-type="interface">
+interface socketInterface {
+  initSocket(url: String): CMLObject
+}
+</script>
+
+<script cml-type="web">
+import Socket from './webSocket.js';
+
+class Method implements socketInterface {
+
+  initSocket(url) {
+    return new Socket(url);
+  }
+
+}
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements socketInterface {
+  initSocket(url) {
+    return cmlBridge.initSocket({url});
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+import Socket from './wxSocket.js'; 
+
+class Method implements socketInterface {
+  initSocket(url) {
+    return new Socket(url);
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+

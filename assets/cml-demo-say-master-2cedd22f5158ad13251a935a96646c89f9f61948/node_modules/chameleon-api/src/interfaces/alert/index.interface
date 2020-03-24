@@ -1,0 +1,89 @@
+<script cml-type="interface">
+type alertOpt = {
+  message: String,
+  confirmTitle: String
+}
+
+type successCallBack = () => void;
+type failCallBack = () => void;
+
+interface uiInterface {
+  alert(opt: alertOpt, successCallBack: successCallBack, failCallBack: failCallBack): void,
+}
+</script>
+
+<script cml-type="web">
+import { buildConfirm } from './popupFactory';
+
+class Method implements uiInterface {
+  alert(opt, successCallBack, failCallBack) {
+    let instance = buildConfirm('alert', {
+      content: opt.message,
+      confirmText: opt.confirmTitle
+    }, successCallBack);
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements uiInterface {
+  alert(opt, successCallBack, failCallBack) {
+    if(inSDK()) {
+      cmlBridge.alert(opt, res => {
+        if(res.errno == 0) {
+          successCallBack();
+        }else {
+          failCallBack();
+        }
+      })
+    }else {
+      const modal = weex.requireModule('modal');
+      let { message, confirmTitle } = opt;
+      modal.alert(
+        {
+          message,
+          okTitle: confirmTitle
+        },
+        successCallBack
+      );
+    }
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements uiInterface {
+  alert(opt, successCallBack, failCallBack) {
+    let { message, confirmTitle} = opt;
+    wx.showModal({
+      showCancel: false,
+      title: '',
+      content: message,
+      confirmText: confirmTitle,
+      success() {
+        successCallBack();
+      },
+      fail() {
+        failCallBack();
+      }
+    });
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+
