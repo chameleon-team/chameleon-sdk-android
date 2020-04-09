@@ -67,9 +67,9 @@ dependencies {
     debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex:2.0.0'
 //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex-no-op:1.0.0'
 
-//    implementation('com.didiglobal.chameleon:cmlsdk:0.0.12.17')
-//    implementation('com.didiglobal.chameleon:cmlweex:0.0.12.17')
-//    implementation('com.didiglobal.chameleon:cmlweb:0.0.12.17')
+//    api "com.didiglobal.chameleon:cmlsdk:$VERSION"
+//    api "com.didiglobal.chameleon:cmlweex:$VERSION"
+//    api "com.didiglobal.chameleon:cmlweb:$VERSION"
     api project(':cmlsdk')
     api project(':cmlweex')
     api project(':cmlweb')
