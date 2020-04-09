@@ -25,9 +25,10 @@ import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
-import com.taobao.weex.IWXRenderListener;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXRenderStrategy;
+
+import org.apache.weex.IWXRenderListener;
+import org.apache.weex.WXSDKInstance;
+import org.apache.weex.common.WXRenderStrategy;
 
 import java.util.HashMap;
 import java.util.Iterator;

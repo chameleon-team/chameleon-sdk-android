@@ -1,0 +1,10 @@
+# ========== weex 混淆配置 ==========
+#-keep class org.apache.weex.bridge.** { *; }
+#-keep class org.apache.weex.layout.** { *; }
+#-keep class org.apache.weex.WXSDKEngine { *; }
+#-keep class org.apache.weex.base.SystemMessageHandler { *; }
+#-dontwarn org.apache.weex.bridge.**
+-keep class org.apache.weex.** { *; }
+
+# 处理不使用dokit的情况
+-dontwarn com.didichuxing.doraemonkit.weex.DKWeexInstance

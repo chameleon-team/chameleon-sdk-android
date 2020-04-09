@@ -10,6 +10,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        multiDexEnabled = true
+
         ndk {
             abiFilters "armeabi-v7a"
         }
@@ -25,6 +27,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled true
             shrinkResources true
@@ -42,11 +47,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:support-v4:$SUPPORT_VER"
-    implementation "com.android.support:appcompat-v7:$SUPPORT_VER"
-    implementation "com.android.support:recyclerview-v7:$SUPPORT_VER"
-    implementation "com.android.support:design:$SUPPORT_VER"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    api "com.android.support:support-v4:$SUPPORT_VER"
+    api "com.android.support:appcompat-v7:$SUPPORT_VER"
+    api "com.android.support:recyclerview-v7:$SUPPORT_VER"
+    api "com.android.support:design:$SUPPORT_VER"
+    api 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.alibaba:fastjson:1.2.54'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
@@ -57,9 +62,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     // 引入Dokit工具箱
-    implementation 'com.didichuxing.doraemonkit:doraemonkit:1.2.1'
+    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:2.0.0'
 //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.2.0'
-    implementation 'com.didichuxing.doraemonkit:doraemonkit-weex:1.0.0'
+    debugImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex:2.0.0'
 //    releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-weex-no-op:1.0.0'
 
 //    implementation('com.didiglobal.chameleon:cmlsdk:0.0.12.17')
@@ -70,7 +75,7 @@ dependencies {
     api project(':cmlweb')
 
     // 引入Weex调试工具
-    api 'com.taobao.android:weex_inspector:0.24.2.11'
-    api 'com.squareup.okhttp:okhttp:2.3.0'
-    api 'com.squareup.okhttp:okhttp-ws:2.3.0'
+    debugApi 'com.taobao.android:weex_inspector:0.24.2.11'
+    debugApi 'com.squareup.okhttp:okhttp:2.3.0'
+    debugApi 'com.squareup.okhttp:okhttp-ws:2.3.0'
 }

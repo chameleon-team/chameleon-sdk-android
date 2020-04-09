@@ -33,9 +33,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    compileOnly  "com.taobao.android:weex_sdk:$WEEX_VER"
+    compileOnly "org.apache.weex:sdk:$WEEX_VER"
     api 'com.taobao.gcanvas:core:1.0.6'
     api 'com.taobao.gcanvas.adapters:img:1.0.1'
     api 'com.taobao.gcanvas.bridges:spec:1.0.3'
-    api project (':glideimageload')
+    api project(':glideimageload')
 }

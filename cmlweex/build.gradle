@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply from: '../upload.gradle'
+apply from: 'download_jsc.gradle' // 依赖JavaScript引擎
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -11,15 +12,11 @@ android {
         targetSdkVersion TARGET_SDK
         versionCode 1
         versionName "1.0"
+
+        consumerProguardFiles 'proguard-rules.txt'
     }
     lintOptions {
         abortOnError false
-    }
-    buildTypes {
-        release {
-        }
-        debug {
-        }
     }
 
 }
@@ -31,10 +28,10 @@ dependencies {
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
 
     testImplementation 'junit:junit:4.12'
-    api "com.taobao.android:weex_sdk:$WEEX_VER"
+    api "org.apache.weex:sdk:$WEEX_VER"
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
-    compileOnly 'com.didichuxing.doraemonkit:doraemonkit-weex:1.0.0' // Dokit Weex测试工具
+    compileOnly 'com.didichuxing.doraemonkit:doraemonkit-weex:2.0.0' // Dokit Weex测试工具
 
     api project(':cmlsdk')
     api project(':rich-text-component')

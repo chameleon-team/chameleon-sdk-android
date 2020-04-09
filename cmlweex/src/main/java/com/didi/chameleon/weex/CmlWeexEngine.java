@@ -31,11 +31,12 @@ import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleMgrConfig;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
 import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
 import com.didichuxing.doraemonkit.weex.DKWeexInstance;
-import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
-import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
-import com.taobao.weex.InitConfig;
-import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.common.WXException;
+//import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
+//import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
+
+import org.apache.weex.InitConfig;
+import org.apache.weex.WXSDKEngine;
+import org.apache.weex.common.WXException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -129,9 +130,9 @@ public class CmlWeexEngine implements ICmlEngine {
             WXSDKEngine.registerModule(ICmlBridgeProtocol.CML_BRIDGE, CmlWeexBridgeJsToNative.class, false);
             // rich text component
             WXSDKEngine.registerComponent(CmlRichTextComponent.NAME, CmlWeexRichText.class);
-            // gcanvas component
-            WXSDKEngine.registerModule("gcanvas", GCanvasWeexModule.class);
-            WXSDKEngine.registerComponent("gcanvas", WXGCanvasWeexComponent.class);
+//            // gcanvas component
+//            WXSDKEngine.registerModule("gcanvas", GCanvasWeexModule.class);
+//            WXSDKEngine.registerComponent("gcanvas", WXGCanvasWeexComponent.class);
         } catch (WXException e) {
             CmlLogUtil.d(TAG, "register weex bridge module error.");
         }

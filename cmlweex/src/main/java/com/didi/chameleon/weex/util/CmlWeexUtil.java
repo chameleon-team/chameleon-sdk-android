@@ -1,9 +1,10 @@
 package com.didi.chameleon.weex.util;
 
-import com.taobao.weex.bridge.WXBridgeManager;
-import com.taobao.weex.ui.action.GraphicActionUpdateStyle;
-import com.taobao.weex.ui.action.GraphicPosition;
-import com.taobao.weex.ui.component.WXComponent;
+import org.apache.weex.bridge.WXBridgeManager;
+import org.apache.weex.common.Constants;
+import org.apache.weex.ui.action.GraphicActionUpdateStyle;
+import org.apache.weex.ui.action.GraphicPosition;
+import org.apache.weex.ui.component.WXComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +15,10 @@ public class CmlWeexUtil {
         GraphicPosition lp = component.getLayoutPosition();
         component.updateDemission(lp.getTop(), lp.getTop() + height, lp.getLeft(), lp.getLeft() + width, height, width);
         Map<String, Object> styles = new HashMap<>(4);
-        styles.put(com.taobao.weex.common.Constants.Name.TOP, lp.getTop());
-        styles.put(com.taobao.weex.common.Constants.Name.BOTTOM, lp.getBottom());
-        styles.put(com.taobao.weex.common.Constants.Name.LEFT, lp.getLeft());
-        styles.put(com.taobao.weex.common.Constants.Name.RIGHT, lp.getRight());
+        styles.put(Constants.Name.TOP, lp.getTop());
+        styles.put(Constants.Name.BOTTOM, lp.getBottom());
+        styles.put(Constants.Name.LEFT, lp.getLeft());
+        styles.put(Constants.Name.RIGHT, lp.getRight());
         updateStyle(component, styles);
     }
 

@@ -11,12 +11,13 @@ import com.taobao.gcanvas.GCanvasJNI;
 import com.taobao.gcanvas.bridges.spec.module.IGBridgeModule;
 import com.taobao.gcanvas.surface.GTextureView;
 import com.taobao.gcanvas.util.GLog;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.annotation.Component;
-import com.taobao.weex.ui.ComponentCreator;
-import com.taobao.weex.ui.action.BasicComponentData;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXVContainer;
+
+import org.apache.weex.WXSDKInstance;
+import org.apache.weex.annotation.Component;
+import org.apache.weex.ui.ComponentCreator;
+import org.apache.weex.ui.action.BasicComponentData;
+import org.apache.weex.ui.component.WXComponent;
+import org.apache.weex.ui.component.WXVContainer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
