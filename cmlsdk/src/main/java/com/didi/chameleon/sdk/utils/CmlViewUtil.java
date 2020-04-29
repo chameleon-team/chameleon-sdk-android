@@ -23,6 +23,10 @@ public class CmlViewUtil {
         return Math.round(dp * context.getResources().getDisplayMetrics().density + 0.5f);
     }
 
+    public static int px2dp(@NonNull Context context, float dp) {
+        return Math.round(dp / context.getResources().getDisplayMetrics().density);
+    }
+
     public static float getDensity(Context ctx) {
         if (ctx != null) {
             Resources res = ctx.getResources();

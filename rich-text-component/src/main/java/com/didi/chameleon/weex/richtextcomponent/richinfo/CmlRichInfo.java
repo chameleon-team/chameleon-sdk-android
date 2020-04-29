@@ -175,6 +175,12 @@ public class CmlRichInfo implements Serializable {
         public String fontName;
 
         /**
+         * 点击链接
+         */
+        @JSONField(name = "url")
+        public String url;
+
+        /**
          * 点击标识
          */
         @JSONField(name = "click")

@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply from: '../upload.gradle'
-apply from: 'download_jsc.gradle' // 依赖JavaScript引擎
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -37,4 +36,8 @@ dependencies {
     api project(':rich-text-component')
     api project(':js-bundle-mgr')
     api project(':weexbridge')
+
+    api project(':cmljsc')
+
+    api 'com.didiglobal.chameleon:cmljsc:0.0.10'
 }

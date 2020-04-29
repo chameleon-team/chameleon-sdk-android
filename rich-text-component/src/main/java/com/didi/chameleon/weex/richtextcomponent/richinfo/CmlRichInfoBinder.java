@@ -17,7 +17,7 @@ public class CmlRichInfoBinder {
 
         void onClick(View widget, String message);
 
-        void onSpanClick(View widget, String message, int index);
+        void onSpanClick(View widget, String message, int index, CmlRichInfo.Bean bean);
 
     }
 
@@ -72,9 +72,9 @@ public class CmlRichInfoBinder {
         }
         textView.setText(new CmlRichInfoSpan(textView.getContext(), richInfo, new CmlRichInfoSpan.CmlSpanAction() {
             @Override
-            public void onItemClick(View widget, String tag, int index) {
+            public void onItemClick(View widget, String tag, int index, CmlRichInfo.Bean bean) {
                 isSpanClicked = true;
-                action.onSpanClick(widget, tag, index);
+                action.onSpanClick(widget, tag, index, bean);
             }
         }));
         textView.setMovementMethod(LinkMovementMethod.getInstance());

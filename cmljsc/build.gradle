@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
-apply from: '../upload.gradle'
+// 仅更新jsc时需要上传
+//apply from: '../upload.gradle'
+apply from: 'download_jsc.gradle' // 依赖JavaScript引擎
 
 android {
     compileSdkVersion COMPILE_SDK.toInteger()
@@ -25,7 +27,4 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
-    compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
-    api project(":cmlsdk")
 }

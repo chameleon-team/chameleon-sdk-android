@@ -22,7 +22,7 @@ public class CmlRichInfoSpan extends SpannableString {
 
     public interface CmlSpanAction {
 
-        void onItemClick(View widget, String tag, int index);
+        void onItemClick(View widget, String tag, int index, CmlRichInfo.Bean bean);
     }
 
     private Context context;
@@ -58,9 +58,9 @@ public class CmlRichInfoSpan extends SpannableString {
                     b.endPosition = info.message.length() - 1;
                 }
 
-                if (b.click) {
-                    setSpan(new ClickSpan(info.message.substring(b.startPosition, b.endPosition + 1), i), b.startPosition,
-                            b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (b.click || !TextUtils.isEmpty(b.url)) {
+                    setSpan(new ClickSpan(info.message.substring(b.startPosition, b.endPosition + 1), i, b)
+                            , b.startPosition, b.endPosition + 1, SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
 
                 if (!TextUtils.isEmpty(b.colorString)) {
@@ -184,10 +184,12 @@ public class CmlRichInfoSpan extends SpannableString {
     private class ClickSpan extends ClickableSpan {
         private final String tag;
         private final int index;
+        private final CmlRichInfo.Bean bean;
 
-        ClickSpan(String tag, int index) {
+        ClickSpan(String tag, int index, CmlRichInfo.Bean bean) {
             this.tag = tag;
             this.index = index;
+            this.bean = bean;
         }
 
         @Override
@@ -198,7 +200,7 @@ public class CmlRichInfoSpan extends SpannableString {
         @Override
         public void onClick(@NonNull View widget) {
             if (action != null) {
-                action.onItemClick(widget, tag, index);
+                action.onItemClick(widget, tag, index, bean);
             }
         }
     }
