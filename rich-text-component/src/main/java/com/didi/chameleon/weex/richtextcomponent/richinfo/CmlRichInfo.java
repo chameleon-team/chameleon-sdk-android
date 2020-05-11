@@ -62,6 +62,8 @@ public class CmlRichInfo implements Serializable {
     public String icon;
     @JSONField(name = "rich_message")
     private List<Bean> beans;
+    @JSONField(name = "text_align")
+    private String textAlign;
 
     public final RichInfoPadding defaultPadding = new RichInfoPadding(6, 3, 6, 3);
     public transient RichInfoPadding padding;
@@ -85,6 +87,14 @@ public class CmlRichInfo implements Serializable {
 
     public void setBeans(List<Bean> beans) {
         this.beans = beans;
+    }
+
+    public String getTextAlign() {
+        return textAlign;
+    }
+
+    public void setTextAlign(String textAlign) {
+        this.textAlign = textAlign;
     }
 
     public void setPadding(RichInfoPadding padding) {

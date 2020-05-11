@@ -1,5 +1,6 @@
-include ':app', ':cmlweex', ':js-bundle-mgr', ':rich-text-component', ':cmlsdk', ':cmlweb', ':glideimageload', ':weexbridge', ':cmljsc'
+include ':app', ':cmlweex', ':js-bundle-mgr', ':rich-text-component', ':cmlsdk', ':cmlweb', ':glideimageload', ':weexbridge'
 
+//include ':cmljsc'
 //include ':cmlrn'
 
 project(':glideimageload').projectDir = new File('gcanvas/glideimageload')

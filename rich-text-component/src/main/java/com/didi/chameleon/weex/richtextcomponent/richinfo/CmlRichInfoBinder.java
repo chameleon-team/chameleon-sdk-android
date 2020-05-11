@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -119,6 +120,19 @@ public class CmlRichInfoBinder {
             int size = Integer.parseInt(richInfo.msgFont) / 2;
             if (size > 0) {
                 textView.setTextSize(COMPLEX_UNIT_DIP, size);
+            }
+        }
+        if (!TextUtils.isEmpty(richInfo.getTextAlign())) {
+            switch (richInfo.getTextAlign()) {
+                case "center":
+                    textView.setGravity(Gravity.CENTER);
+                    break;
+                case "left":
+                    textView.setGravity(Gravity.LEFT);
+                    break;
+                case "right":
+                    textView.setGravity(Gravity.RIGHT);
+                    break;
             }
         }
     }

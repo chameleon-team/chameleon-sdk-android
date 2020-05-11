@@ -37,7 +37,5 @@ dependencies {
     api project(':js-bundle-mgr')
     api project(':weexbridge')
 
-    api project(':cmljsc')
-
     api 'com.didiglobal.chameleon:cmljsc:0.0.10'
 }
