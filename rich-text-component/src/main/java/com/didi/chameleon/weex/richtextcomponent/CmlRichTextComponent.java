@@ -88,7 +88,7 @@ public class CmlRichTextComponent extends AppCompatTextView {
         post(new Runnable() {
             @Override
             public void run() {
-                updateSize(getWidth());
+                updateSize(getWidth(), true);
             }
         });
 
@@ -98,11 +98,14 @@ public class CmlRichTextComponent extends AppCompatTextView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (oldw != w) {
-            updateSize(w);
+            updateSize(w, false);
         }
     }
 
-    private void updateSize(int newWidth) {
+    private void updateSize(int newWidth, boolean force) {
+        if (force) {
+            lastWidth = 0;
+        }
         if (newWidth == 0 || newWidth == lastWidth) {
             return;
         }
