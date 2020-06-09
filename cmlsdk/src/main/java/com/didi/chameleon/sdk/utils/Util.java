@@ -41,7 +41,7 @@ public class Util {
      * @return 根据协议，从主链接中解析出js地址
      */
     public static String parseCmlUrl(String url) {
-        if (CmlEnvironment.CML_DEBUG && url.startsWith("file://")) {
+        if (url.startsWith("file://")) {
             return url;
         }
 

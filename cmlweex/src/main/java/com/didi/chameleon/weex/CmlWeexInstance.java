@@ -166,7 +166,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
             return;
         }
 
-        if (CmlEnvironment.CML_DEBUG && mWXUrl.startsWith("file://")) {
+        if (mWXUrl.startsWith("file://")) {
             mWeexInstance.renderByUrl(CML_PAGE_NAME, mWXUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
             return;
         }
