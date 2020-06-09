@@ -86,3 +86,29 @@
 # ========== fastjson 混淆配置 ==========
 -dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.*{*;}
+
+# ========== weex 混淆配置 ==========
+-keep class org.apache.weex.WXDebugTool{*;}
+-keep class org.apache.weex.devtools.common.LogUtil{*;}
+-keepclassmembers class ** {
+  @org.apache.weex.ui.component.WXComponentProp public *;
+}
+-keep class org.apache.weex.bridge.**{*;}
+-keep class org.apache.weex.dom.**{*;}
+-keep class org.apache.weex.adapter.**{*;}
+-keep class org.apache.weex.common.**{*;}
+-keep class * implements org.apache.weex.IWXObject{*;}
+-keep class org.apache.weex.ui.**{*;}
+-keep class org.apache.weex.ui.component.**{*;}
+-keep class org.apache.weex.utils.**{
+    public <fields>;
+    public <methods>;
+    }
+-keep class org.apache.weex.view.**{*;}
+-keep class org.apache.weex.module.**{*;}
+-keep public class * extends org.apache.weex.common.WXModule{*;}
+-keep public class * extends org.apache.weex.ui.component.WXComponent{*;}
+-keep class * implements org.apache.weex.ui.IExternalComponentGetter{*;}
+
+# ========== chameleon 包下的类混淆配置 ==========
+-keep class com.didi.chameleon.** { *; }

@@ -13,7 +13,6 @@ import org.apache.weex.ui.view.gesture.WXGestureObservable;
 /**
  * @author ertong
  */
-
 public class GWXTextureView extends GTextureView implements WXGestureObservable {
 
     private WXGesture wxGesture;
