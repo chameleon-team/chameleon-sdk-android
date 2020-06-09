@@ -45,6 +45,10 @@ public class CmlEnvironment {
      * 是否开启缓存。前端调试的时候需要关闭缓存
      */
     public static boolean CML_ALLOW_BUNDLE_CACHE = true;
+    /**
+     * 是否允许直接从文件加载
+     */
+    public static boolean CML_ALLOW_LOAD_FROM_FILE = false;
 
     /**
      * 是否输出分析日志

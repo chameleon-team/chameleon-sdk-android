@@ -134,7 +134,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             return;
         }
 
-        if (mCmlUrl.startsWith("file://")) {
+        if (url.startsWith("file://") && (CmlEnvironment.CML_DEBUG || CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE)) {
             mWeexInstance.renderByUrl(CML_PAGE_NAME, mCmlUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
             return;
         }

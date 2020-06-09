@@ -35,7 +35,9 @@ public class MyApplication extends Application implements ICmlConfig {
         // 开发阶段可以禁用js bundle缓存
         CmlEnvironment.CML_ALLOW_BUNDLE_CACHE = true;
         // Debug开关
-        CmlEnvironment.CML_DEBUG = true;
+        CmlEnvironment.CML_DEBUG = false;
+        // Debug开关
+        CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE = false;
         // 开发阶段手动降级测试
 //        CmlEnvironment.CML_DEGRADE = false;
 
