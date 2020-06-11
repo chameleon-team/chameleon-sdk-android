@@ -11,6 +11,8 @@ import com.didi.chameleon.sdk.adapter.log.ICmlLoggerAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlProgressAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
+import com.didi.chameleon.sdk.adapter.monitor.CmlDefaultMonitorAdapter;
+import com.didi.chameleon.sdk.adapter.monitor.ICmlMonitorAdapter;
 import com.didi.chameleon.sdk.adapter.navigator.CmlNavigatorDefault;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
 import com.didi.chameleon.sdk.adapter.storage.ICmlStorageAdapter;
@@ -83,6 +85,7 @@ public class CmlEnvironment {
     private static ICmlStatisticsAdapter statisticsAdapter;
     private static ICmlDegradeAdapter degradeAdapter;
     private static ICmlImgLoaderAdapter imageLoaderAdapter;
+    private static ICmlMonitorAdapter monitorAdapter;
 
     private static CmlJsonWrapper jsonWrapper;
     private static CmlThreadCenter threadCenter;
@@ -147,6 +150,10 @@ public class CmlEnvironment {
 
     public static void setImageLoaderAdapter(ICmlImgLoaderAdapter imageLoaderAdapter) {
         CmlEnvironment.imageLoaderAdapter = imageLoaderAdapter;
+    }
+
+    public static void setMonitorAdapter(ICmlMonitorAdapter monitorAdapter) {
+        CmlEnvironment.monitorAdapter = monitorAdapter;
     }
 
     public static long getMaxPreloadSize() {
@@ -219,6 +226,13 @@ public class CmlEnvironment {
             imageLoaderAdapter = new CmlDefaultImgLoaderAdapter();
         }
         return imageLoaderAdapter;
+    }
+
+    public static ICmlMonitorAdapter getMonitorAdapter() {
+        if (monitorAdapter == null) {
+            monitorAdapter = new CmlDefaultMonitorAdapter();
+        }
+        return monitorAdapter;
     }
 
     public static ICmlWebSocketAdapter getWebSocketAdapter() {
