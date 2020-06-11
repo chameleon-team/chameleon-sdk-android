@@ -40,19 +40,12 @@ import static com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol.CML_BRIDGE_EVENT;
  * @since 18/7/30
  * 主要功能:
  */
-<<<<<<< HEAD
-
-=======
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
 public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle, IWXRenderListener {
     private static final String TAG = "CmlWeexInstance";
     private static final String CML_PAGE_NAME = "cml_weex";
 
-<<<<<<< HEAD
-=======
     private static final String DEGRADE_TO_H5 = "degrade_to_h5";
 
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
     private String mInstanceId;
     private int mRequestCode;
     private CmlWXSDKInstanceWrapper mWeexInstance;
@@ -143,10 +136,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
 
     public boolean onBackPress() {
         if (mWeexInstance != null) {
-<<<<<<< HEAD
-=======
             CmlLogUtil.i(TAG, "back pressed, weex code should process back event and close current page.");
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
             CmlEngine.getInstance().callToJs(this, "cml", "onBackPressed", null, null);
             return true;
         }
@@ -370,11 +360,6 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
      * 降级到{@link ICmlDegradeAdapter} 实现页面
      */
     @Override
-<<<<<<< HEAD
-    public void degradeToH5(int degradeCode) {
-        if (mInstanceListener != null) {
-            mInstanceListener.onDegradeToH5(mTotalUrl, degradeCode);
-=======
     public void degradeToH5(final int degradeCode) {
         if (mInstanceListener != null) {
             CmlEnvironment.getThreadCenter().postMain(new Runnable() {
@@ -389,7 +374,6 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
                     mInstanceListener.onDegradeToH5(degradeUri.toString(), degradeCode);
                 }
             });
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
         }
     }
 
@@ -514,10 +498,6 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
      * @since 18/7/30
      * 主要功能:
      */
-<<<<<<< HEAD
-
-=======
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
     public interface ICmlInstanceListener {
         /**
          * 降级到h5.需要容器自己实现

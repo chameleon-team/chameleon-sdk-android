@@ -14,7 +14,7 @@ import com.didi.chameleon.weex.container.CmlWeexView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.zkml.healthmanagement.member.R;
+import cn.zkml.care.member.R;
 
 public class CmlWeexViewActivity extends AppCompatActivity implements View.OnClickListener, CmlWeexView.IDegradeToH5 {
     private static final String TAG = "CmlWeexViewActivity";

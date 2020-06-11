@@ -1,7 +1,11 @@
-package com.didi.chameleon.sdk.extend.record.recorder;
+package cn.zkml.care.member.module.record.recorder;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
+
+import com.didi.chameleon.sdk.CmlEngine;
+import com.didi.chameleon.sdk.utils.CmlLogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,13 +15,20 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Util {
     public static JSONObject getError(String msg, int code){
         JSONObject result = new JSONObject();
         HashMap<String, Object> param = new HashMap<>();
         param.put("code", code);
         param.put("message", msg);
-        result.put("error", param);
+        try {
+            result.put("error", param);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
@@ -47,9 +58,12 @@ public class Util {
     }
 
     public static File getRootFile(){
+        String package_name = CmlEngine.getInstance().getAppContext().getPackageName();
+        String root_path = Environment.getExternalStorageDirectory() + "/" + package_name+ "/recorder";
         File file = new File(Constant.ROOT_PATH);
         if (!file.exists()) {
-            file.mkdir();
+            Boolean res = file.mkdirs();
+            CmlLogUtil.e("cmlBridge", res.toString());
         }
         return file;
     }

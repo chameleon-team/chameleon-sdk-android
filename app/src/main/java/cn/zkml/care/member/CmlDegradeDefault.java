@@ -1,4 +1,4 @@
-package cn.zkml.healthmanagement.member;
+package cn.zkml.care.member;
 
 import android.app.Activity;
 import android.content.Context;

@@ -1,10 +1,7 @@
 package com.didi.chameleon.sdk;
 
 import android.app.Activity;
-<<<<<<< HEAD
-=======
 import android.app.Application;
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -16,10 +13,6 @@ import com.didi.chameleon.sdk.extend.CmlClipboardModule;
 import com.didi.chameleon.sdk.extend.CmlCommonModule;
 import com.didi.chameleon.sdk.extend.CmlModalModule;
 import com.didi.chameleon.sdk.extend.CmlAudioModule;
-<<<<<<< HEAD
-import com.didi.chameleon.sdk.extend.CmlRecordModule;
-=======
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
 import com.didi.chameleon.sdk.extend.CmlPositionModule;
 import com.didi.chameleon.sdk.extend.CmlStorageModule;
 import com.didi.chameleon.sdk.extend.CmlStreamModule;
@@ -29,10 +22,7 @@ import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
-<<<<<<< HEAD
-=======
 import com.didichuxing.doraemonkit.DoraemonKit;
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
 
 import java.util.HashMap;
 import java.util.List;
@@ -146,7 +136,6 @@ public class CmlEngine {
         registerModule(CmlPositionModule.class);
         registerModule(CmlImageModule.class);
         registerModule(CmlAudioModule.class);
-        registerModule(CmlRecordModule.class);
     }
 
     private void initEngine(Context context) {
@@ -201,8 +190,6 @@ public class CmlEngine {
         }
     }
 
-<<<<<<< HEAD
-=======
     private void initDoraemonkit(Context context) {
         try {
             Class.forName("com.didichuxing.doraemonkit.DoraemonKit");
@@ -217,7 +204,6 @@ public class CmlEngine {
         DoraemonKit.install((Application) context);
     }
 
->>>>>>> a8d4749153ff21cfa5af984edd35e11f2c7ac1ad
     public Context getAppContext() {
         return mContext;
     }

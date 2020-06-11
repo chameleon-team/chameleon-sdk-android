@@ -13,7 +13,7 @@ import com.didi.chameleon.web.container.CmlWebView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.zkml.healthmanagement.member.R;
+import cn.zkml.care.member.R;
 
 public class CmlWebViewActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "CmlWeexViewActivity";

@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.extend.record.permission;
+package cn.zkml.care.member.module.record.permission;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +43,7 @@ public class PermissionChecker {
         return true;
     }
 
-    public static void requestPermissions(final Activity activity, HashMap<String, String> dialogParams, final ModuleResultListener listener, final int requestCode, final String... permissions) {
+    public static void requestPermissions(final Activity activity, HashMap<String, String> dialogParams, final PermissionResultListener listener, final int requestCode, final String... permissions) {
         if (shouldShowRequestPermissionsRationale(activity, permissions)) {
             AlertDialog dialog = new AlertDialog.Builder(activity)
                     .setTitle(dialogParams.get("title"))

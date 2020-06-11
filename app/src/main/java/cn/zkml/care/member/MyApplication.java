@@ -1,4 +1,4 @@
-package cn.zkml.healthmanagement.member;
+package cn.zkml.care.member;
 
 import android.app.Application;
 
@@ -7,6 +7,10 @@ import com.didi.chameleon.example.ModuleDemo;
 import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlConfig;
+
+import cn.zkml.care.member.module.CmlConsoleLogModule;
+import cn.zkml.care.member.module.audio.module.CmlAudioModule2;
+import cn.zkml.care.member.module.record.CmlRecordModule;
 
 public class MyApplication extends Application implements ICmlConfig {
     @Override
@@ -39,5 +43,8 @@ public class MyApplication extends Application implements ICmlConfig {
     @Override
     public void registerModule() {
         CmlEngine.getInstance().registerModule(ModuleDemo.class);
+        CmlEngine.getInstance().registerModule(CmlConsoleLogModule.class);
+        CmlEngine.getInstance().registerModule(CmlRecordModule.class);
+        CmlEngine.getInstance().registerModule(CmlAudioModule2.class);
     }
 }

@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.extend.record.permission;
+package cn.zkml.care.member.module.record.permission;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -13,7 +13,7 @@ import com.didi.chameleon.sdk.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.zkml.healthmanagement.member.R;
+import cn.zkml.care.member.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 执行预加载
         CmlEngine.getInstance().performPreload();
 
-        CmlEngine.getInstance().launchPage(this, CML_DEMO, null);
+        //CmlEngine.getInstance().launchPage(this, CML_DEMO, null);
     }
 
     @Override

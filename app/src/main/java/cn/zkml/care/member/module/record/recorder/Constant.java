@@ -1,18 +1,20 @@
-package com.didi.chameleon.sdk.extend.record.recorder;
+package cn.zkml.care.member.module.record.recorder;
 
 import android.os.Environment;
+
+import com.didi.chameleon.sdk.CmlEngine;
 
 //import app.eeui.framework.ui.eeui;
 
 public class Constant {
-    //public static final String ROOT_PATH = Environment.getExternalStorageDirectory() + "/" + eui.egetApplication().getPackageName()+ "/recorder";
+    public static final String ROOT_PATH = Environment.getExternalStorageDirectory() + "/" + CmlEngine.getInstance().getAppContext().getPackageName()+ "/recorder";
     public static final int DEFAULT_TIMEOUT_MS = 3000;
 
     //nat 自定义receiver的action
     public static final String VIDEO_PAUSE_OPERATE = "video_pause";
     public static final String VIDEO_STOP_OPERATE = "video_stop";
 
-    //nat activity result,request codeo
+    //nat activity result,request codeoinitDoraemonkit
     public static final int IMAGE_REQUEST_CODE = 1001;
     public static final int VIDEO_REQUEST_CODE = 1002;
     public static final int IMAGE_PICK_REQUEST_CODE = 1003;

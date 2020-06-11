@@ -1,4 +1,4 @@
-package com.didi.chameleon.sdk.extend.record.recorder;
+package cn.zkml.care.member.module.record.recorder;
 
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
@@ -13,6 +13,9 @@ import omrecorder.AudioSource;
 import omrecorder.OmRecorder;
 import omrecorder.PullTransport;
 import omrecorder.Recorder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RecorderModule {
     private Recorder mRecorder;
@@ -111,8 +114,12 @@ public class RecorderModule {
             mRecorder.stopRecording();
             mIsPausing = false;
             mIsRecording = false;
-            HashMap<String, String> result = new HashMap<>();
-            result.put("path", mFile.getAbsolutePath());
+            JSONObject result = new JSONObject();
+            try {
+                result.put("path", mFile.getAbsolutePath());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             listener.onResult(result);
         }
     }
