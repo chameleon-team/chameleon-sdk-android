@@ -1,0 +1,47 @@
+<script cml-type="interface">
+interface reloadInterface {
+  reload(): void
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements reloadInterface {
+  reload() {
+    if (inSDK()) {
+      bridge.reload({});
+    } else {
+      location.reload(true);
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements reloadInterface {
+  reload() {
+    cmlBridge.reload({});
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements reloadInterface {
+  reload() {
+  }
+}
+
+export default new Method();
+
+</script>

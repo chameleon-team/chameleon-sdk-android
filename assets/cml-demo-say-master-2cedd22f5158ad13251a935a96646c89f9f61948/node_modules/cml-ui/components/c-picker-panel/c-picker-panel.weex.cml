@@ -1,0 +1,140 @@
+<template>
+  <view class="picker-panel" c-if="{{show}}">
+    <c-popup mask="{{true}}" show="{{show}}" >
+      <view class="panel-wrap" style="{{wraperStyle}}">
+        <view class="panel-header" style="{{headerStyle}}">
+            <view class="left-wrap" c-bind:tap="cancelclick">
+              <text class="left-btn-text" style="{{cancelBtnStyle}}">取消</text>
+            </view>
+           <text class="title">{{title}}</text>
+            <view class="right-wrap" c-bind:tap="confirmclick">
+              <text class="right-btn-text" style="{{confirmBtnStyle}}">确定</text>
+            </view>
+        </view>
+        <slot></slot>
+      </view>
+    </c-popup>
+</view>
+</template>
+<script>
+
+ class CPickerPanel implements CPickerPanelInterface {
+    props = {
+      show: {
+        type: Boolean,
+        default: false
+      },
+      height: {
+        type: Number,
+        default: 500
+      },
+      title: {
+        type: String,
+        default: "请选择"
+      },
+      headerHeight: {
+        type: Number,
+        default: 100
+      },
+      cancelBtnStyle: {
+        type: String,
+        default: ''
+      },
+      confirmBtnStyle: {
+        type: String,
+        default: ''
+      }
+    }
+    computed ={
+      wraperStyle() {
+        return `height: ${this.height}cpx`;
+      },
+      headerStyle() {
+        return `height: ${this.headerHeight}cpx`;
+      }
+    }
+    watch = {}
+    methods = {
+      cancelclick() {
+        this.$cmlEmit("cancel");
+      },
+      confirmclick() {
+        this.$cmlEmit("confirm");
+      }
+    }
+    beforeCreate(){}
+    created() {}
+    beforeMount() {}
+    mounted() {}
+    beforeDestroy() {}
+    destroyed() {}   
+  }
+
+  export default new CPickerPanel();
+
+</script>
+
+<style scoped>
+.panel-wrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-bottom-width: env(safe-area-inset-bottom);
+  border-bottom-width: constant(safe-area-inset-bottom);
+  border-bottom-color: #ffffff;
+  border-bottom-style: solid;
+  box-sizing: content-box;
+}
+.panel-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #dcdcdc;
+}
+.left-btn-text {
+  color: #999;
+  font-size: 32cpx;
+}
+.right-btn-text {
+  color: #fc9153;
+  font-size: 32cpx;
+}
+.left-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15cpx;
+}
+.right-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15cpx;
+}
+.title {
+  flex: 1;
+  font-size: 40cpx;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+</style>
+
+<script cml-type="json">
+{
+  "weex": {
+    "usingComponents": {
+      "c-popup": "../c-popup/c-popup"
+    },
+    "component": true
+  }
+}
+</script>

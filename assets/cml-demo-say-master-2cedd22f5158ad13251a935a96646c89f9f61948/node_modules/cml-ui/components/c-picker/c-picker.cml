@@ -1,0 +1,100 @@
+<template>
+    <view show="{{show}}">
+        <c-picker-panel 
+            show="{{show}}" 
+            height="{{height}}" 
+            header-height="{{headerHeight}}" 
+            cancel-btn-style="{{cancelBtnStyle}}"
+            confirm-btn-style="{{confirmBtnStyle}}"
+            c-bind:cancel="cancel"
+            c-bind:confirm="confirm">
+            <c-picker-item 
+                text-align="{{textAlign}}" 
+                height="{{dataScrollerHeight}}" 
+                data="{{data}}" 
+                default-index="{{defaultIndex}}"            
+                c-bind:selectchange="selectchange">
+            </c-picker-item>
+        </c-picker-panel>
+    </view>
+</template>
+<script>
+  class CPicker   {
+
+  props = {
+    show: {
+        type: Boolean,
+        default: false
+    },
+    height: {
+        type: Number,
+        default: 500
+    },
+    headerHeight: {
+        type: Number,
+        default: 100
+    },
+    textAlign: {
+        type: String,
+        default: "center"
+    },
+    dataScrollerHeight: {
+        type: Number,
+        default: 400
+    },
+    data: {
+        type: Array,
+        default: []
+    },
+    defaultIndex: {
+        type: Number,
+        default: 0
+    },
+    cancelBtnStyle: {
+        type: String,
+        default: ''
+    },
+    confirmBtnStyle: {
+        type: String,
+        default: ''
+    }
+  }
+  data = {}
+  computed = {}
+  watch  = {}
+  methods = {
+    cancel(){
+        this.$cmlEmit('cancel');
+    },
+    confirm(){
+        this.$cmlEmit('confirm');
+    },
+    selectchange(e){
+        this.$cmlEmit('selectchange',e.detail);    
+    }
+  }
+
+  beforeCreate() {}
+  created() {}
+  beforeMount() {}
+  mounted() {}
+  beforeDestroy() {}
+  destroyed() {}
+}
+
+export default new CPicker();
+</script>
+<style scoped>
+
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "usingComponents": {
+            "c-picker-panel":"../c-picker-panel/c-picker-panel",
+            "c-picker-item": "../c-picker-item/c-picker-item"
+        },
+        "component": true
+    }
+}
+</script>

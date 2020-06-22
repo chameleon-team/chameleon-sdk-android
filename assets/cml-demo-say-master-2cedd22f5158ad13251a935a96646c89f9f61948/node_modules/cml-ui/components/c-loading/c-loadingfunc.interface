@@ -1,0 +1,64 @@
+<script cml-type="interface">
+interface CLoadingInterface {
+  move(context: CMLObject): void,
+  loadingWrapStyle(): Promise,
+}
+</script>
+
+<script cml-type="web">
+  class Method implements CLoadingInterface {
+    scheduleTime = 0;
+    move(context) {}
+    loadingWrapStyle() {
+      return Promise.resolve('position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 998;')
+    }
+  }
+
+  export default new Method();
+</script>
+<script cml-type="weex">
+  import cml from 'chameleon-api';
+  const animation = weex.requireModule('animation')
+  let rotate = 36000;
+  class Method implements CLoadingInterface {
+    scheduleTime = 50;
+    move (context) {
+      if (weex.config.env.platform === 'android') {
+        var loadingEl = context.$refs.loading;
+        const self = this;
+        animation.transition(loadingEl, {
+          styles: {
+            transform: 'rotate(' + rotate + 'deg)',
+            transformOrigin: 'center center'
+          },
+          duration: 200000, //ms
+          timingFunction: 'linear',
+        }, function () {
+          rotate = rotate + 36000;
+          
+          self.move();
+        })
+      }
+    }
+
+    loadingWrapStyle() {
+      return cml.getSystemInfo().then((res) => {
+        return `position: fixed; left: 0; top: 0;width: 750cpx; height: ${res.viewportHeight - 200}cpx; z-index: 998;`
+      })
+      
+    }
+  }
+
+  export default new Method();
+</script>
+<script cml-type="wx">
+  class Method implements CLoadingInterface {
+    scheduleTime = 50;
+    move(context) {}
+    loadingWrapStyle() {
+      return Promise.resolve('position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 998;');
+    }
+  }
+
+  export default new Method();
+</script>

@@ -1,0 +1,70 @@
+<script cml-type="interface">
+type toastOpt = {
+  message: string,
+  duration: number
+}
+
+interface uiInterface {
+  showToast(opt: toastOpt): void,
+}
+</script>
+
+<script cml-type="web">
+import { buildToast } from './popupFactory';
+
+class Method implements uiInterface {
+  showToast(opt) {
+    let { message, duration } = opt;
+    let instance = buildToast({ message, show: true });
+    setTimeout(() => {
+      instance.show = false;
+    }, duration);
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+const modal = weex.requireModule('modal');
+
+class Method implements uiInterface {
+  showToast(opt) {
+    if(inSDK()) {
+      cmlBridge.showToast(opt);
+    }else {
+      let { message, duration } = opt;
+      modal.toast({
+        message,
+        duration: duration / 1000
+      });
+    }
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+class Method implements uiInterface {
+  showToast(opt) {
+    let { message, duration } = opt;
+    wx.showToast({
+      icon: 'none',
+      title: message,
+      duration: duration
+    });
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+

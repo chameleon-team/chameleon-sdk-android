@@ -11,14 +11,15 @@ buildscript {
         }
     }
     dependencies {
+        // TODO wangshan 升到3.5.1会有问题，但weex-playground0.28.0版升到3.5.1就没事
         classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
 allprojects {
     repositories {
-        mavenCentral()
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
         maven {
             url 'https://oss.sonatype.org/content/repositories/public/'
         }

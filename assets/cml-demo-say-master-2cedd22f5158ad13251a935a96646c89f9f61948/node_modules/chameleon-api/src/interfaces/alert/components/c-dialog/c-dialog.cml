@@ -1,0 +1,272 @@
+<template>
+<c-popup show="{{show}}" mask="{{mask}}">
+  <view class="dialog-content">
+    <!-- <slot name="header"></slot> -->
+    <view class="dialog-close" c-if="{{showClose}}" c-bind:tap="closeTap">
+      <image src="{{closeSrc}}" style="width:22cpx;height:22cpx;"/>
+    </view>
+    <!-- <slot> -->
+      <view class="icon-row">
+        <image c-if="{{iconUrl}}" src="{{iconUrl}}" class="custom-icon" style="{{computedIconStyle}}" />       
+        <view c-else class="icon-bg">
+          <image src="{{iconSrc}}" class="icon" />
+        </view>
+      </view>
+      <text class="title-row">{{title}}</text>
+      <text class="content-row">{{content}}</text>
+    <!-- </slot> -->
+    <!-- <slot name="footer"> -->
+      <view class="btn-row">
+        <block c-if="{{type !== 'alert'}}">
+          <view class="left-btn-wrap" c-bind:tap="cancelTap"><text class="cancel-text">{{cancelText}}</text></view>
+        </block>
+        <view class="btn-wrap"  c-bind:tap="confirmTap"><text class="confirm-text">{{confirmText}}</text></view>
+      </view>     
+    <!-- </slot> -->
+  </view>
+</c-popup>
+</template>
+<script>
+let IconMap = {
+  network: require("./images/network.png?inline"),
+  warn: require("./images/warn.png?inline"),
+  success: require("./images/success.png?inline")
+};
+class CDialog   {
+  props = {
+    show: {
+      type: Boolean,
+      default: false
+    },
+    mask: {
+      type: Boolean,
+      default: false
+    },
+    title: {
+      type: String,
+      default: ""
+    },
+    content: {
+      type: String,
+      default: ""
+    },
+    type: {
+      type: String,
+      default: "alert" //alert confirm
+    },
+    showClose: {
+      type: Boolean,
+      default: false
+    },
+    closeSrc: {
+      type: String,
+      default: require("./images/close.png?inline")
+    },
+    cancelText: {
+      type: String,
+      default: "取消"
+    },
+    confirmText: {
+      type: String,
+      default: "确定"
+    },
+    iconType: {
+      type: String,
+      default: "warn" //warn  success
+    },
+    iconUrl: {
+      type: String,
+      default: "" //warn  success
+    },
+    iconStyle: {
+      type: Object
+    }
+  }
+
+  data = {
+    defaultCloseIcon: require('./images/close.png?inline')
+  }
+
+  computed = {
+    iconSrc() {
+      return IconMap[this.iconType];
+    },
+    computedIconStyle() {
+      let result = this.$cmlStyle(this.iconStyle);
+      return result;
+    }
+  }
+
+  watch  = {
+  }
+
+  methods = {
+    cancelTap() {
+      this.$cmlEmit("show", { value: false });
+      this.$cmlEmit("cancel");
+    },
+    confirmTap() {
+      this.$cmlEmit("show", { value: false });
+      this.$cmlEmit("confirm");
+    },
+    closeTap() {
+      this.$cmlEmit("show", { value: false });
+      this.$cmlEmit("close");
+    }
+  }
+
+  beforeCreate() {
+  }
+
+  created() {
+  }
+
+  beforeMount() {
+  }
+
+  mounted() {
+  }
+
+  beforeDestroy() {
+  }
+
+  destroyed() {
+  }
+}
+
+export default new CDialog();
+</script>
+<style scoped lang="less">
+.border-scale(@color, @border-radius: 2cpx,
+      @border-width: 1cpx 1cpx 1cpx 1cpx) {
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    border: 1cpx solid @color;
+    border-width: @border-width;
+    border-radius: 2 * @border-radius;
+    transform-origin: 0% 0%;
+    -webkit-transform-origin: 0% 0%;
+    -webkit-transform: scale(0.5, 0.5);
+    transform: scale(0.5, 0.5);
+    pointer-events: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}
+.dialog-content {
+  width: 540cpx;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 4cpx;
+  position: relative;
+}
+.dialog-close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  width: 64cpx;
+  height: 64cpx;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.icon {
+  width: 60cpx;
+  height: 60cpx;
+}
+.custom-icon {
+  width: 100cpx;
+  height: 100cpx;
+}
+.icon-bg {
+  border-radius: 50%;
+  background-color: #f3f4f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100cpx;
+  height: 100cpx;
+}
+.icon-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40cpx;
+  margin-bottom: 32cpx;
+}
+.title-row {
+  margin: 0cpx 32cpx;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #333;
+  font-size: 32cpx;
+  font-weight: 400;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.content-row {
+  margin: 16cpx 0 24cpx 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+  font-size: 28cpx;
+  line-height: 44cpx;
+  padding: 0 32cpx;
+}
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: 0.5cpx solid #f0f0f0;
+}
+.cancel-text {
+  font-size: 32cpx;
+  color: #999;
+}
+.confirm-text {
+  font-size: 32cpx;
+  color: #fc9153;
+}
+.btn-wrap {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 30cpx 20cpx;
+  display: flex;
+}
+.left-btn-wrap {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 30cpx 20cpx;
+  display: flex;
+  border-right: 0.5cpx solid #f0f0f0;
+}
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "usingComponents": {
+          "c-popup": "../c-popup/c-popup"
+        }
+    },
+    "wx": {
+        "navigationBarTitleText": "index",
+        "backgroundTextStyle": "dark",
+        "backgroundColor": "#E2E2E2",
+        "component": true
+       
+    }
+}
+</script>

@@ -1,0 +1,155 @@
+<script cml-type="interface">
+type responseType = {
+  status: Number,
+  data: String,
+  headers: String
+}
+
+type requestParams = {
+  url: String,
+  body: String,
+  headers: CMLObject,
+  setting: CMLObject,
+  method: String,
+  cb(res: responseType): void
+}
+
+
+interface UtilsInterface {
+  request(params: requestParams): void;
+}
+
+</script>
+
+<script cml-type="web">
+  import 'fetch-detector';
+  import 'fetch-ie8';
+  import { parseHeader } from './common.js';
+  import { queryStringify } from '../../lib/utils.js';
+
+
+  // web端接口实现
+  class Method implements UtilsInterface {
+    request(params) {
+      let {
+        url, body, headers, method, cb, setting
+      } = params;
+
+      let fetchOptions = {
+        credentials: 'include',
+        method,
+        headers: headers
+      };
+      if (['POST', 'DELETE', 'PUT'].indexOf(method.toUpperCase()) > -1) {
+        fetchOptions.body = body;
+      }
+
+      if (setting.jsonp) {
+        jsonp({url, data: body}).then(res => {
+          cb(res);
+        });
+        return;
+      }
+
+      fetch(url, fetchOptions).then(res => {
+        res.text().then(data => {
+          cb({
+            status: res.status,
+            data,
+            headers: parseHeader(res.headers && res.headers.map || {})
+          });
+        });
+      }).catch(e => {
+        throw e;
+      });
+    }
+  }
+
+  function jsonp(options) {
+    return new Promise((resolve, reject) => {
+      let name = options.jsonp || 'callback';
+      let callback = '_cml_' + Math.random().toString(36).substr(2);
+      let body = null;
+      let handler;
+      let script;
+      let contentType = options.contentType || 'json';
+
+      handler = ({type}) => {
+        let status = 0;
+        if (type === 'load') {
+          status = 200;
+        } else if (type === 'error') {
+          status = 500;
+        }
+
+        if (status && window[callback]) {
+          delete window[callback];
+          document.body.removeChild(script);
+        }
+
+        resolve({
+          status,
+          data: body,
+          headers: ''
+        });
+      };
+
+      window[callback] = result => {
+        body = (contentType === 'json') ? result : JSON.stringify(result);
+      };
+      let separater = options.url.indexOf('?') > -1 ? '&' : '?'
+      script = document.createElement('script');
+      script.src = options.url + `${separater}${name}=${callback}` + options.data || '';
+      script.type = 'text/javascript';
+      script.async = true;
+      script.onload = handler;
+      script.onerror = handler;
+
+      document.body.appendChild(script);
+    });
+  }
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements UtilsInterface {
+  request(params) {
+    cmlBridge.request(params);
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  import { parseHeader } from './common.js';
+
+  class Method implements UtilsInterface {
+    request(params) {
+      let {
+        url, body, headers, method, cb
+      } = params;
+      wx.request({
+        url,
+        data:body,
+        dataType: 'text',
+        method,
+        header: headers,
+        success: function(res) {
+          cb({
+            status: res.statusCode,
+            data: res.data, 
+            headers: parseHeader(res.header)
+          });
+        },
+        fail: function(e) {
+          throw e;
+        }
+      });
+    }
+  }
+
+  export default new Method();
+</script>

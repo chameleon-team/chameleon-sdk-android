@@ -1,0 +1,158 @@
+<script cml-type="interface">
+type res = {
+  errno: number,
+  errMsg: string,
+  data: string
+};
+
+type callback = (res: res) => void;
+
+interface ClipBoardDataInterface {
+  getClipBoardData(cb: callback): void;
+  setClipBoardData(text: String, cb: callback): void;
+}
+</script>
+
+<script cml-type="web">
+    import setStorage from '../setStorage/index.js';
+    import getStorage from '../getStorage/index.js';
+    // 全局监听Copy事件
+    document.addEventListener('copy', function(event) {
+      // text就是拿到的复制的内容
+      const text = window.getSelection().toString();
+      setStorage('cml-copyText', text).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      });
+    });
+
+    class Method implements ClipBoardDataInterface {
+      getClipBoardData(cb) {
+        getStorage('cml-copyText').then(text => {
+          cb({
+            errno: 0,
+            errMsg: '',
+            data: text
+          });
+        }, err => {
+          cb({
+            errno: -1,
+            errMsg: err.message,
+            data: ''
+          });
+        }).catch(err => {
+          cb({
+            errno: -2,
+            errMsg: err.message,
+            data: ''
+          });
+        });
+      }
+      setClipBoardData(text, cb) {
+        // 先存入存储，最基本的是可以通过get拿到
+        setStorage('cml-copyText', text).then(res => {
+          // 尝试执行copy命令，存到剪切板
+          if (document.execCommand('copy')) {
+            const input = document.createElement('input');
+            input.setAttribute('readonly', 'readonly');
+            input.setAttribute('value', text);
+            input.style.position = 'absolute';
+            input.style.width = '100px';
+            input.style.left = '-10000px';
+            document.body.appendChild(input);
+            input.focus();
+            if (input.setSelectionRange) {
+              input.setSelectionRange(0, input.value.length);
+              document.execCommand('copy');
+              document.body.removeChild(input);
+            }
+          }
+          cb({
+            errno: 0,
+            errMsg: '',
+            data: text
+          });
+        }).catch(err => {
+          cb({
+            errno: -1,
+            errMsg: 'web setClipBoardData fail',
+            data: ''
+          });
+        });
+      }
+    }
+    export default new Method();
+</script>
+
+<script cml-type="weex">
+    import cmlBridge from '../../lib/sdk/cmlBridge';
+
+    class Method implements ClipBoardDataInterface {
+      getClipBoardData(cb) {
+        cmlBridge.getClipBoardData({}, res =>{
+          const {errno, data, msg} = res;
+          cb({
+            errno: errno,
+            data: data,
+            errMsg: msg
+          })
+        });
+      }
+      setClipBoardData(text, cb) {
+        cmlBridge.setClipBoardData({data: text}, res =>{
+          const {errno, msg = ''} = res;
+          cb({
+            errno,
+            data: '',
+            errMsg: msg
+          })
+        });
+      }
+    }
+    export default new Method();
+</script>
+
+<script cml-type="wx">
+    class Method implements ClipBoardDataInterface {
+      getClipBoardData(cb) {
+        wx.getClipboardData({
+          success : res => {
+            cb({              
+              errno: 0,
+              errMsg: '',
+              data: res.data
+            });
+          },
+          fail:res => {
+            cb({
+              errno: -1,
+              errMsg : 'wx.getClipboardData fail',
+              data: ''
+            });
+          }
+        });
+      }
+      setClipBoardData(text, cb) {
+        wx.setClipboardData({
+          data: text,
+          success: res => {
+            cb({
+              errno: 0,
+              errMsg: '',
+              data : text
+            });
+          },
+          fail:res => {
+            cb({
+              errno: -1,
+              data: '',
+              errMsg : 'wx.setClipboardData fail'
+            });
+          }
+        });
+      }
+    }
+
+    export default new Method();
+</script>

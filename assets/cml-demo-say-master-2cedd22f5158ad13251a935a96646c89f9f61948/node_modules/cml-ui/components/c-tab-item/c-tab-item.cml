@@ -1,0 +1,148 @@
+<template>
+<view class="{{cTabsItem}}" c-bind:tap="handleTabTap">
+  <view c-if="{{tab.prefixStyle}}" style="{{finalPrefix}}"></view>
+  <text style="{{finalLabel}}" >{{tab.label}}</text>
+  <view c-if="{{tab.suffixStyle}}" style="{{finalSuffix}}"></view>
+</view>
+</template>
+<script>
+class CTabsItem {
+
+  props = {
+    tab:{ //label labelStyle prefixIcon  suffixIcon
+      type:Object,
+      default(){
+        return {};
+      },
+    },
+    inline:{
+      type:Boolean,
+      default:true
+    },
+    activeLabel:{
+      type:String,
+    },
+    activeLabelStyle:{
+      // 这个在微信中可以
+      type:String,
+      default:"color:#FC9153"
+    },
+    activeIconStyle:{
+      // 这个在微信中可以
+      type:String,
+      default:""
+    }
+  }
+  data = {
+    defaultPrefixStyle:`font-size: 28cpx;
+        text-align: center;`,
+    defaultLabelStyle:`line-height: 88cpx;
+        font-size: 28cpx;
+        text-align: center;
+        height: 88cpx;
+        padding-left:5cpx;
+        padding-right:5cpx;
+        padding-top:5cpx;
+        padding-bottom:5cpx;`,
+    defaultSuffixStyle:`font-size: 28cpx;
+        text-align: center;`,
+  }
+  computed = {
+    cTabsItem(){
+      return this.inline ? "c-tabs-item-row" : "c-tabs-item-column";
+    },
+    finalPrefix(){
+      let activeIconStyle = this.isActive ? this.activeIconStyle : ';';
+      return this.defaultPrefixStyle + (this.tab.prefixStyle || ';') + (activeIconStyle || ';');
+    },
+    finalLabel(){
+       let activeLabelStyle = this.isActive ? this.activeLabelStyle : ';';
+       return this.defaultLabelStyle + (this.tab.labelStyle || ';') + activeLabelStyle;
+    },
+    finalSuffix(){
+      let activeIconStyle = this.isActive ? this.activeIconStyle : ';';
+      return this.defaultSuffixStyle + (this.tab.suffixStyle || ';') + (activeIconStyle || ';')
+    },
+    isActive(){
+      return this.activeLabel === this.tab.label;
+    },
+  }
+  watch = {
+  }
+  methods = {
+    handleTabTap(){
+      this.$cmlEmit('tabclick',this.tab);
+    }
+  }
+  
+}
+export default new CTabsItem();
+</script>
+<script cml-type="json">
+{
+  "base": {
+    "component": true
+  }
+}
+</script>
+<style scoped>
+.c-tabs-item-row{
+  flex:1;
+
+  display:flex;
+  flex-direction:row;
+
+  justify-content: center;
+  
+  align-items:center;
+}
+.c-tabs-item-column{
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+
+  justify-content: center;
+  align-items:center;
+  
+}
+.c-tabs-item-row{
+  flex:1;
+
+  display:flex;
+  flex-direction:row;
+
+  justify-content: center;
+  
+  align-items:center;
+}
+.c-tabs-item-column{
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+
+  justify-content: center;
+  align-items:center;
+  
+}
+.c-tabs-icon{
+  width:20cpx;
+  height:20cpx;
+}
+/* .c-tabs-label{
+  line-height: 88cpx;
+  font-size: 28cpx;
+  text-align: center;
+  height: 88cpx;
+  color: #999;
+}
+.c-tabs-label-active{
+  line-height: 88cpx;
+  font-size: 28cpx;
+  text-align: center;
+  height: 88cpx;
+  color: #FC9153;
+} */
+
+</style>

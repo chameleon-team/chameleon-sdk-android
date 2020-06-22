@@ -1,0 +1,60 @@
+<script cml-type="interface">
+type Func = (res: CMLObject) => Void
+interface CoreInterface {
+  // 初始化通道
+  initChannel(): Void;
+  // 主动调用native
+  callNative(module: String, method: String, args: CMLObject, callback: Func): Void;
+  // 注册监听等待native调用
+  listenNative(module: String, method: String, callback: Func): Void;
+}
+</script>
+
+<script cml-type="web">
+import { call } from './h5/call';
+import { init, listen } from './h5/listen';
+
+class Method implements CoreInterface {
+  initChannel() {
+    init();
+  }
+  callNative(module, method, args, callback) {
+    call('invokeNativeMethod', ...arguments);
+  }
+  listenNative(module, method, callback) {
+    listen(...arguments);
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import { call } from './weex/call';
+import { init, listen } from './weex/listen';
+
+class Method implements CoreInterface {
+  initChannel() {
+    init();
+  }
+  callNative(module, method, args, callback) {
+    call('invokeNativeMethod', ...arguments);
+  }
+  listenNative(module, method, callback) {
+    listen(...arguments);
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="wx">
+class Method implements CoreInterface {
+  initChannel() {
+  }
+  callNative(module, method, args, callback) {
+  }
+  listenNative(module, method, callback) {
+  }
+}
+export default new Method();
+</script>

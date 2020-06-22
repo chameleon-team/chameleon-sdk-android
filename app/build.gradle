@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
+//apply from: 'https://raw.githubusercontent.com/apache/incubator-weex/release/0.28/android/sdk/buildSrc/download_jsc.gradle'
+apply from: 'http://127.0.0.1:8000/download_jsc.gradle'
+
 
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.didi.chameleon.example"
+        applicationId "cn.zkml.care.member"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
@@ -37,6 +40,17 @@ android {
     lintOptions {
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
+    }
+
+    packagingOptions {
+        pickFirst 'lib/x86/libweexcore.so'
+        pickFirst 'lib/armeabi-v7a/libweexjst.so'
+        pickFirst 'lib/x86/libweexjss.so'
+        pickFirst 'lib/armeabi-v7a/libweexjss.so'
+        pickFirst 'lib/armeabi-v7a/libweexcore.so'
+        pickFirst 'lib/armeabi-v7a/libweexjsb.so'
+        pickFirst 'lib/x86/libweexjst.so'
+        pickFirst 'lib/x86/libweexjsb.so'
     }
 }
 
@@ -73,4 +87,8 @@ dependencies {
     api 'com.taobao.android:weex_inspector:0.24.2.11'
     api 'com.squareup.okhttp:okhttp:2.3.0'
     api 'com.squareup.okhttp:okhttp-ws:2.3.0'
+
+    implementation 'com.kailashdabhi:om-recorder:1.1.0'
+    implementation 'com.instapp.nat:media-audio:2.0.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }

@@ -1,0 +1,137 @@
+<template>
+<view ref="refresh" class="refresh">
+  <block c-if="{{ refreshing || showBeforeRefreshing }}" display="{{display}}" showBeforeRefreshing="{{showBeforeRefreshing}}">
+    <view class="{{ triggerClass }}"  c-if="{{ !customUi }}">
+      <image class="loading-icon" src="{{ icon }}"/>
+    </view>
+    <view class="{{ triggerClass }}" c-else>
+      <slot></slot>
+    </view>
+  </block>
+</view>
+
+</template>
+<script>
+import cml from 'chameleon-api'
+ class CRefresh implements CRefreshInterface {
+    props = {
+      display: {
+        type: Boolean,
+        default: false
+      },
+      // top上拉刷新，bottom下拉刷新
+      direction: {
+        type: String,
+        default: 'top'
+      },
+      // 是否通过插槽自定义ui
+      customUi: {
+        type: Boolean,
+        default: false
+      }
+    }
+
+    computed = {
+      triggerClass () {
+        if (this.display) return 'after-trigger'
+        return 'before-trigger'
+      }
+    }
+
+    watch = {
+      display (val) {
+        if (!val) {
+          this.refreshing = val
+          this.beforeRefreshing = true;
+          this.showBeforeRefreshing = false;
+          this.isRebounding = true
+          this.$parent.finishPull()
+        }
+      },
+      refreshing (val) {
+        if (val) {
+          this.$cmlEmit('refresh', {
+            value: true
+          });
+          this.$cmlEmit('refreshevent', {
+            value: true
+          });
+        }
+      }
+    }
+    data = {
+      refreshing: false,
+      beforeRefreshing: true,
+      showBeforeRefreshing:false,
+      icon: require('./images/loading.gif'),
+      isRebounding: false,
+    }
+
+    methods = {
+      pullingDown () {
+        this.refreshing = true
+        this.beforeRefreshing = false
+      },
+      pullingUp () {
+        this.refreshing = true
+        this.beforeRefreshing = true
+        this.showBeforeRefreshing = true
+      },
+      toggleBeforeRefreshing (offsetY) {
+        if (this.beforeRefreshing  && offsetY > 10) {
+          this.showBeforeRefreshing = true
+          // 防止未触发pulldown事件
+          let timer = setTimeout(() => {
+            this.showBeforeRefreshing = false
+            clearTimeout(timer)
+          }, 6000)
+        }
+
+        if (this.isRebounding) {
+          this.showBeforeRefreshing = false
+        }
+      }
+    }
+
+    mounted() {
+      if (this.direction === 'top') {
+        this.$parent._refresh = this
+      } else {
+        this.$parent._loading = this
+      }
+    }
+
+  }
+  export default new CRefresh();
+
+</script>
+
+<style scoped>
+.refresh {
+  width: 750cpx;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.loading {
+  width: 750cpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.loading-icon {
+  width:50cpx;
+  height:50cpx;
+  margin: 50cpx 0;
+  text-align: center;
+}
+</style>
+
+<script cml-type="json">
+{
+  "web": {
+    "component": true
+  }
+}
+</script>

@@ -13,6 +13,8 @@ import com.didi.chameleon.sdk.utils.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.zkml.care.member.R;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 演示自定义Module 和 JS 通信, 加载本地jsbundle需设置 CmlEnvironment.CML_DEBUG = true
 //    private static final String URL_MODULE_DEMO = "file://local/cml-demo-say.js";
     private static final String URL_MODULE_DEMO = "file://local/test.js";
+    private static final String CML_SAY = "file://local/cml-demo-say-master-2cedd22f5158ad13251a935a96646c89f9f61948_f18670d849d1fb47abf4.js";
+    private static final String CML_DEMO = "file://local/cml-demo.js";
 
     private TextView txtOpenUrlInActivity;
     private TextView txtOpenUrlInView;
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CmlEngine.getInstance().initPreloadList(getPreloadList());
         // 执行预加载
         CmlEngine.getInstance().performPreload();
+
+        //CmlEngine.getInstance().launchPage(this, CML_DEMO, null);
     }
 
     @Override

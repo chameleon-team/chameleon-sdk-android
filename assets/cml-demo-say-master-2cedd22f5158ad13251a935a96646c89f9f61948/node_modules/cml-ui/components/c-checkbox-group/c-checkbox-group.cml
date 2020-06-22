@@ -1,0 +1,109 @@
+<template>
+<view class="cml-checkbox-group" style="{{ horizontalStyle }}">
+  <checkbox c-for="{{ option }}"
+    data-index="{{ index }}"
+    data-uid="{{ item.uid }}"
+    checked="{{ item.checked }}"
+    label="{{ item.label }}"
+    group-index="{{ index }}"
+    position="{{ subPosition }}"
+    disabled="{{ item.disabled ? true : false }}"
+    c-bind:change="valueChange"
+    >
+  </checkbox>
+</view>
+</template>
+<script>
+class Checkboxgroup {
+  props = {
+    option: {
+      type: Array,
+      default: []
+    },
+    position: {
+      type: String,
+      default: 'left'
+    },
+    horizontal: {
+      type: Boolean,
+      default: false
+    }
+  }
+  data = {
+  }
+
+  computed = {
+    horizontalStyle () {
+      if (this.horizontal) {
+        return 'display:inline-flex;flex-direction:row;align-items:center;flex-wrap:wrap;flex:1;'
+      }
+      return ''
+    },
+    subPosition () {
+      // 水平排列默认位置失效
+      if (this.position === 'right' && !this.horizontal) {
+        return 'right'
+      }
+      return 'left'
+    }
+  }
+
+  watch  = {
+  }
+
+  methods = {
+    valueChange (e) {
+      let groups = JSON.parse(JSON.stringify(this.option));
+      let value = groups[e.detail.index];
+      value = {
+        checked: e.detail.value,
+        label: value.label,
+        disabled: value.disabled
+      }
+      groups[e.detail.index] = value;
+      let selected = [];
+      groups.forEach((item) => {
+        if (item.checked) {
+          selected.push(item.label)
+        }
+      })
+      this.$cmlEmit('groupchange', {
+        index: e.detail.index,
+        value: groups,
+        selected: selected
+      })
+    }
+  }
+
+  beforeCreate() {
+  }
+
+  created() {
+  }
+
+  beforeMount() {
+  }
+
+  mounted() {
+    this.checkList = JSON.parse(JSON.stringify(this.option))
+  }
+
+  beforeDestroy() {
+  }
+
+  destroyed() {
+  }
+}
+
+export default new Checkboxgroup();
+</script>
+<style scoped>
+
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "component": true
+    }
+}
+</script>

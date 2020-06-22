@@ -1,0 +1,17 @@
+{
+  "name": "cml-demo-say",
+  "version": "1.0.0",
+  "description": "A chameleon project",
+  "author": "",
+  "private": true,
+  "scripts": {},
+  "license": "MIT",
+  "dependencies": {
+    "chameleon-api": "0.0.9",
+    "chameleon-bridge": "0.0.5",
+    "chameleon-runtime": "0.0.2",
+    "chameleon-store": "0.0.3",
+    "chameleon-ui-builtin": "0.0.2",
+    "cml-ui": "0.0.2"
+  }
+}

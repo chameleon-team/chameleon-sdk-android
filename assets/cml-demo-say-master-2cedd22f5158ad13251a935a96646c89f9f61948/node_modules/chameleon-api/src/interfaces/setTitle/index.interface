@@ -1,0 +1,56 @@
+<script cml-type="interface">
+interface setTitleInterface {
+  setTitle(title: string): void
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements setTitleInterface {
+  setTitle(title) {
+    if (inSDK()) {
+      bridge.setTitle({
+        title
+      });
+    } else {
+      document.title = title;
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements setTitleInterface {
+  setTitle(title) {
+    // weex 端使用titleBar组件实现， 此处不再实现
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements setTitleInterface {
+  setTitle(title) {
+    wx.setNavigationBarTitle({
+      title
+    });
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+
+

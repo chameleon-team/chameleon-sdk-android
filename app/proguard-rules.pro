@@ -91,27 +91,25 @@
 -keep class com.alibaba.fastjson.*{*;}
 
 # ========== weex 混淆配置 ==========
--keep class com.taobao.weex.WXDebugTool{*;}
--keep class com.taobao.weex.devtools.common.LogUtil{*;}
+-keep class org.apache.weex.WXDebugTool{*;}
+-keep class org.apache.weex.devtools.common.LogUtil{*;}
 -keepclassmembers class ** {
-  @com.taobao.weex.ui.component.WXComponentProp public *;
+  @org.apache.weex.ui.component.WXComponentProp public *;
 }
--keep class com.taobao.weex.bridge.**{*;}
--keep class com.taobao.weex.dom.**{*;}
--keep class com.taobao.weex.adapter.**{*;}
--keep class com.taobao.weex.common.**{*;}
--keep class * implements com.taobao.weex.IWXObject{*;}
--keep class com.taobao.weex.ui.**{*;}
--keep class com.taobao.weex.ui.component.**{*;}
--keep class com.taobao.weex.utils.**{
+-keep class org.apache.weex.bridge.**{*;}
+-keep class org.apache.weex.dom.**{*;}
+-keep class org.apache.weex.adapter.**{*;}
+-keep class org.apache.weex.common.**{*;}
+-keep class * implements org.apache.weex.IWXObject{*;}
+-keep class org.apache.weex.ui.**{*;}
+-keep class org.apache.weex.ui.component.**{*;}
+-keep class org.apache.weex.utils.**{
     public <fields>;
     public <methods>;
     }
--keep class com.taobao.weex.view.**{*;}
--keep class com.taobao.weex.module.**{*;}
--keep public class * extends com.taobao.weex.common.WXModule{*;}
--keep public class * extends com.taobao.weex.ui.component.WXComponent{*;}
--keep class * implements com.taobao.weex.ui.IExternalComponentGetter{*;}
+-keep class org.apache.weex.view.**{*;}
+-keep class org.apache.weex.module.**{*;}
+-keep public class * extends org.apache.weex.common.WXModule{*;}
+-keep public class * extends org.apache.weex.ui.component.WXComponent{*;}
+-keep class * implements org.apache.weex.ui.IExternalComponentGetter{*;}
 
-# ========== chameleon 包下的类混淆配置 ==========
--keep class com.didi.chameleon.** { *; }

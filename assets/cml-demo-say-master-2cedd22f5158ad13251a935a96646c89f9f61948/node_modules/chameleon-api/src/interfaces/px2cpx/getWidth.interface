@@ -1,0 +1,61 @@
+<script cml-type="interface">
+type callback = (res: Number) => void
+interface getWidthInterface {
+  getWidth(cb:callback): Void
+}
+</script>
+
+<script cml-type="web">
+  import { getViewportSize } from './common.js';
+
+  class Method implements getWidthInterface {
+    getWidth(cb) {
+      let { viewportWidth } = getViewportSize();
+      cb(viewportWidth);
+    }
+  }
+
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements getWidthInterface {
+  getWidth(cb) {
+    if(inSDK()) {
+      cmlBridge.getSystemInfo({}, function (res) {
+        const {errno, data} = res;
+        if(errno == 0) {
+          const { viewportWidth } = data;
+          cb(viewportWidth);
+        }else {
+          cb(0)
+        }
+      });
+    }else {
+      const { scale, deviceWidth } = weex.config.env;
+      const viewportWidth = deviceWidth / scale;
+      cb(viewportWidth);
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  class Method implements getWidthInterface {
+    getWidth(cb) {
+      const { windowWidth } = wx.getSystemInfoSync();
+      cb(windowWidth);
+    }
+  }
+
+  export default new Method();
+</script>
+
+
+
+

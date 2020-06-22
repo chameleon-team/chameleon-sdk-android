@@ -1,0 +1,93 @@
+<template>
+  <view class="refresh" c-if="{{ display }}">
+    <block c-if="{{ !customUi }}" >
+      <image class="loading-icon" src="{{ icon }}" />
+    </block>
+    <block c-else>
+      <slot></slot>
+    </block>
+  </view>
+</template>
+<script>
+ class CRefresh implements CRefreshInterface {
+    props = {
+      display: {
+        type: Boolean,
+        default: false
+      },
+      // top上拉刷新，bottom下拉刷新
+      direction: {
+        type: String,
+        default: 'top'
+      },
+      // 是否通过插槽自定义ui
+      customUi: {
+        type: Boolean,
+        default: false
+      }
+    }
+    data = {
+      icon: require('./images/loading.gif')
+    }
+    computed ={
+    }
+    watch = {
+      display (val) {
+        this.$cmlEmit('refresh', {
+          value: val
+        });
+        this.$cmlEmit('refreshevent', {
+          value: true
+        });
+      }
+    }
+    methods = {
+      
+    }
+    beforeCreate(){
+     
+    }
+    created() {
+    }
+    beforeMount() {
+    }
+    mounted() {
+    }
+    beforeDestroy() {
+    }
+    destroyed() {
+    }
+  }
+
+  export default new CRefresh();
+
+</script>
+
+<style scoped>
+.refresh {
+  width: 750cpx;
+  display: -ms-flex;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.loading-icon {
+  width:50cpx;
+  height:50cpx;
+  margin:50cpx 0;
+}
+</style>
+
+<script cml-type="json">
+{
+  "wx": {
+    "component": true
+  }
+}
+</script>

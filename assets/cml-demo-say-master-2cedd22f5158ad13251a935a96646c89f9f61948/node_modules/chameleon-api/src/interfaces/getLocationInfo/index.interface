@@ -1,0 +1,123 @@
+<script cml-type="interface">
+type data = {
+  lat: Number,
+  lng: Number
+}
+type resData = {
+  errno: Number,
+  errMsg: String,
+  data: data
+}
+type callback = (resData: resData) => void;
+
+interface UtilsInterface {
+  getLocationInfo(cb: callback): void;
+}
+
+</script>
+
+<script cml-type="web">
+  import { inSDK } from '../../lib/sdk/env';
+  import bridge from '../../lib/sdk/cmlBridge';
+  import { tryJsonParse } from '../../lib/utils';
+
+  class Method implements UtilsInterface {
+    getLocationInfo(cb) {
+      if (inSDK()) {
+        bridge.getLocationInfo({}, function (res) {
+          const { errno, msg, data } = res;
+          if(errno == 0) {
+            cb({
+              errno,
+              errMsg: msg,
+              data
+            });
+          }
+        });
+      } else {
+        if (navigator.geolocation) {
+          // getCurrentPosition 方法需要在https协议下才能调用
+          navigator.geolocation.getCurrentPosition((pos) => {
+            let lng = pos && pos.coords && pos.coords.longitude;
+            let lat = pos && pos.coords && pos.coords.latitude;
+            if (typeof lng === 'string') {
+              lng = parseFloat(lng);
+              lat = parseFloat(lat);
+            }
+            cb({
+              errno: 0,
+              errMsg: '',
+              data: {
+                lng,
+                lat,
+              }
+            });
+          }, err => {
+            cb({
+              errno: -1,
+              errMsg: err.message,
+              data: {
+                lng: 0,
+                lat: 0
+              }
+            });
+          });
+        }
+      }
+    }
+  }
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+  
+class Method implements UtilsInterface {
+  getLocationInfo(cb) {
+    cmlBridge.getLocationInfo({}, function (res) {
+      const { errno, msg = '', data = {lat: 0, lng: 0} } = res;
+      if(errno == 0) {
+        cb({
+          errno,
+          errMsg: msg,
+          data
+        });
+      }
+    });
+  }
+}
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  class Method implements UtilsInterface {
+    getLocationInfo(cb) {
+      wx.getLocation({
+        type: 'wgs84',
+        success: function (res) {
+          const latitude = +res.latitude;
+          const longitude = +res.longitude;
+          cb({
+            errno: 0,
+            errMsg: '',
+            data: {
+              lat: latitude,
+              lng: longitude
+            }
+          });
+        },
+        fail() {
+          cb({
+            errno: -1,
+            errMsg: 'getLocation failed',
+            data: {
+              lat: 0,
+              lng: 0
+            }
+          });
+        }
+      });
+    }
+  }
+  export default new Method();
+</script>

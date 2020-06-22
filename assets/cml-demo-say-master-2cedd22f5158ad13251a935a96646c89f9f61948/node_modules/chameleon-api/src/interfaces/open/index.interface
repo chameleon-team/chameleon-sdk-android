@@ -1,0 +1,92 @@
+<script cml-type="interface">
+type extraOptions = {
+  closeCurrent: bool
+}
+interface openPageInterface {
+  open(url: string, commonPatchParams: CMLObject, extraOptions: extraOptions): void
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+import {
+  tryJsonParse,
+  getOpenObj,
+  queryStringify,
+  getUrlWithConnector
+} from '../../lib/utils.js';
+
+/* 
+ * 打开新的web页面
+ * @param {String} url 地址带参数
+ * @param {Object} commonPatchParams 额外传入的三端都需要的参数，会被merge到前面
+ * @param {Object} extraOptions 其他配置，目前支持传入closeCurrent: true 关闭当前页面
+ */
+
+class Method implements openPageInterface {
+  open(url, commonPatchParams, extraOptions) {
+    url = getUrlWithConnector(url) + queryStringify(commonPatchParams);
+    const openObj = getOpenObj(url);
+    if (inSDK() && openObj.weex) {
+      bridge.openPage({
+        url: openObj.weex,
+        closeCurrent: extraOptions.closeCurrent
+      });
+    } else {
+      extraOptions.closeCurrent ? location.replace(openObj.web) : location.href = openObj.web;
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements openPageInterface {
+  open(url, commonPatchParams, extraOptions) {
+    if(inSDK()) {
+      cmlBridge.open({url, commonPatchParams, extraOptions});
+    }else {
+      const navigator = weex.requireModule('navigator');
+      let weexUrlMatch = url.match(/(cml_addr|wx_addr)=([^&]*)/);
+      if(weexUrlMatch) {
+        url = decodeURIComponent(weexUrlMatch[2]);
+      }
+      navigator.push({
+        url
+      })
+    }
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+import {
+  tryJsonParse,
+  getOpenObj,
+  queryStringify,
+  getUrlWithConnector
+} from '../../lib/utils.js';
+class Method implements openPageInterface {
+  
+  open(url, commonPatchParams, extraOptions) {
+    url = getUrlWithConnector(url) + queryStringify(commonPatchParams);
+    wx.navigateToMiniProgram(getOpenObj(url).wx);
+  } 
+}
+
+export default new Method();
+
+</script>
+
+
+
+

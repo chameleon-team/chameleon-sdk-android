@@ -8,7 +8,7 @@ import com.didi.chameleon.sdk.CmlEngine;
 import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.ICmlConfig;
 import com.didi.chameleon.sdk.bridge.CmlProtocolProcessor;
-import com.taobao.weex.WXEnvironment;
+import org.apache.weex.WXEnvironment;
 
 public class MyApplication extends Application implements ICmlConfig {
     @Override

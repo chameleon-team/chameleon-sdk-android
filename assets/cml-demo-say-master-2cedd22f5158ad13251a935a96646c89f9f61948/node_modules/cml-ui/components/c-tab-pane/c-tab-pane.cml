@@ -1,0 +1,69 @@
+<template>
+<view class="pane-root">
+  <view class="pane-wrap" style="{{paneWrap}}">
+    <slot>  </slot>
+  </view>
+</view>
+</template>
+<script>
+class CTabPane {
+
+  props = {
+    tabs:{ //label labelStyle prefixIcon  suffixIcon
+      type:Array,
+      default(){
+        return [];
+      }
+    },
+    activeLabel:{
+      type:[Number,String],
+      required:true,
+    },
+    
+  }
+  data = {
+  }
+  computed = {
+    paneWrap(){
+      let width = this.tabs.length * 750;//总宽度；
+      //findIndex找不到返回 -1
+      
+      let foundIndex = this.tabs.findIndex((item,index,arr) => {
+        return this.activeLabel === item.label;
+      });
+      let leftIndex = foundIndex == -1 ? 0 : foundIndex;
+
+      let leftOffset = leftIndex * 750;
+
+      let style = `width:${width}cpx;transform: translateX(${-leftOffset}cpx)`;
+      return style;
+    }
+  }
+}
+export default new CTabPane();
+</script>
+<style scoped>
+.pane-root{
+  width:750cpx;
+  overflow-x:hidden;
+  overflow-y:hidden;
+}
+.pane-wrap{
+  display:flex;
+  flex-direction:row;
+  transition-duration: 0.5s;
+  transition-timing-function:ease-in-out;
+  transition-property:transform;
+}
+
+</style>
+<script cml-type="json">
+{
+    "base": {
+        "usingComponents": {
+            "c-tab-item": "../c-tab-pane-item/c-tab-pane-item"
+        },
+        "component": true
+    }
+}
+</script>

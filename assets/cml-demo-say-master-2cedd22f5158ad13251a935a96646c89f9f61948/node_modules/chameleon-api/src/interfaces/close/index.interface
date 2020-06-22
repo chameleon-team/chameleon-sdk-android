@@ -1,0 +1,51 @@
+<script cml-type="interface">
+interface closeInterface {
+  close(): void
+}
+</script>
+
+<script cml-type="web">
+import bridge from '../../lib/sdk/cmlBridge';
+import { inSDK } from '../../lib/sdk/env';
+
+class Method implements closeInterface {
+  close() {
+    if (inSDK()) {
+      bridge.close();
+    } else {
+      window.open('', '_self');
+      window.close();
+    }
+  }
+}
+
+export default new Method();
+</script>
+
+<script cml-type="weex">
+import cmlBridge from '../../lib/sdk/cmlBridge';
+
+class Method implements closeInterface {
+  close() {
+    cmlBridge.close();
+  }
+}
+
+export default new Method();
+
+</script>
+
+
+<script cml-type="wx">
+
+class Method implements closeInterface {
+  close() {
+    wx.navigateBack({
+      delta: 1
+    });
+  }
+}
+
+export default new Method();
+
+</script>

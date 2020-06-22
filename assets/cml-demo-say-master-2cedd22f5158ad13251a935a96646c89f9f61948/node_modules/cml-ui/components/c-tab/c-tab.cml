@@ -1,0 +1,118 @@
+<template>
+<view class="c-tabs-root">
+  <view class="c-tabs-wrap">
+    <c-tab-item 
+      class="c-tabs-item"
+      c-for="{{tabs}}" 
+      tab="{{item}}" inline="{{inline}}"
+      c-bind:tabclick="handleTabTap" 
+      active-label="{{activeLabel}}"
+      active-label-style="{{activeLabelStyle}}"
+      active-icon-style="{{activeIconStyle}}"
+    ></c-tab-item>
+  </view>
+  <view c-if="{{hasUnderline}}" class="c-tabs-line-wrap" style="{{tabLineStyle}}">
+  </view>
+</view>
+</template>
+<script>
+class CTabs {
+
+  props = {
+    tabs:{ //label labelStyle prefixIcon  suffixIcon
+      type:Array,
+      default(){
+        return [];
+      },
+    },
+    activeLabel:{
+      type:String,
+    },
+    //标识item子项的排列方向,默认横向排列
+    inline:{
+      type:Boolean,
+      default:true
+    },
+    lineStyle:{
+      type:String,
+      default:'',
+    },
+    hasUnderline:{
+      type:Boolean,
+      default:true,
+    },
+    activeLabelStyle:{
+      // 这个在微信中可以
+      type:String,
+      default:"color:#FC9153;"
+    },
+    activeIconStyle:{
+      // 这个在微信中可以
+      type:String,
+      default:""
+    }
+
+  }
+  data = {
+  }
+  computed = {
+    tabLineStyle(){
+      if(!this.tabs.length){
+        return '';
+      }
+      let width = 750 / this.tabs.length ;//line的总宽度；
+      let foundIndex = this.tabs.findIndex((item,index,arr) => {
+        return this.activeLabel === item.label;
+      });
+      let leftIndex = foundIndex == -1 ? 0 : foundIndex;
+
+      let leftOffset = leftIndex * width;
+      let style = `;width:${width}cpx;transform: translateX(${leftOffset}cpx);`;
+      return this.lineStyle + style;
+    }
+    
+  }
+  methods = {
+    handleTabTap(e){
+      this.$cmlEmit('tabclick',e.detail)
+    }
+  }
+  
+}
+export default new CTabs();
+</script>
+<script cml-type="json">
+{
+  "base": {
+    "usingComponents": {
+      "c-tab-item": "../c-tab-item/c-tab-item"
+    },
+    "component": true
+  }
+}
+</script>
+<style scoped>
+.c-tabs-root{
+  position:relative;
+}
+.c-tabs-line-wrap{
+  transition-duration: 0.3s;
+  transition-timing-function:ease-in-out;
+  transition-property:transform;
+  height:3cpx;
+  background-color:#FC9153;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.c-tabs-item{
+  flex:1;
+}
+.c-tabs-wrap{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-around;
+}
+
+</style>
+

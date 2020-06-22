@@ -30,12 +30,12 @@ import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleManager;
 import com.didi.chameleon.weex.jsbundlemgr.CmlJsBundleMgrConfig;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
 import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
-import com.didichuxing.doraemonkit.weex.DKWeexInstance;
 import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
 import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
-import com.taobao.weex.InitConfig;
-import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.common.WXException;
+import org.apache.weex.InitConfig;
+import org.apache.weex.WXSDKEngine;
+import org.apache.weex.common.WXException;
+import com.didichuxing.doraemonkit.weex.DKWeexInstance;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,0 +1,53 @@
+<script cml-type="interface">
+  type AnimationFrameFactory = () => void
+  interface CancelAnimationInterface {
+    init(): AnimationFrameFactory
+  }
+
+</script>
+
+<script cml-type="web">
+  // web端接口实现
+  class Method implements CancelAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        cancelAnimationFrame() {
+          return window.cancelAnimationFrame.bind(window);
+        }
+      };
+    }
+  }
+
+  export default new Method();
+</script>
+
+<script cml-type="weex">
+  import { cancelAnimationFrame } from '../requestAnimationFrame/animationShim.js';
+  class Method implements CancelAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        cancelAnimationFrame() {
+          return cancelAnimationFrame;
+        }
+      };
+    }
+  }
+
+export default new Method();
+</script>
+
+<script cml-type="wx">
+  // web端接口实现
+  import { cancelAnimationFrame } from '../requestAnimationFrame/animationShim.js';
+  class Method implements CancelAnimationInterface {
+    init() {
+      return class AnimationFrameFactory {
+        cancelAnimationFrame() {
+          return cancelAnimationFrame;
+        }
+      };
+    }
+  }
+
+  export default new Method();
+</script>
