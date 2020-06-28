@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.didi.chameleon.sdk.ICmlInstance;
 
 import java.util.regex.Pattern;
 
@@ -46,7 +47,7 @@ public class CmlDefaultImgLoaderAdapter implements ICmlImgLoaderAdapter {
     }
 
     @Override
-    public void setImage(String url, final ImageView view) {
+    public void setImage(ICmlInstance instance, String url, final ImageView view) {
         checkGlide();
         RequestBuilder<Drawable> typeRequest = getCommonStep(url, view.getContext());
         if (typeRequest == null) {
