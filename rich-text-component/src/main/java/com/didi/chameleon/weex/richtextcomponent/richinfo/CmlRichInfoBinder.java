@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ public class CmlRichInfoBinder {
 
         void onClick(View widget, String message);
 
-        void onSpanClick(View widget, String message, int index);
+        void onSpanClick(View widget, String message, int index, CmlRichInfo.Bean bean);
 
     }
 
@@ -72,9 +73,9 @@ public class CmlRichInfoBinder {
         }
         textView.setText(new CmlRichInfoSpan(textView.getContext(), richInfo, new CmlRichInfoSpan.CmlSpanAction() {
             @Override
-            public void onItemClick(View widget, String tag, int index) {
+            public void onItemClick(View widget, String tag, int index, CmlRichInfo.Bean bean) {
                 isSpanClicked = true;
-                action.onSpanClick(widget, tag, index);
+                action.onSpanClick(widget, tag, index, bean);
             }
         }));
         textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -119,6 +120,19 @@ public class CmlRichInfoBinder {
             int size = Integer.parseInt(richInfo.msgFont) / 2;
             if (size > 0) {
                 textView.setTextSize(COMPLEX_UNIT_DIP, size);
+            }
+        }
+        if (!TextUtils.isEmpty(richInfo.getTextAlign())) {
+            switch (richInfo.getTextAlign()) {
+                case "center":
+                    textView.setGravity(Gravity.CENTER);
+                    break;
+                case "left":
+                    textView.setGravity(Gravity.LEFT);
+                    break;
+                case "right":
+                    textView.setGravity(Gravity.RIGHT);
+                    break;
             }
         }
     }

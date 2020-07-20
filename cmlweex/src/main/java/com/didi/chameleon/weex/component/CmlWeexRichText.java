@@ -4,16 +4,17 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.didi.chameleon.sdk.CmlEnvironment;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
-import com.didi.chameleon.weex.util.CmlWeexUtil;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.Constants;
-import com.taobao.weex.ui.action.BasicComponentData;
-import com.taobao.weex.ui.component.WXComponent;
-import com.taobao.weex.ui.component.WXComponentProp;
-import com.taobao.weex.ui.component.WXVContainer;
 
+import org.apache.weex.WXSDKInstance;
+import org.apache.weex.ui.action.BasicComponentData;
+import org.apache.weex.ui.component.WXComponent;
+import org.apache.weex.ui.component.WXComponentProp;
+import org.apache.weex.ui.component.WXVContainer;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class CmlWeexRichText extends WXComponent<CmlRichTextComponent>
@@ -46,17 +47,20 @@ public class CmlWeexRichText extends WXComponent<CmlRichTextComponent>
 
     @Override
     public void updateSize(int width, int height) {
-        CmlWeexUtil.updateSize(this, width, height);
+        Map<String, Object> info = new HashMap<>();
+        info.put("width", width);
+        info.put("height", height);
+        fireEvent(CmlRichTextComponent.LAYOUT, info);
     }
 
     @Override
     public void onClick(Map<String, Object> info) {
-        fireEvent(Constants.Event.CLICK, info);
-    }
-
-    @Override
-    public int getMaxHeight() {
-        return getParent() != null ? getParent().getViewPortWidth() : 0;
+        String link = info != null && info.containsKey("url") ? String.valueOf(info.get("url")) : "";
+        if (!TextUtils.isEmpty(link)) {
+            CmlEnvironment.getNavigatorAdapter().navigator(getContext(), link);
+        } else {
+            fireEvent(CmlRichTextComponent.CLICK, info);
+        }
     }
 
 }

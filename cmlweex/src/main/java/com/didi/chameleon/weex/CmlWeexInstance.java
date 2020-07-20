@@ -25,9 +25,10 @@ import com.didi.chameleon.sdk.container.ICmlActivity;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
 import com.didi.chameleon.weex.jsbundlemgr.code.CmlGetCodeStringCallback;
-import com.taobao.weex.IWXRenderListener;
-import com.taobao.weex.WXSDKInstance;
-import com.taobao.weex.common.WXRenderStrategy;
+
+import org.apache.weex.IWXRenderListener;
+import org.apache.weex.WXSDKInstance;
+import org.apache.weex.common.WXRenderStrategy;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -165,7 +166,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
             return;
         }
 
-        if (CmlEnvironment.CML_DEBUG && mWXUrl.startsWith("file://")) {
+        if (url.startsWith("file://") && (CmlEnvironment.CML_DEBUG || CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE)) {
             mWeexInstance.renderByUrl(CML_PAGE_NAME, mWXUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
             return;
         }

@@ -28,7 +28,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,12 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
 
     private static final IEventReporterDelegate DEFAULT_DELEGATE = new NOPEventReportDelegate();
     private ExecutorService mExecutorService;
+    protected CookieManager cookieManager = new CookieManager();
+
+    public CmlHttpAdapterDefault() {
+        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        CookieHandler.setDefault(cookieManager);
+    }
 
     private void execute(Runnable runnable) {
         if (mExecutorService == null) {
@@ -77,6 +88,9 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
                     } else {
                         response.errorMsg = readInputStream(connection.getErrorStream(), listener);
                     }
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        saveCookie(request.url, headers);
+                    }
                     if (listener != null) {
                         listener.onHttpFinish(response);
                     }
@@ -103,11 +117,6 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
 
     /**
      * Opens an {@link HttpURLConnection} with parameters.
-     *
-     * @param request
-     * @param listener
-     * @return an open connection
-     * @throws IOException
      */
     private HttpURLConnection openConnection(CmlRequest request, OnHttpListener listener) throws IOException {
         URL url = new URL(request.url);
@@ -116,6 +125,10 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
         connection.setReadTimeout(request.timeoutMs);
         connection.setUseCaches(false);
         connection.setDoInput(true);
+        String cookie = getCookie(request.url);
+        if (!TextUtils.isEmpty(cookie)) {
+            connection.setRequestProperty("Cookie", cookie);
+        }
 
         if (request.paramMap != null) {
             Set<String> keySets = request.paramMap.keySet();
@@ -198,6 +211,33 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
     public @NonNull
     IEventReporterDelegate getEventReporterDelegate() {
         return DEFAULT_DELEGATE;
+    }
+
+
+    public String getCookie(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+        try {
+            List<HttpCookie> cookies = cookieManager.getCookieStore().get(URI.create(url));
+            if (cookies != null && cookies.size() > 0) {
+                return TextUtils.join(";", cookies);
+            }
+        } catch (Exception e) {
+            return "";
+        }
+        return "";
+    }
+
+    public void saveCookie(String url, Map<String, List<String>> responseHeaders) {
+        // make sure our args are valid
+        if ((TextUtils.isEmpty(url)) || (responseHeaders == null)) return;
+
+        try {
+            cookieManager.put(URI.create(url), responseHeaders);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface IEventReporterDelegate {

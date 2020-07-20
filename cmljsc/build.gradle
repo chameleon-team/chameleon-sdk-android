@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+// 仅更新jsc时需要上传
+//apply from: '../upload.gradle'
+apply from: 'download_jsc.gradle' // 依赖JavaScript引擎
+
+android {
+    compileSdkVersion COMPILE_SDK.toInteger()
+    buildToolsVersion BUILD_TOOL_VER
+    defaultPublishConfig VERSION.endsWith('-SNAPSHOT') ? 'debug' : "release"
+
+    defaultConfig {
+        minSdkVersion MIN_SDK
+        targetSdkVersion TARGET_SDK
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+    }
+    buildTypes {
+        release {
+        }
+        debug {
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+}

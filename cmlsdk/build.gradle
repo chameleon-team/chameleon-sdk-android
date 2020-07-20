@@ -12,15 +12,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        consumerProguardFiles 'proguard-rules.txt'
     }
     lintOptions {
         abortOnError false
-    }
-    buildTypes {
-        release {
-        }
-        debug {
-        }
     }
 }
 
@@ -36,6 +32,6 @@ dependencies {
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
 
-    compileOnly 'com.didichuxing.doraemonkit:doraemonkit:1.2.1' // Dokit测试工具
+    compileOnly 'com.didichuxing.doraemonkit:doraemonkit:2.0.0' // Dokit测试工具
 
 }

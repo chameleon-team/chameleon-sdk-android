@@ -39,28 +39,14 @@ dependencies {
 }
 ```
 
-#### 1.2.2 渲染引擎选择
-目前只针对weex引擎实现的比较完整，<font color=#E69138>React Native即将支持</font>。 Chameleon SDK 当前依赖的weex 和 rn 版本分别是
-- weex   -> com.taobao.android:weex_sdk:0.18.0
-- rn sdk -> com.facebook.react:react-native:0.57.6
-
-
-如果采用 weex 作为渲染引擎，还需要添加如下依赖
+#### 1.2.2 渲染引擎
+采用 weex 作为渲染引擎，需要添加如下依赖
 ```gradle
 dependencies {
     ...
 	compile "com.didiglobal.chameleon:cmlweex:$VERSION"
 }
 ```
-
-如果采用 react native 作为渲染引擎<font color=#E69138>(即将支持)</font>，则需要添加如下依赖
-```gradle
-dependencies {
-    ...
-	compile "com.didiglobal.chameleon:cmlrn:$VERSION"
-}
-```
-注意，上述渲染引擎依赖只能<font color=#FF0000>二者选其一</font>。com.android.tools.build:gradle 3.0 以后的版本用 `implementation` 替换 `compile`，完整的依赖列表可参考示例工程。
 
 ## 2. 权限添加及 android 6.0 以上系统授权
 Chameleon SDK 已经添加了如下权限，android 6.0 以上系统版本需要在调起相关页面后手动授权。

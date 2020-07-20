@@ -27,4 +27,5 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly "com.android.support:appcompat-v7:$SUPPORT_VER"
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
+    api project(":cmlsdk")
 }

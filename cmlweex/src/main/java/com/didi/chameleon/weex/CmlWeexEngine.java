@@ -16,8 +16,7 @@ import com.didi.chameleon.sdk.bridge.ICmlBridgeProtocol;
 import com.didi.chameleon.sdk.bundle.CmlBundle;
 import com.didi.chameleon.sdk.utils.CmlLogUtil;
 import com.didi.chameleon.sdk.utils.Util;
-import com.didi.chameleon.weex.adapter.CmlDefaultJsExceptionAdapter;
-import com.didi.chameleon.weex.adapter.ICmlJSExceptionAdapter;
+import com.didi.chameleon.weex.adapter.WXApmGenerator;
 import com.didi.chameleon.weex.adapter.WXImgLoaderAdapter;
 import com.didi.chameleon.weex.adapter.WxJsExceptionAdapter;
 import com.didi.chameleon.weex.bridge.CmlWeexBridge;
@@ -33,12 +32,16 @@ import com.didi.chameleon.weex.richtextcomponent.CmlRichTextComponent;
 import com.didichuxing.doraemonkit.weex.DKWeexInstance;
 import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
 import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
-import com.taobao.weex.InitConfig;
-import com.taobao.weex.WXSDKEngine;
-import com.taobao.weex.common.WXException;
+
+import org.apache.weex.InitConfig;
+import org.apache.weex.WXSDKEngine;
+import org.apache.weex.common.WXException;
 
 import java.util.HashMap;
 import java.util.List;
+
+//import com.taobao.gcanvas.bridges.weex.GCanvasWeexModule;
+//import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
 
 /**
  * <h3>Weex 引擎初始化入口</h3>
@@ -50,7 +53,6 @@ import java.util.List;
 
 public class CmlWeexEngine implements ICmlEngine {
     private static final String TAG = "CmlWeexEngine";
-    private ICmlJSExceptionAdapter cmlJSExceptionAdapter = new CmlDefaultJsExceptionAdapter();
     private CmlJsBundleManager cmlJsBundleManager;
 
     public static CmlWeexEngine getInstance() {
@@ -122,7 +124,8 @@ public class CmlWeexEngine implements ICmlEngine {
 
         InitConfig.Builder builder = new InitConfig.Builder();
         builder.setImgAdapter(new WXImgLoaderAdapter(CmlEnvironment.getImgLoaderAdapter()));
-        builder.setJSExceptionAdapter(new WxJsExceptionAdapter(this.cmlJSExceptionAdapter));
+        builder.setJSExceptionAdapter(new WxJsExceptionAdapter(CmlEnvironment.getMonitorAdapter()));
+        builder.setApmGenerater(new WXApmGenerator(CmlEnvironment.getMonitorAdapter()));
         WXSDKEngine.initialize((Application) context.getApplicationContext(), builder.build());
         try {
             // bridge

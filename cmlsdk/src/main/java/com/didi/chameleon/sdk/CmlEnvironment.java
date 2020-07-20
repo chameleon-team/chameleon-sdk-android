@@ -11,6 +11,8 @@ import com.didi.chameleon.sdk.adapter.log.ICmlLoggerAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlDialogAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlProgressAdapter;
 import com.didi.chameleon.sdk.adapter.modal.ICmlToastAdapter;
+import com.didi.chameleon.sdk.adapter.monitor.CmlDefaultMonitorAdapter;
+import com.didi.chameleon.sdk.adapter.monitor.ICmlMonitorAdapter;
 import com.didi.chameleon.sdk.adapter.navigator.CmlNavigatorDefault;
 import com.didi.chameleon.sdk.adapter.navigator.ICmlNavigatorAdapter;
 import com.didi.chameleon.sdk.adapter.storage.ICmlStorageAdapter;
@@ -45,6 +47,10 @@ public class CmlEnvironment {
      * 是否开启缓存。前端调试的时候需要关闭缓存
      */
     public static boolean CML_ALLOW_BUNDLE_CACHE = true;
+    /**
+     * 是否允许直接从文件加载
+     */
+    public static boolean CML_ALLOW_LOAD_FROM_FILE = false;
 
     /**
      * 是否输出分析日志
@@ -79,6 +85,7 @@ public class CmlEnvironment {
     private static ICmlStatisticsAdapter statisticsAdapter;
     private static ICmlDegradeAdapter degradeAdapter;
     private static ICmlImgLoaderAdapter imageLoaderAdapter;
+    private static ICmlMonitorAdapter monitorAdapter;
 
     private static CmlJsonWrapper jsonWrapper;
     private static CmlThreadCenter threadCenter;
@@ -143,6 +150,10 @@ public class CmlEnvironment {
 
     public static void setImageLoaderAdapter(ICmlImgLoaderAdapter imageLoaderAdapter) {
         CmlEnvironment.imageLoaderAdapter = imageLoaderAdapter;
+    }
+
+    public static void setMonitorAdapter(ICmlMonitorAdapter monitorAdapter) {
+        CmlEnvironment.monitorAdapter = monitorAdapter;
     }
 
     public static long getMaxPreloadSize() {
@@ -215,6 +226,13 @@ public class CmlEnvironment {
             imageLoaderAdapter = new CmlDefaultImgLoaderAdapter();
         }
         return imageLoaderAdapter;
+    }
+
+    public static ICmlMonitorAdapter getMonitorAdapter() {
+        if (monitorAdapter == null) {
+            monitorAdapter = new CmlDefaultMonitorAdapter();
+        }
+        return monitorAdapter;
     }
 
     public static ICmlWebSocketAdapter getWebSocketAdapter() {

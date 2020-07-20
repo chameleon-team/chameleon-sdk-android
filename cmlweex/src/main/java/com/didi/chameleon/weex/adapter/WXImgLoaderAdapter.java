@@ -2,10 +2,13 @@ package com.didi.chameleon.weex.adapter;
 
 import android.widget.ImageView;
 
+import com.didi.chameleon.sdk.CmlInstanceManage;
+import com.didi.chameleon.sdk.ICmlInstance;
 import com.didi.chameleon.sdk.adapter.ICmlImgLoaderAdapter;
-import com.taobao.weex.adapter.IWXImgLoaderAdapter;
-import com.taobao.weex.common.WXImageStrategy;
-import com.taobao.weex.dom.WXImageQuality;
+
+import org.apache.weex.adapter.IWXImgLoaderAdapter;
+import org.apache.weex.common.WXImageStrategy;
+import org.apache.weex.dom.WXImageQuality;
 
 /**
  * Weex 图片加载代理类
@@ -20,6 +23,10 @@ public class WXImgLoaderAdapter implements IWXImgLoaderAdapter {
 
     @Override
     public void setImage(String url, ImageView view, WXImageQuality quality, WXImageStrategy strategy) {
-        this.imgLoaderAdapter.setImage(url, view);
+        if (strategy == null) {
+            return;
+        }
+        ICmlInstance instance = CmlInstanceManage.getInstance().getCmlInstance(strategy.instanceId);
+        this.imgLoaderAdapter.setImage(instance, url, view);
     }
 }
