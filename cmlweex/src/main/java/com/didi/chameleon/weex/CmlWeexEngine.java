@@ -36,6 +36,9 @@ import com.taobao.gcanvas.bridges.weex.WXGCanvasWeexComponent;
 import org.apache.weex.InitConfig;
 import org.apache.weex.WXSDKEngine;
 import org.apache.weex.common.WXException;
+import org.apache.weex.ui.SimpleComponentHolder;
+import org.apache.weex.ui.component.WXBasicComponentType;
+import org.apache.weex.ui.component.richtext.WXRichText;
 
 import java.util.HashMap;
 import java.util.List;
@@ -132,6 +135,11 @@ public class CmlWeexEngine implements ICmlEngine {
             WXSDKEngine.registerModule(ICmlBridgeProtocol.CML_BRIDGE, CmlWeexBridgeJsToNative.class, false);
             // rich text component
             WXSDKEngine.registerComponent(CmlRichTextComponent.NAME, CmlWeexRichText.class);
+            WXSDKEngine.registerComponent(
+                    new SimpleComponentHolder(
+                            WXRichText.class,
+                            new WXRichText.Creator()
+                    ), false, "weex-richtext");
             // gcanvas component
             WXSDKEngine.registerModule("gcanvas", GCanvasWeexModule.class);
             WXSDKEngine.registerComponent("gcanvas", WXGCanvasWeexComponent.class);
