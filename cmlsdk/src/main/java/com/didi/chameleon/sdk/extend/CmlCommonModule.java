@@ -14,6 +14,7 @@ import com.didi.chameleon.sdk.module.CmlMethod;
 import com.didi.chameleon.sdk.module.CmlModule;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
 import com.didi.chameleon.sdk.module.CmlParam;
+import com.didi.chameleon.sdk.utils.CmlAppUtil;
 import com.didi.chameleon.sdk.utils.CmlSystemUtil;
 import com.didi.chameleon.sdk.utils.CmlViewUtil;
 
@@ -29,10 +30,15 @@ public class CmlCommonModule {
     }
 
     @CmlMethod(alias = "openPage")
-    public void openNativePage(ICmlInstance instance, Context context,
+    public void openNativePage(final ICmlInstance instance, Context context,
                                @CmlParam(name = "url") String url, @CmlParam(name = "closeCurrent") boolean closeWeb) {
         if (closeWeb) {
-            instance.finishSelf();
+            CmlAppUtil.waitNextActivityCreate(instance.getContext(), 300, new CmlAppUtil.Callback() {
+                @Override
+                public void onCallback() {
+                    instance.finishSelf();
+                }
+            });
         }
         CmlEnvironment.getNavigatorAdapter().navigator(context, url);
     }
