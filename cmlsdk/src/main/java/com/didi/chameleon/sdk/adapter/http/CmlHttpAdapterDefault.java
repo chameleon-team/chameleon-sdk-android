@@ -18,6 +18,7 @@
  */
 package com.didi.chameleon.sdk.adapter.http;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -219,7 +220,12 @@ public class CmlHttpAdapterDefault implements ICmlHttpAdapter {
             return "";
         }
         try {
-            List<HttpCookie> cookies = cookieManager.getCookieStore().get(URI.create(url));
+            URI uri = URI.create(url);
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                // 6.0版本以下，CookieManager内部判断的是http，故替换scheme适配版本差异
+                uri = new URI("http", uri.getHost(), null, null);
+            }
+            List<HttpCookie> cookies = cookieManager.getCookieStore().get(uri);
             if (cookies != null && cookies.size() > 0) {
                 return TextUtils.join(";", cookies);
             }
