@@ -1,6 +1,8 @@
 package com.didi.chameleon.weex.jsbundlemgr.code;
 
 
+import android.support.annotation.Nullable;
+
 import com.didi.chameleon.weex.jsbundlemgr.cache.DiskLruCache;
 import com.didi.chameleon.weex.jsbundlemgr.utils.CmlLogUtils;
 import com.didi.chameleon.weex.jsbundlemgr.utils.CmlUtils;
@@ -22,6 +24,7 @@ public class CmlDiskLruCache implements CmlDiskCache {
 
     public static final long DEFAULT_CACHE_SIZE = 10 * 1024 * 1024; //10Mb
 
+    @Nullable
     private DiskLruCache diskCache;
 
     /**
@@ -47,10 +50,12 @@ public class CmlDiskLruCache implements CmlDiskCache {
      * 获取文件
      *
      * @param url js路径
-     * @return
      */
     @Override
     public synchronized File get(String url) {
+        if (diskCache == null) {
+            return null;
+        }
         DiskLruCache.Snapshot snapshot = null;
         try {
             String key = CmlUtils.generateMd5(url);
@@ -59,8 +64,7 @@ public class CmlDiskLruCache implements CmlDiskCache {
                 InputStream source = snapshot.getInputStream(0);
                 if (source != null) {
                     File dir = diskCache.getDirectory();
-                    File cacheFile = new File(new StringBuilder(dir.getAbsolutePath()).append(File.separator)
-                            .append(key).append(".0").toString());
+                    File cacheFile = new File(dir.getAbsolutePath() + File.separator + key + ".0");
                     CmlLogUtils.d(TAG, "找到本地缓存....key=" + key + " path: " + cacheFile.getAbsolutePath());
                     return cacheFile;
                 }
@@ -83,6 +87,9 @@ public class CmlDiskLruCache implements CmlDiskCache {
      */
     @Override
     public boolean save(String url, InputStream inputStream) {
+        if (diskCache == null) {
+            return false;
+        }
         DiskLruCache.Editor editor = null;
         BufferedOutputStream out = null;
         BufferedInputStream in = null;

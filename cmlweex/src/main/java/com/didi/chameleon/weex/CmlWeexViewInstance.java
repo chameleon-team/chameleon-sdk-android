@@ -29,7 +29,6 @@ import org.apache.weex.WXSDKInstance;
 import org.apache.weex.common.WXRenderStrategy;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,6 +44,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     private static final String DEGRADE_TO_H5 = "degrade_to_h5";
 
+    @Nullable
     private CmlWXSDKInstanceWrapper mWeexInstance;
     private ICmlView mCmlView;
     private String mCmlUrl;
@@ -134,6 +134,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             return;
         }
 
+        if (mWeexInstance == null) {
+            degradeToH5(CmlConstant.FAILED_TYPE_RUNTIME);
+            return;
+        }
+
         if (url.startsWith("file://") && (CmlEnvironment.CML_DEBUG || CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE)) {
             mWeexInstance.renderByUrl(CML_PAGE_NAME, mCmlUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
             return;
@@ -199,8 +204,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             return null;
         }
         HashMap<String, Object> paramsMaps = new HashMap<>();
-        for (Iterator<String> it = names.iterator(); it.hasNext(); ) {
-            String key = it.next();
+        for (String key : names) {
             paramsMaps.put(key, uri.getQueryParameter(key));
         }
         return paramsMaps;
@@ -222,6 +226,9 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      */
     private void renderView(String template, Map<String, Object> options) {
         mStartRenderTime = System.currentTimeMillis();
+        if (mWeexInstance == null) {
+            CmlEnvironment.getLoggerAdapter().e(TAG, "renderView inner instance is null");
+        }
         mWeexInstance.render(CML_PAGE_NAME, template, options, null, WXRenderStrategy.APPEND_ASYNC);
     }
 
@@ -345,7 +352,6 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     private void createWXInstance() {
         destroyWeexInstance();
         mWeexInstance = new CmlWXSDKInstanceWrapper(mCmlView.getContext());
-        mWeexInstance.setCmlInstance(this);
         mWeexInstance.registerRenderListener(this);
         mWeexInstance.onActivityCreate();
 
@@ -402,6 +408,9 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
 
     @Override
     public String getInstanceId() {
+        if (mWeexInstance == null) {
+            return "";
+        }
         return mWeexInstance.getInstanceId();
     }
 
@@ -438,15 +447,9 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     /**
      * 构造包装类，封装更多参数
      */
-    public class CmlWXSDKInstanceWrapper extends WXSDKInstance {
-        private CmlWeexViewInstance cmlInstance;
-
+    public static class CmlWXSDKInstanceWrapper extends WXSDKInstance {
         CmlWXSDKInstanceWrapper(Context context) {
             super(context);
-        }
-
-        void setCmlInstance(CmlWeexViewInstance cmlInstance) {
-            this.cmlInstance = cmlInstance;
         }
     }
 
