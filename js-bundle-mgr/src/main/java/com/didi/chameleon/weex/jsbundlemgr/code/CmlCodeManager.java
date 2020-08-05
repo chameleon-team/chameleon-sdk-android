@@ -34,7 +34,6 @@ public class CmlCodeManager implements ICmlCodeManager {
     private Context context;
 
     private List<CmlBundle> mPreloadList = new ArrayList<>();
-    private Map<String, Map<String, String>> mGlobalCodes = new HashMap<>();
 
     //是否初始化
     private volatile boolean isInit = false;
@@ -94,22 +93,20 @@ public class CmlCodeManager implements ICmlCodeManager {
             return;
         }
         CmlGetCodeCallback codeCallback = new CmlGetCodeCallback() {
+
+            private Map<String, String> storeCodes = new HashMap<>();
+
             @Override
             public void onSuccess(Map<String, String> codes) {
-                if (mGlobalCodes.get(url) != null) {
-                    Map<String, String> codeMaps = mGlobalCodes.get(url);
-                    codeMaps.putAll(codes);
-                } else {
-                    mGlobalCodes.put(url, codes);
+                if (codes != null) {
+                    storeCodes.putAll(codes);
                 }
-                if (CmlCodeUtils.isCodeFull(url, mGlobalCodes.get(url))) {
+                if (CmlCodeUtils.isCodeFull(url, storeCodes)) {
                     // 代码都获取完毕
                     CmlEnvironment.getThreadCenter().postMain(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onSuccess(CmlCodeUtils.mergeCode(mGlobalCodes.get(url)));
-                            // 清除掉内存缓存
-                            mGlobalCodes.remove(url);
+                            callback.onSuccess(CmlCodeUtils.mergeCode(storeCodes));
                         }
                     });
 
