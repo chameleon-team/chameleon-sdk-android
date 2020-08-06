@@ -74,8 +74,10 @@ public class Util {
         try {
             cmlUrl = uri.getQueryParameter(keyWord);
             if (cmlUrl == null) {
-                // 兼容url被encode过
-                cmlUrl = Uri.parse(Uri.decode(url)).getQueryParameter(keyWord);
+                // 如果scheme获取不到，则可能是url被encode，做一下兼容处理
+                if (uri.getScheme() == null) {
+                    cmlUrl = Uri.parse(Uri.decode(url)).getQueryParameter(keyWord);
+                }
             }
         } catch (Exception e) {
             CmlLogUtil.e(TAG, "parseCmlUrl error, msg = " + e.toString());
