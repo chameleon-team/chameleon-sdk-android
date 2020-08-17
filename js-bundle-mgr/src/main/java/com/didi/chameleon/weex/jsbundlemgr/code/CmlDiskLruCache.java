@@ -106,6 +106,9 @@ public class CmlDiskLruCache implements CmlDiskCache {
         try {
             String cacheName = CmlUtils.generateMd5(url);
             editor = diskCache.edit(cacheName);
+            if (editor == null) {
+                return false;
+            }
             outputStream = editor.newOutputStream(0);
             in = new BufferedInputStream(inputStream, 1024);
             out = new BufferedOutputStream(outputStream, 1024);
