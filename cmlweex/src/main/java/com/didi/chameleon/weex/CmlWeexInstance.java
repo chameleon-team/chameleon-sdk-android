@@ -167,7 +167,8 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
         }
 
         if (url.startsWith("file://") && (CmlEnvironment.CML_DEBUG || CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE)) {
-            mWeexInstance.renderByUrl(CML_PAGE_NAME, mWXUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
+            HashMap<String, Object> options = structOptionsParams(url, extendsParam);
+            mWeexInstance.renderByUrl(CML_PAGE_NAME, mWXUrl, options, null, WXRenderStrategy.APPEND_ASYNC);
             return;
         }
 
@@ -180,18 +181,7 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
                     reportError(CmlConstant.FAILED_TYPE_DOWNLOAD, "code is null");
                     degradeToH5(CmlConstant.FAILED_TYPE_DOWNLOAD);
                 } else {
-                    HashMap<String, Object> options = new HashMap<>();
-                    HashMap<String, Object> params = new HashMap<>();
-                    if (extendsParam != null) {
-                        params.putAll(extendsParam);
-                    }
-                    params.put(CmlEnvironment.CML_QUERY_SDK, CmlEnvironment.VERSION);
-                    params.put(CmlEnvironment.CML_QUERY_URL, mTotalUrl);
-                    options.put(CmlConstant.WEEX_OPTIONS_KEY, params);
-
-                    //适配weex的自定内容
-                    options.put("bundleUrl", mWXUrl);
-
+                    HashMap<String, Object> options = structOptionsParams(url, extendsParam);
                     render(template, options);
                 }
             }
@@ -203,6 +193,25 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
             }
         });
     }
+
+    public static HashMap<String, Object> structOptionsParams(String url, HashMap<String, Object> extendsParam) {
+        HashMap<String, Object> options = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
+        if (extendsParam != null) {
+            params.putAll(extendsParam);
+        }
+        params.put(CmlEnvironment.CML_QUERY_SDK, CmlEnvironment.VERSION);
+        params.put(CmlEnvironment.CML_QUERY_URL, url);
+        options.put(CmlConstant.WEEX_OPTIONS_KEY, params);
+        HashMap<String, Object> parse = parseUrl(url);
+        if (parse != null) {
+            params.putAll(parse);
+        }
+        //适配weex的自定内容
+        options.put("bundleUrl", Util.parseCmlUrl(url));
+        return options;
+    }
+
 
     /**
      * 重新加载当前页面
@@ -221,7 +230,8 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
     /**
      * 获取url中的参数
      */
-    private HashMap<String, Object> parseUrl(@NonNull String url) {
+    @Nullable
+    private static HashMap<String, Object> parseUrl(@NonNull String url) {
         Uri uri = Uri.parse(Uri.decode(url));
         Set<String> names = uri.getQueryParameterNames();
         if (names == null || names.size() == 0) {

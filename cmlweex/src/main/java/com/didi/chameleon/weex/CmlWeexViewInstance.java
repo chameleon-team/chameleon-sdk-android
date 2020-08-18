@@ -140,7 +140,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         }
 
         if (url.startsWith("file://") && (CmlEnvironment.CML_DEBUG || CmlEnvironment.CML_ALLOW_LOAD_FROM_FILE)) {
-            mWeexInstance.renderByUrl(CML_PAGE_NAME, mCmlUrl, null, null, WXRenderStrategy.APPEND_ASYNC);
+            HashMap<String, Object> options = CmlWeexInstance.structOptionsParams(url, extendsParam);
+            mWeexInstance.renderByUrl(CML_PAGE_NAME, mCmlUrl, options, null, WXRenderStrategy.APPEND_ASYNC);
             return;
         }
 
@@ -153,16 +154,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
                     reportError(CmlConstant.FAILED_TYPE_DOWNLOAD, "code is null");
                     degradeToH5(CmlConstant.FAILED_TYPE_DOWNLOAD);
                 } else {
-                    HashMap<String, Object> options = new HashMap<>();
-                    HashMap<String, Object> params = new HashMap<>();
-                    if (extendsParam != null) {
-                        params.putAll(extendsParam);
-                    }
-                    params.put(CmlEnvironment.CML_QUERY_SDK, CmlEnvironment.VERSION);
-                    params.put(CmlEnvironment.CML_QUERY_URL, mTotalUrl);
-                    params.putAll(parseUrl(url));
-                    options.put(CmlConstant.WEEX_OPTIONS_KEY, params);
-
+                    HashMap<String, Object> options = CmlWeexInstance.structOptionsParams(url, extendsParam);
                     renderView(template, options);
                 }
             }
