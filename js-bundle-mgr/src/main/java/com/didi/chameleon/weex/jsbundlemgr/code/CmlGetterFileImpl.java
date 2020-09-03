@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 /**
-
  * @since 2018/9/10
  * 文件获取代码方式的实现
  */
@@ -56,7 +55,7 @@ public class CmlGetterFileImpl implements ICmlCodeGetter {
             String code = getCodeFromFile(singleUrl);
             codes.put(singleUrl, code);
         }
-        callback.onSuccess(codes);
+        callback.onSuccess(codes, true);
     }
 
     private String getCodeFromFile(String url) {

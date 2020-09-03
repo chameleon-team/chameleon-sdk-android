@@ -17,6 +17,7 @@ import com.didi.chameleon.sdk.CmlInstanceManage;
 import com.didi.chameleon.sdk.ICmlViewInstance;
 import com.didi.chameleon.sdk.adapter.ICmlDegradeAdapter;
 import com.didi.chameleon.sdk.adapter.ICmlStatisticsAdapter;
+import com.didi.chameleon.sdk.adapter.monitor.ICmlMonitorAdapter;
 import com.didi.chameleon.sdk.container.ICmlView;
 import com.didi.chameleon.sdk.module.CmlCallback;
 import com.didi.chameleon.sdk.module.CmlModuleManager;
@@ -28,6 +29,7 @@ import org.apache.weex.IWXRenderListener;
 import org.apache.weex.WXSDKInstance;
 import org.apache.weex.common.WXRenderStrategy;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +62,7 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * 是否已经渲染成功
      */
     private boolean hasRenderSuccess = false;
+    private boolean renderFromLocal = false;
 
     public CmlWeexViewInstance(@NonNull ICmlView cmlView,
                                @NonNull ICmlInstanceListener listener) {
@@ -148,7 +151,8 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         mWeexInstance.addUserTrackParameter(CmlConstant.WEEX_INSTANCE_URL, mTotalUrl);
         CmlWeexEngine.getInstance().performGetCode(mCmlUrl, new CmlGetCodeStringCallback() {
             @Override
-            public void onSuccess(String template) {
+            public void onSuccess(String template, boolean fromLocal) {
+                renderFromLocal = fromLocal;
                 // 代码为空weex不会报错，需要主动降级
                 if (TextUtils.isEmpty(template)) {
                     reportError(CmlConstant.FAILED_TYPE_DOWNLOAD, "code is null");
@@ -217,6 +221,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
      * @param options  参数
      */
     private void renderView(String template, Map<String, Object> options) {
+
+        CmlEnvironment.getMonitorAdapter().onTrace(CmlWeexViewInstance.this,
+                ICmlMonitorAdapter.TRACE_RENDER_LOAD,
+                Collections.singletonMap(ICmlMonitorAdapter.PARAM_LOAD_SOURCE, (Object) (renderFromLocal ? 1 : 0)));
+
         mStartRenderTime = System.currentTimeMillis();
         if (mWeexInstance == null) {
             CmlEnvironment.getLoggerAdapter().e(TAG, "renderView inner instance is null");
@@ -248,6 +257,12 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
             map.put("link", mTotalUrl);
             CmlEnvironment.getStatisticsAdapter().event("cml_weex_container_load_time", map1);
         }
+
+        Map<String, Object> monitorMap = new HashMap<>();
+        monitorMap.put(ICmlMonitorAdapter.PARAM_RENDER_TIME, renderDuration);
+        monitorMap.put(ICmlMonitorAdapter.PARAM_LOAD_SOURCE, renderFromLocal ? 1 : 0);
+        CmlEnvironment.getMonitorAdapter().onTrace(this, ICmlMonitorAdapter.TRACE_RENDER_SUCCESS, monitorMap);
+
         CmlLogUtil.d(TAG, "onRenderSuccess, render_time : " + renderDuration + "   load_time : " + loadDuration);
     }
 
@@ -268,6 +283,12 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
     @Override
     public void onException(WXSDKInstance instance, String errCode, String msg) {
         CmlLogUtil.e(TAG, "onException msg = " + msg);
+
+        Map<String, Object> monitorMap = new HashMap<>();
+        monitorMap.put(ICmlMonitorAdapter.PARAM_RENDER_TIME, System.currentTimeMillis() - mStartRenderTime);
+        monitorMap.put(ICmlMonitorAdapter.PARAM_LOAD_SOURCE, renderFromLocal ? 1 : 0);
+        CmlEnvironment.getMonitorAdapter().onTrace(this, ICmlMonitorAdapter.TRACE_RENDER_FAIL, monitorMap);
+
         if (CmlEnvironment.CML_DEBUG) {
             showDebugInfo(msg);
         } else {

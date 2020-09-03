@@ -10,6 +10,12 @@ import java.util.Map;
 public interface ICmlMonitorAdapter {
 
     String TRACE_PERFORMANCE = "performance";
+    String TRACE_RENDER_LOAD = "render_load";
+    String TRACE_RENDER_SUCCESS = "render_success";
+    String TRACE_RENDER_FAIL = "render_fail";
+
+    String PARAM_LOAD_SOURCE = "load_source";
+    String PARAM_RENDER_TIME = "render_time";
 
     interface ErrorInfo {
 

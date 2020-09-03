@@ -94,19 +94,24 @@ public class CmlCodeManager implements ICmlCodeManager {
         }
         CmlGetCodeCallback codeCallback = new CmlGetCodeCallback() {
 
+            private boolean fromLocal = true;
             private Map<String, String> storeCodes = new HashMap<>();
 
             @Override
-            public void onSuccess(Map<String, String> codes) {
+            public void onSuccess(Map<String, String> codes, boolean fLocal) {
                 if (codes != null) {
                     storeCodes.putAll(codes);
+                }
+                // 只要有网络，就不视为缓存加载
+                if (!fLocal) {
+                    this.fromLocal = false;
                 }
                 if (CmlCodeUtils.isCodeFull(url, storeCodes)) {
                     // 代码都获取完毕
                     CmlEnvironment.getThreadCenter().postMain(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onSuccess(CmlCodeUtils.mergeCode(storeCodes));
+                            callback.onSuccess(CmlCodeUtils.mergeCode(storeCodes), fromLocal);
                         }
                     });
 

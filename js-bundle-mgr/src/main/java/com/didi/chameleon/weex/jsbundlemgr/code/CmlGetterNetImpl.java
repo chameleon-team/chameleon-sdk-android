@@ -136,7 +136,7 @@ public class CmlGetterNetImpl implements ICmlCodeGetter {
         }
         if (callbacks != null && callbacks.size() > 0) {
             for (CmlGetCodeCallback callback : callbacks) {
-                callback.onSuccess(codeMaps);
+                callback.onSuccess(codeMaps, false);
             }
         }
         // 进行缓存
