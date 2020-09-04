@@ -86,7 +86,7 @@ public class CmlDiskLruCache implements CmlDiskCache {
      * @param inputStream 文件流
      */
     @Override
-    public boolean save(String url, InputStream inputStream) {
+    public synchronized boolean save(String url, InputStream inputStream) {
         if (diskCache == null) {
             return false;
         }
