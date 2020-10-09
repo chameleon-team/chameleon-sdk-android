@@ -10,7 +10,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.didi.chameleon.sdk.ICmlInstance;
 
 import java.util.regex.Pattern;
@@ -47,13 +51,34 @@ public class CmlDefaultImgLoaderAdapter implements ICmlImgLoaderAdapter {
     }
 
     @Override
-    public void setImage(ICmlInstance instance, String url, final ImageView view) {
+    public void setImage(ICmlInstance instance, String url, final ImageView view, final OnLoadCallback callback) {
         checkGlide();
         RequestBuilder<Drawable> typeRequest = getCommonStep(url, view.getContext());
         if (typeRequest == null) {
+            if (callback != null) {
+                callback.onFinish(false);
+            }
             return;
         }
-        typeRequest.transition(new DrawableTransitionOptions().crossFade()).into(view);
+        typeRequest.transition(new DrawableTransitionOptions().crossFade())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        if (callback != null) {
+                            callback.onFinish(false);
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if (callback != null) {
+                            callback.onFinish(true);
+                        }
+                        return false;
+                    }
+                })
+                .into(view);
     }
 
     private boolean activityValid(Activity activity) {

@@ -22,11 +22,18 @@ public class WXImgLoaderAdapter implements IWXImgLoaderAdapter {
     }
 
     @Override
-    public void setImage(String url, ImageView view, WXImageQuality quality, WXImageStrategy strategy) {
+    public void setImage(final String url, final ImageView view, WXImageQuality quality, final WXImageStrategy strategy) {
         if (strategy == null) {
             return;
         }
         ICmlInstance instance = CmlInstanceManage.getInstance().getCmlInstance(strategy.instanceId);
-        this.imgLoaderAdapter.setImage(instance, url, view);
+        this.imgLoaderAdapter.setImage(instance, url, view, new ICmlImgLoaderAdapter.OnLoadCallback() {
+            @Override
+            public void onFinish(boolean result) {
+                if (strategy.getImageListener() != null) {
+                    strategy.getImageListener().onImageFinish(url, view, result, null);
+                }
+            }
+        });
     }
 }
