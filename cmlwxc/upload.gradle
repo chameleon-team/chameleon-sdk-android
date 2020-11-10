@@ -1,0 +1,100 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+ext {
+    aar_path = "$rootDir/cmlwxc/weex_sdk-release.aar"
+}
+
+publishing {
+    publications {
+        upload(MavenPublication) {
+            groupId project.GROUP_ID
+            artifactId project.ARTIFACT_ID
+            version project.VERSION
+
+            artifact(aar_path)
+
+            pom.packaging = 'aar'
+            pom.withXml {
+                asNode().appendNode('name', "Chameleon android SDK")
+                asNode().appendNode('description',
+                        "Chameleon android SDK uses some most common native rendering engines " +
+                                "as it's fundamental lib, and extended some general engineering capabilities" +
+                                ". The currently supported rendering engines are weex and react native, and " +
+                                "you can only choose one of them as the rendering engine for every single project.")
+                asNode().appendNode('url', "https://github.com/chameleon-team/chameleon-sdk-android.git")
+
+                def licensesNode = asNode().appendNode('licenses')
+                def licenseNode = licensesNode.appendNode('license')
+                licenseNode.appendNode('name', "The Apache License, Version 2.0")
+                licenseNode.appendNode('url', "http://www.apache.org/licenses/LICENSE-2.0.txt")
+
+                def developersNode = asNode().appendNode('developers')
+                def developerNode1 = developersNode.appendNode('developer')
+                developerNode1.appendNode('name', "sxychenjing")
+                developerNode1.appendNode('email', "chenjingchenjing@didiglobal.com")
+                def developerNode2 = developersNode.appendNode('developer')
+                developerNode2.appendNode('name', "KSKjust")
+                developerNode2.appendNode('email', "lizechen@didiglobal.com")
+
+                def scmNode = asNode().appendNode('scm')
+                scmNode.appendNode('connection', "scm:git:https://github.com/chameleon-team/chameleon-sdk-android.git")
+                scmNode.appendNode('developerConnection', "scm:git:https://github.com/chameleon-team/chameleon-sdk-android.git")
+                scmNode.appendNode('url', "https://github.com/chameleon-team/chameleon-sdk-android.git")
+            }
+
+            if (!project.VERSION.endsWith('-SNAPSHOT')) {
+                artifact(file(aar_path + ".asc")) {
+                    classifier = null
+                    extension = 'aar.asc'
+                    builtBy(signArtifactAar)
+                }
+                artifact(file("$buildDir/publications/upload/pom-default.xml.asc")) {
+                    classifier = null
+                    extension = 'pom.asc'
+                    builtBy(signArtifactPom)
+                }
+            }
+        }
+    }
+
+//    这里就是在创建issue成功后，对方回复的地址
+    repositories {
+        maven {
+            name 'release'
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            credentials {
+                username = properties.getProperty("oss.usr")
+                password = properties.getProperty("oss.pwd")
+            }
+        }
+
+        maven {
+            name 'snapshot'
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+            credentials {
+                username = properties.getProperty("oss.usr")
+                password = properties.getProperty("oss.pwd")
+            }
+        }
+    }
+}
+
+ext."signing.keyId" = properties.getProperty("signing.keyId")
+ext."signing.password" = properties.getProperty("signing.password")
+ext."signing.secretKeyRingFile" = properties.getProperty("signing.secretKeyRingFile")
+
+task signArtifactAar() {
+    doLast {
+        signing.sign file(aar_path)
+    }
+}
+
+task signArtifactPom() {
+    doLast {
+        signing.sign file("$buildDir/publications/upload/pom-default.xml")
+    }
+}

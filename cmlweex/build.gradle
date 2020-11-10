@@ -27,7 +27,6 @@ dependencies {
     compileOnly "com.alibaba:fastjson:$FAST_JSON_VER"
 
     testImplementation 'junit:junit:4.12'
-    api "org.apache.weex:sdk:$WEEX_VER"
 
     compileOnly 'com.squareup.okhttp3:okhttp:3.11.0' // 默认 web socket 框架
     compileOnly 'com.didichuxing.doraemonkit:doraemonkit-weex:2.0.0' // Dokit Weex测试工具
@@ -38,4 +37,6 @@ dependencies {
     api project(':weexbridge')
 
     api 'com.didiglobal.chameleon:cmljsc:0.0.10'
+    //    api "org.apache.weex:sdk:$WEEX_VER"
+    api 'com.didiglobal.chameleon:cmlwxc:0.0.10'
 }

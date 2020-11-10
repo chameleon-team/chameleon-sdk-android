@@ -1,0 +1,5 @@
+// 仅更新wxc时需要上传
+//apply from: 'upload.gradle'
+
+configurations.maybeCreate("default")
+artifacts.add("default", file('weex_sdk-release.aar'))
