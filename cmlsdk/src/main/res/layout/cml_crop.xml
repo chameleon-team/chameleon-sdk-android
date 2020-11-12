@@ -3,12 +3,12 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <com.didi.chameleon.sdk.image.CmlCropImageView
+    <com.didi.chameleon.sdk.extend.image.CmlCropImageView
         android:id="@+id/src_pic"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <com.didi.chameleon.sdk.image.CmlCropView
+    <com.didi.chameleon.sdk.extend.image.CmlCropView
         android:id="@+id/crop_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
