@@ -511,6 +511,11 @@ public class CmlWeexInstance implements ICmlActivityInstance, ICmlBaseLifecycle,
         mWeexInstance.fireGlobalEventCallback(CML_BRIDGE_EVENT, params);
     }
 
+    @Nullable
+    public WXSDKInstance getWeexInstance(){
+        return mWeexInstance;
+    }
+
     /**
      * 构造包装类，封装更多参数
      */

@@ -457,6 +457,11 @@ public class CmlWeexViewInstance implements ICmlViewInstance, IWXRenderListener 
         return false;
     }
 
+    @Nullable
+    public WXSDKInstance getWeexInstance() {
+        return mWeexInstance;
+    }
+
     /**
      * 构造包装类，封装更多参数
      */
