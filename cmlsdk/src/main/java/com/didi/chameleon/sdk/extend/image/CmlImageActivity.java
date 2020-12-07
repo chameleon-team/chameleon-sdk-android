@@ -294,12 +294,9 @@ public class CmlImageActivity extends FragmentActivity {
                     if (TextUtils.isEmpty(width) || TextUtils.isEmpty(height) || "0".equals(width) || "0".equals(height)) {
 
                         final Uri imageUri = data.getData();
-                        String url = CmlImageFileUtil.getPath(this, imageUri);
-                        File mSaveFile = CmlImageFileUtil.getPhotoOutputFile(this);
-                        CmlImageFileUtil.copyFile(url, mSaveFile.getAbsolutePath());
                         if (isNeedCut) {
-
-                            startSystemCropActivity(Uri.fromFile(mSaveFile));
+                            String url = CmlImageFileUtil.getPath(this, imageUri);
+                            startSystemCropActivity(Uri.parse(url));
                             return;
                         }
                         handlePic(imageUri);
