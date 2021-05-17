@@ -68,11 +68,10 @@ public class CmlViewUtil {
         }
         int height = 0;
         try {
-            Class c = Class.forName("com.android.internal.R$dimen");
-            Object obj = c.newInstance();
-            Field field = c.getField("status_bar_height");
-            int x = Integer.parseInt(field.get(obj).toString());
-            height = ctx.getResources().getDimensionPixelSize(x);
+            int resourceId = ctx.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                height = ctx.getResources().getDimensionPixelSize(resourceId);
+            }
         } catch (Exception e1) {
             e1.printStackTrace();
         }
